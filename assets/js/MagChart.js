@@ -36,13 +36,15 @@ export default class MagChart {
 
     initchart() {
         this.chart = new CanvasJS.Chart(this.canvas, {
-            zoomEnabled: true,
             culture: "fr",
             axisY: {
                 includeZero: false
             },
             axisX: {
-                valueFormatString: "DD MMM YYYY HH:mm:ss"
+                valueFormatString: "DD MMM YYYY HH:mm:ss",
+                labelFormatter: (e) => {
+                    return CanvasJS.formatDate(e.value  - (2 * 60 * 60 * 1000), "DD MMMM YYYY HH:mm:ss", e.chart.culture)
+                }
             },
             legend: {
                 dockInsidePlotArea: false,
@@ -58,20 +60,22 @@ export default class MagChart {
                 dataPoints: this.data,
                 xValueType: "dateTime",
                 showInLegend: true,
-                xValueFormatString: "DD MMMM HH:mm:ss",
+                xValueFormatString: "DD MMMM YYYY HH:mm:ss",
             }],
             options: {
                 scales: {
                     xAxes: [{ type: "time" }]
                 },
             },
+            panEnabled: false,
             zoomEnabled: true,
             zoomType: "x",
-            rangeChanged: this.resizeHandler.bind(this),
+            rangeChanging: this.resizeHandler.bind(this),
+            // rangeChanged: this.resizeHandler.bind(this),
             toolTip: {
                 contentFormatter: function (e) {
                     return `<strong style="color: ${e.entries[0].dataSeries.color}">
-                        ${CanvasJS.formatDate(e.entries[0].dataPoint.x, "DD MMMM HH:mm:ss", e.chart.culture)}</strong>: 
+                        ${CanvasJS.formatDate(e.entries[0].dataPoint.x  - (2 * 60 * 60 * 1000), "DD MMMM YYYY HH:mm:ss", e.chart.culture)}</strong>: 
                         ${e.entries[0].dataPoint.y} nT`;
                 }
             },

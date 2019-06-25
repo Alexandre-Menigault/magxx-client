@@ -19,13 +19,14 @@ window.addEventListener("DOMContentLoaded", (event) => {
         days: ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"],
         shortDays: ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"],
         months: ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"],
-        ShoreMonths: ["Jan", "Fév", "Mar", "Avr", "Mai", "Juin", "Jui", "Août", "Sept", "Oct", "Nov", "Déc"]
+        ShoreMonths: ["Jan", "Fév", "Mar", "Avr", "Mai", "Juin", "Juil", "Août", "Sept", "Oct", "Nov", "Déc"]
     })
 
     function fetchAndPlot(type) {
         let file = "";
-        if (type === "5min") file = "http://localhost/magxx/api/data/CLF3/1561386697/env";
-        else if (type === "1day") file = "http://localhost/magxx/api/data/CLF3/1561386697/raw";
+        const posix = Date.UTC(2019, 5, 13)/1000; // Attention, les mois commencent à zéro
+        if (type === "5min") file = `http://localhost/magxx/api/data/CLF3/${posix}/env`;
+        else if (type === "1day") file = `http://localhost/magxx/api/data/CLF3/${posix}/raw`;
         const plot_time = Date.now();
         fetch(file)
             .then((response) => { return response.json() })

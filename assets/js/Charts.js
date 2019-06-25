@@ -39,15 +39,15 @@ export default class Charts {
      */
     __createPlots(jsonData) {
         let headers = jsonData[0].header
-        headers.splice(0, 2)
-        const colors = ["#080", "#008b8b", "#ff8c00", "#9400d3"]
+        headers.splice(0, 2); // On retire les deux premiers headers qui sont les headers de temps posix + les milisecondes
+        const colors = jsonData[0].colors;
         let i = 0;
         for (let header of headers) {
             /** @type {ChartData[]} */
             const chartData = jsonData.reduce((data, line, j) => {
                 if (j !== 0) {
-                    const x = new Date(line.t * 1000 - (2 * 60 * 60 * 1000));
-                    const y = parseFloat(line[header.toLowerCase()]);
+                    const x = new Date(line.t*1000);
+                    const y = parseFloat(line[header]);
                     data.push({ x, y });
                 }
                 return data
