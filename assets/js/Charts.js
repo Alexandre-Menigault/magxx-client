@@ -38,19 +38,23 @@ export default class Charts {
      * @param {MagData[]} jsonData 
      */
     __createPlots(jsonData) {
-        const headers = ["x", "y", "z", "f"]
+        let headers = jsonData[0].header
+        headers.splice(0, 2)
         const colors = ["#080", "#008b8b", "#ff8c00", "#9400d3"]
         let i = 0;
         for (let header of headers) {
             /** @type {ChartData[]} */
-            const chartData = jsonData.map((line) => {
-                const x = new Date(line.posix * 1000 - (2 * 60 * 60 * 1000));
-                const y = parseFloat(line[header]);
-                return { x, y }
-            });
-            if(this.charts[i] != undefined) this.charts[i].updateData(chartData);
+            const chartData = jsonData.reduce((data, line, j) => {
+                if (j !== 0) {
+                    const x = new Date(line.t * 1000 - (2 * 60 * 60 * 1000));
+                    const y = parseFloat(line[header.toLowerCase()]);
+                    data.push({ x, y });
+                }
+                return data
+            }, [])
+            if (this.charts[i] != undefined) this.charts[i].updateData(chartData);
             else {
-                const c = new MagChart(chartData, { label: `${header} value`, type: header, color: colors[i] }, this)
+                const c = new MagChart(chartData, { label: `${header} value`, type: header, color: colors[i] != undefined ? colors[i] : colors[0] }, this)
                 this.charts.push(c);
                 c.chart.render()
             }

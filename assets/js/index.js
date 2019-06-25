@@ -1,5 +1,4 @@
 import Charts from "./Charts.js";
-// import MagChart from "./MagChart.js"
 window.addEventListener("DOMContentLoaded", (event) => {
     /**
      * @type {Charts}
@@ -25,17 +24,23 @@ window.addEventListener("DOMContentLoaded", (event) => {
 
     function fetchAndPlot(type) {
         let file = "";
-        if (type === "5min") file = "http://localhost/magxx/upload/file/CLF320190614040500.raw.csv";
-        else if (type === "1day") file = "http://localhost/magxx/upload/file/CLF320190614.raw.csv";
+        if (type === "5min") file = "http://localhost/magxx/api/data/CLF3/1561386697/env";
+        else if (type === "1day") file = "http://localhost/magxx/api/data/CLF3/1561386697/raw";
         const plot_time = Date.now();
         fetch(file)
             .then((response) => { return response.json() })
             .then((resJson) => {
                 resJson.pop();
-                console.log("Init charts duration: ", Date.now() - plot_time, "ms")
-                if(charts != null) charts.__createPlots(resJson)
-                charts = new Charts(resJson, "magxx_plots");
-                console.log("Got all data", "Begin plotting ...");
+                if(resJson[0].type === "raw") {
+                    console.log("Init charts duration: ", Date.now() - plot_time, "ms")
+                    if(charts != null) charts.__createPlots(resJson)
+                    charts = new Charts(resJson, "magxx_plots");
+                    console.log("Got all data", "Begin plotting ...");
+                } else {
+                    // Don't plot log or env data
+                    // const magxx_text = document.getElementById("magxx_text");
+                    // magxx_text.textContent = JSON.stringify(resJson, null, 4);
+                }
             });
     }
 })
