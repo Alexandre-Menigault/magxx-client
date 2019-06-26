@@ -32,6 +32,8 @@ export default class MagChart {
 
     updateData(newData) {
         this.data = newData;
+        this.chart.data[0].dataPoints = newData
+        this.chart.render()
     }
 
     initchart() {

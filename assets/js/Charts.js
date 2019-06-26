@@ -37,9 +37,9 @@ export default class Charts {
      * Creates or updates all plots from the data sent by the server
      * @param {MagData[]} jsonData 
      */
-    __createPlots(jsonData) {
+    __createPlots(jsonData, isUpdate = false) {
         let headers = jsonData[0].header
-        headers.splice(0, 2); // On retire les deux premiers headers qui sont les headers de temps posix + les milisecondes
+        if(!isUpdate) headers.splice(0, 2); // On retire les deux premiers headers qui sont les headers de temps posix + les milisecondes
         const colors = jsonData[0].colors;
         let i = 0;
         for (let header of headers) {

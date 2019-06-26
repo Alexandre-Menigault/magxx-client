@@ -34,7 +34,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
                 resJson.pop();
                 if(resJson[0].type === "raw") {
                     console.log("Init charts duration: ", Date.now() - plot_time, "ms")
-                    if(charts != null) charts.__createPlots(resJson)
+                    if(charts != null) charts.__createPlots(resJson, true)
                     charts = new Charts(resJson, "magxx_plots");
                     console.log("Got all data", "Begin plotting ...");
                 } else {
