@@ -16,11 +16,11 @@ export default class MagChart {
      */
     constructor(data, options, parent) {
         this.canvas = document.createElement("div");
-        this.canvas.style.width = "100%";
+        // this.canvas.style.width = "100%";
         // this.canvas.style.height = "15%";
-        this.canvas.style.marginTop = "10px";
+        // this.canvas.style.marginTop = "10px";
         this.canvas.id = "canvas" + options.type
-        this.canvas.classList.add("canvas-container")
+        this.canvas.classList.add("canvas-container", "p-2", "container-fluid", "bd-highlight")
         this.canvas.ondblclick = this.doubleClickHandler.bind(this);
         this.parent = parent
         this.parent.container.appendChild(this.canvas)
