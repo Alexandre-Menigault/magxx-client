@@ -1,4 +1,6 @@
-#magxx_plots,.plots_container{
-    width: 80%;
-    height: 80%;
+.magxx_plotd {
+    height: 100%
+}
+.canvas-container {
+    height: 18vh
 }
