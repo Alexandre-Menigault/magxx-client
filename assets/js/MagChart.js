@@ -29,7 +29,9 @@ export default class MagChart {
     }
 
     updateData(newData) {
+        this.data = null;
         this.data = newData;
+        this.chart.data[0].dataPoints = null
         this.chart.data[0].dataPoints = newData
         this.chart.render()
     }
@@ -71,7 +73,6 @@ export default class MagChart {
             zoomEnabled: true,
             zoomType: "x",
             rangeChanging: this.resizeHandler.bind(this),
-            // rangeChanged: this.resizeHandler.bind(this),
             toolTip: {
                 contentFormatter: function (e) {
                     return `<strong style="color: ${e.entries[0].dataSeries.color}">
