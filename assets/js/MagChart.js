@@ -16,9 +16,6 @@ export default class MagChart {
      */
     constructor(data, options, parent) {
         this.canvas = document.createElement("div");
-        // this.canvas.style.width = "100%";
-        // this.canvas.style.height = "15%";
-        // this.canvas.style.marginTop = "10px";
         this.canvas.id = "canvas" + options.type
         this.canvas.classList.add("canvas-container", "p-2", "container-fluid", "bd-highlight")
         this.canvas.ondblclick = this.doubleClickHandler.bind(this);
@@ -46,7 +43,7 @@ export default class MagChart {
             axisX: {
                 valueFormatString: "DD MMM YYYY HH:mm:ss",
                 labelFormatter: (e) => {
-                    return CanvasJS.formatDate(e.value  - (2 * 60 * 60 * 1000), "DD MMMM YYYY HH:mm:ss", e.chart.culture)
+                    return CanvasJS.formatDate(e.value  - (-e.value.getTimezoneOffset() * 60 * 1000), "DD MMMM YYYY HH:mm:ss", e.chart.culture)
                 }
             },
             legend: {
@@ -78,7 +75,7 @@ export default class MagChart {
             toolTip: {
                 contentFormatter: function (e) {
                     return `<strong style="color: ${e.entries[0].dataSeries.color}">
-                        ${CanvasJS.formatDate(e.entries[0].dataPoint.x  - (2 * 60 * 60 * 1000), "DD MMMM YYYY HH:mm:ss", e.chart.culture)}</strong>: 
+                        ${CanvasJS.formatDate(e.entries[0].dataPoint.x  - (-e.entries[0].dataPoint.x.getTimezoneOffset() * 60 * 1000), "DD MMMM YYYY HH:mm:ss", e.chart.culture)}</strong>: 
                         ${e.entries[0].dataPoint.y} nT`;
                 }
             },
