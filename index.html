@@ -7,26 +7,67 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
     <link rel="stylesheet" href="./assets/css/vendor/bootstrap.css">
+    <link rel="stylesheet" href="./assets/css/vendor/font-awesome.all.min.css">
+    <link rel="stylesheet" href="./assets/css/vendor/tempusdominus-bootstrap-4.min.css">
     <link rel="stylesheet" href="./assets/css/style.css">
 </head>
 
 <body>
-    <div class="container-fluid" style="min-height: 100%">
-        <nav class="navbar navbar-dark bg-dark">
+    <div class="container-fluid" style="min-height: 100%; min-width: 100vw; padding: 0px" class="px-0">
+        <nav class="sticky-top navbar navbar-expand-lg navbar-dark bg-dark">
             <a class="navbar-brand" href="#"> Magxx </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav" id="navbarContainer">
+
+                </ul>
+            </div>
+
+            <form class="form-inline px-1">
+                <div class="form-group">
+                    <select id="dateRangeSelector" class="custom-select mr-2">
+                        <option value="1d" selected>1 jour</option>
+                        <option value="2h">2 heures</option>
+                    </select>
+                    <div class="input-group">
+                        <div class="input-group-append">
+                            <div class="input-group-text"><i class="fa fa-calendar-alt"></i></div>
+                        </div>
+                        <div class="input-group-append">
+                            <div class="input-group-text"><strong>De</strong></div>
+                        </div>
+                        <input type="text" id="datetimepicker1" class="form-control datetimepicker-input"
+                            data-target="#datetimepicker1" data-toggle="datetimepicker" />
+                        <div class="input-group-append">
+                            <div class="input-group-text"><strong style="text-transform: uppercase">à</strong></div>
+                        </div>
+                        <input type="text" style="cursor:not-allowed;" disabled="disabled" aria-disabled="disabled"
+                            id="datetimepicker2" class="form-control datetimepicker-input"
+                            data-target="#datetimepicker2" data-toggle="datetimepicker" />
+                    </div>
+                </div>
+            </form>
         </nav>
         <button id="1day" class="btn btn-primary fetchDataButton">13 juin 2019</button>
-        <button id="5min" class="btn btn-primary fetchDataButton">5 min</button>
-        <div class="container-fluid"  style="margin-top:10px; min-height: 100%">
+        <!-- <button id="5min" class="btn btn-primary fetchDataButton">5 min</button> -->
+        <div class="container-fluid" style="margin-top:10px; min-height: 100%">
+
+            <div id="text_comp" class="container-fluid border rounded d-flex mb-3 bd-highlight"></div>
             <!-- <button id="5min" class="btn btn-error fetchDataButton">5 min</button> -->
             <div id="magxx_plots" class="container-fluid border rounded d-flex flex-column mb-3 bd-highlight"
                 style="position: relative; width: 95%; min-height: 100%; max-height: 100%"></div>
         </div>
     </div>
 
-    <script src="./assets//js/vendor/jquery-3.4.1.js"></script>
+    <script src="./assets/js/vendor/jquery-3.4.1.js"></script>
     <script src="./assets/js/vendor/bootstrap.bundle.js"></script>
     <script src="./assets/js/vendor/canvasjs.min.js"></script>
+    <script src="./assets/js/vendor/moment-2.22.2.min.js"></script>
+    <script src="./assets/js/vendor/locale/fr.js"></script>
+    <script src="./assets/js/vendor/tempusdominus-bootstrap-4.min.js"></script>
     <script src="./assets/js/index.js" type="module"></script>
 </body>
 
