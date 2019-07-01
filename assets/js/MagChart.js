@@ -29,10 +29,11 @@ export default class MagChart {
     }
 
     updateData(newData) {
+        this.chart.destroy(); // Destroy previous chart to prevent memory leaks
         this.data = null;
         this.data = newData;
-        this.chart.data[0].dataPoints = null
-        this.chart.data[0].dataPoints = newData
+        this.chart = null;
+        this.initchart();
         this.chart.render()
     }
 
@@ -81,7 +82,6 @@ export default class MagChart {
                 }
             },
         })
-
     }
 
     doubleClickHandler(e) {

@@ -16,48 +16,39 @@ window.addEventListener("DOMContentLoaded", (event) => {
         },
         buttons: {
             showToday: true,
-        }
+        },
+        maxDate: moment("2019-06-20T00:00:00.000")
     })
 
     $("#datetimepicker2").datetimepicker({
         locale: 'fr',
     });
 
+    let datetimepicker1LastUpdate = Date.now();
+
     const selector = document.getElementById("dateRangeSelector")
     $("#datetimepicker1").datetimepicker("date", moment().format("DD/MM/YYYY H:mm"))
     $("#datetimepicker2").datetimepicker("date", $("#datetimepicker1").datetimepicker("date").add(parseInt(selector.value[0]), selector.value[1]))
     $("#datetimepicker1").on("change.datetimepicker", (e) => {
-        const selector = document.getElementById("dateRangeSelector")
-        $("#datetimepicker2").datetimepicker("date", $("#datetimepicker1").datetimepicker("date").add(parseInt(selector.value[0]), selector.value[1]));
+        const time = Date.now();
+        if (time - datetimepicker1LastUpdate > 1000) {
+            datetimepicker1LastUpdate = time;
+            const selector = document.getElementById("dateRangeSelector")
+            $("#datetimepicker2").datetimepicker("date", $("#datetimepicker1").datetimepicker("date").add(parseInt(selector.value[0]), selector.value[1]));
+            $("#datetimepicker1").datetimepicker("hide");
+            const posix = $("#datetimepicker1").datetimepicker("date").toDate().getTime() / 1000;
+            fetchAndPlot("1day", posix)
+
+        }
     })
 
     $("#dateRangeSelector").change((e) => {
         $("#datetimepicker2").datetimepicker("date", $("#datetimepicker1").datetimepicker("date").add(parseInt(e.target.value[0]), e.target.value[1]))
     })
 
-    /**
-     * @type {Charts}
-     */
     let charts = null;
-    const fetchDataButton = document.getElementsByClassName("fetchDataButton");
-    for (let button of fetchDataButton) {
-        button.onclick = function () {
-            fetchAndPlot(button.id)
-        }
-    }
-
     const navbarConiatiner = document.getElementById("navbarContainer")
-    const base = new Component();
-    const comp = new Button("Btn");
     const navbarLink = new NavLink("Nav link", "#", { active: true })
-    comp.onclick((e) => {
-        comp.baseHTMLElement.disabled = true;
-        setTimeout(() => {
-            comp.baseHTMLElement.disabled = false;
-        }, 1000);
-    });
-    base.appendChildren(comp);
-    base.draw(document.getElementById("text_comp"));
     navbarLink.draw(navbarConiatiner)
 
     CanvasJS.addCultureInfo("fr", {
@@ -71,9 +62,8 @@ window.addEventListener("DOMContentLoaded", (event) => {
         ShoreMonths: ["Jan", "Fév", "Mar", "Avr", "Mai", "Juin", "Juil", "Août", "Sept", "Oct", "Nov", "Déc"]
     })
 
-    function fetchAndPlot(type) {
+    function fetchAndPlot(type, posix) {
         let file = "";
-        const posix = Date.UTC(2019, 5, 13) / 1000; // Attention, les mois commencent à zéro
         if (type === "5min") file = `http://localhost/magxx/api/data/CLF3/${posix}/env`;
         else if (type === "1day") file = `http://localhost/magxx/api/data/CLF3/${posix}/raw`;
         const plot_time = Date.now();
@@ -83,9 +73,14 @@ window.addEventListener("DOMContentLoaded", (event) => {
                 resJson.pop();
                 if (resJson[0].type === "raw") {
                     console.log("Init charts duration: ", Date.now() - plot_time, "ms")
-                    if (charts != null) charts.__createPlots(resJson, true)
-                    charts = new Charts(resJson, "magxx_plots");
-                    console.log("Got all data", "Begin plotting ...");
+                    // if (charts != null) charts.charts = []
+                    if (charts != null) charts.__createPlots(resJson)
+                    else {
+                        console.log("Got all data", "Begin plotting ...");
+                        charts = new Charts(resJson, "magxx_plots");
+                        console.log(charts);
+                        resJson = null;
+                    }
                 } else {
                     const alert = document.createElement('div');
                     alert.classList.add('alert', "alert-danger", "alert-fixed", "alert-dismissible");
