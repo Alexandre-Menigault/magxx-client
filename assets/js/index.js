@@ -17,22 +17,50 @@ window.addEventListener("DOMContentLoaded", (event) => {
         buttons: {
             showToday: true,
         },
-        maxDate: moment("2019-06-20T00:00:00.000")
+        maxDate: moment("2019-06-24T23:59:59.999"),
+        minDate: moment("2019-01-01T00:00:00.000"),
+        tooltips: {
+            today: "Ajouurd'hui",
+            close: 'Fermer',
+            selectMonth: 'Selectionner mois',
+            prevMonth: 'Mois précédent',
+            nextMonth: 'Mois suivant',
+            selectYear: 'Sélectionner année',
+            prevYear: 'Année précédente',
+            nextYear: 'Année suivante',
+            incrementHour: 'Incrémenter heure',
+            pickHour: 'Choisir heure',
+            decrementHour: 'Décrémenter heure',
+            incrementMinute: 'Incrémenter minute',
+            pickMinute: 'Choisir minute',
+            decrementMinute: 'Décrémenter minute',
+            incrementSecond: 'Incrémenter seconde',
+            pickSecond: 'Choisir seconde',
+            decrementSecond: 'Décrémenter seconde',
+            selectTime: "Sélectionner temps",
+            selectDate: "Sélectionner date"
+        },
+        keepOpen: false
     })
 
     $("#datetimepicker2").datetimepicker({
         locale: 'fr',
+        maxDate: moment("2019-06-24T23:59:59.999"),
+        minDate: moment("2019-01-01T00:00:00.000"),
+        keepInvalid: true
     });
 
+    let lastDate = "";
     let datetimepicker1LastUpdate = Date.now();
 
     const selector = document.getElementById("dateRangeSelector")
     $("#datetimepicker1").datetimepicker("date", moment().format("DD/MM/YYYY H:mm"))
     $("#datetimepicker2").datetimepicker("date", $("#datetimepicker1").datetimepicker("date").add(parseInt(selector.value[0]), selector.value[1]))
-    $("#datetimepicker1").on("change.datetimepicker", (e) => {
+    $("#datetimepicker1").on("hide.datetimepicker", (e) => {
         const time = Date.now();
-        if (time - datetimepicker1LastUpdate > 1000) {
+        if (lastDate != $("#datetimepicker1").val() && time - datetimepicker1LastUpdate > 1000) {
             datetimepicker1LastUpdate = time;
+            lastDate = $("#datetimepicker1").val()
             const selector = document.getElementById("dateRangeSelector")
             $("#datetimepicker2").datetimepicker("date", $("#datetimepicker1").datetimepicker("date").add(parseInt(selector.value[0]), selector.value[1]));
             $("#datetimepicker1").datetimepicker("hide");
