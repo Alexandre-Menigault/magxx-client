@@ -93,7 +93,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
     function fetchAndPlot(type, posix) {
         let file = "";
         if (type === "5min") file = `http://localhost/magxx/api/data/CLF3/${posix}/env`;
-        else if (type === "1day") file = `http://localhost/magxx/api/data/CLF3/${posix}/raw`;
+        else if (type === "1day") file = `http://localhost/magxx/api/data/CLF3/${posix}/raw?interval=${$("#dateRangeSelector").val()}`;
         const plot_time = Date.now();
         fetch(file)
             .then((response) => { return response.json() })
