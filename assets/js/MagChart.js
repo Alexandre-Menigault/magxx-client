@@ -46,7 +46,8 @@ export default class MagChart {
             axisX: {
                 valueFormatString: "DD MMM YYYY HH:mm:ss",
                 labelFormatter: (e) => {
-                    return CanvasJS.formatDate(e.value - (-e.value.getTimezoneOffset() * 60 * 1000), "DD MMMM YYYY HH:mm:ss", e.chart.culture)
+                    return ""
+                    // return CanvasJS.formatDate(e.value - (-e.value.getTimezoneOffset() * 60 * 1000), "DD MMMM YYYY HH:mm:ss", e.chart.culture)
                 }
             },
             legend: {
