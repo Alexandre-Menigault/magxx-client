@@ -19,6 +19,10 @@ export default class MagChart {
         this.canvas.id = "canvas" + options.type
         this.canvas.classList.add("canvas-container", "mx-0", "container-fluid", "bd-highlight")
         this.canvas.ondblclick = this.doubleClickHandler.bind(this);
+        this.canvas.onmousedown = this.mouseDownHandler.bind(this);
+        this.canvas.onmouseup = this.mouseUpHandler.bind(this);
+        this.canvas.onmousemove = this.mouseMoveHandler.bind(this);
+        this.canvas.oncontextmenu = function (e) { return false; }
         this.parent = parent
         this.parent.container.appendChild(this.canvas)
         this.options = options;
@@ -26,6 +30,8 @@ export default class MagChart {
 
         this.initchart();
 
+        this._striplines = [-1, -1]
+        this._isSelecting
     }
 
     updateData(newData) {
@@ -46,9 +52,16 @@ export default class MagChart {
             axisX: {
                 valueFormatString: "DD MMM YYYY HH:mm:ss",
                 labelFormatter: (e) => {
-                    return ""
-                    // return CanvasJS.formatDate(e.value - (-e.value.getTimezoneOffset() * 60 * 1000), "DD MMMM YYYY HH:mm:ss", e.chart.culture)
-                }
+                    // return ""
+                    return CanvasJS.formatDate(e.value - (-e.value.getTimezoneOffset() * 60 * 1000), "DD MMMM YYYY HH:mm:ss", e.chart.culture)
+                },
+                stripLines: [{
+                    color: "#000",
+                    showOnTop: true,
+                    thickness: 2,
+                    opacity: 0.5,
+                    lineDashType: "solid",
+                }]
             },
             legend: {
                 dockInsidePlotArea: false,
@@ -62,7 +75,7 @@ export default class MagChart {
                 markerType: "circle",
                 markerSize: null,
                 dataPoints: this.data,
-                xValueType: "dateTime",
+                // xValueType: "dateTime",
                 showInLegend: true,
                 xValueFormatString: "DD MMMM YYYY HH:mm:ss",
             }],
@@ -72,9 +85,9 @@ export default class MagChart {
                 },
             },
             panEnabled: false,
-            zoomEnabled: true,
-            zoomType: "x",
-            rangeChanging: this.resizeHandler.bind(this),
+            // zoomEnabled: true,
+            // zoomType: "x",
+            // rangeChanging: this.resizeHandler.bind(this),
             toolTip: {
                 contentFormatter: function (e) {
                     return `<strong style="color: ${e.entries[0].dataSeries.color}">
@@ -86,8 +99,64 @@ export default class MagChart {
     }
 
     doubleClickHandler(e) {
+        this._striplines = [-1, -1];
         this.resizeHandler({ trigger: "reset", chart: this.chart })
-        this.chart.render()
+        // this.chart.render()
+    }
+
+    mouseDownHandler(e) {
+        if (e.button == 0 && !this._isSelecting) {
+            const c = $(this.canvas).find(".canvasjs-chart-canvas").first();
+            const parentOffset = c.parent().offset();
+            const relX = e.pageX - parentOffset.left;
+            const xVal = Math.round(this.chart.axisX[0].convertPixelToValue(relX))
+            this._striplines[0] = xVal;
+            this._isSelecting = true;
+        }
+    }
+    mouseMoveHandler(e) {
+        if (e.buttons == 1 && this._isSelecting) {
+
+            const c = $(this.canvas).find(".canvasjs-chart-canvas").first();
+            const parentOffset = c.parent().offset();
+            const relX = e.pageX - parentOffset.left;
+            const xVal = Math.round(this.chart.axisX[0].convertPixelToValue(relX))
+            this._striplines[1] = xVal;
+            if (this._striplines[0] < this._striplines[1]) {
+                this.chart.axisX[0].stripLines[0].set("startValue", this._striplines[0], false)
+                this.chart.axisX[0].stripLines[0].set("endValue", this._striplines[1])
+            } else {
+                this.chart.axisX[0].stripLines[0].set("startValue", this._striplines[1], false)
+                this.chart.axisX[0].stripLines[0].set("endValue", this._striplines[0])
+            }
+
+        }
+    }
+
+    mouseUpHandler(e) {
+        if (e.button == 0 && this._isSelecting) {
+            this._isSelecting = false;
+            const startValue = this.chart.axisX[0].stripLines[0].get("startValue")
+            const endValue = this.chart.axisX[0].stripLines[0].get("endValue")
+
+            this.parent.charts.forEach((c, i) => {
+                const chart = c.chart;
+                chart.axisX[0].stripLines[0].set("startValue", startValue, false)
+                chart.axisX[0].stripLines[0].set("endValue", endValue)
+            })
+        } else if (e.button == 2 && !this._isSelecting) {
+            const startValue = this.chart.axisX[0].stripLines[0].get("startValue")
+            const endValue = this.chart.axisX[0].stripLines[0].get("endValue")
+            this.parent.charts.forEach((c, i) => {
+                const chart = c.chart;
+
+                chart.axisX[0].set("viewportMinimum", startValue, false)
+                chart.axisX[0].set("viewportMaximum", endValue, false)
+
+                chart.axisX[0].stripLines[0].set("startValue", null, false)
+                chart.axisX[0].stripLines[0].set("endValue", null)
+            })
+        }
     }
 
     resizeHandler(e) {
@@ -101,7 +170,6 @@ export default class MagChart {
             if (!chart.options.axisY)
                 chart.options.axisY = {};
 
-            MagChart.handleMarkers(chart, e, count)
             if (e.trigger === "reset") {
                 chart.options.axisX.viewportMinimum = chart.options.axisX.viewportMaximum = null;
                 chart.options.axisY.viewportMinimum = chart.options.axisY.viewportMaximum = null;
@@ -110,16 +178,17 @@ export default class MagChart {
                 chart.options.axisX.viewportMinimum = e.axisX[0].viewportMinimum;
                 chart.options.axisX.viewportMaximum = e.axisX[0].viewportMaximum;
                 chart.render();
+            } else {
+                chart.render();
             }
-            chart.render();
+            MagChart.handleMarkers(chart, e, count)
         })
     }
 
     static handleMarkers(chart, e, count) {
         chart.data[0].dataPoints.forEach((point, i) => {
-            if (e.trigger != "reset" &&
-                count < 500 &&
-                ((point.x >= e.axisX[0].viewportMinimum) && (point.x <= e.axisX[0].viewportMaximum))) {
+            if (e.trigger != "reset" && count < 500 &&
+                ((point.x >= e.chart.axisX[0].viewportMinimum) && (point.x <= e.chart.axisX[0].viewportMaximum))) {
                 chart.data[0].dataPoints[i].markerType = "circle";
                 chart.data[0].dataPoints[i].markerSize = 6;
             } else {

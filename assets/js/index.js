@@ -106,7 +106,6 @@ window.addEventListener("DOMContentLoaded", (event) => {
                     else {
                         console.log("Got all data", "Begin plotting ...");
                         charts = new Charts(resJson, "magxx_plots");
-                        console.log(charts);
                         resJson = null;
                     }
                 } else {
