@@ -156,6 +156,7 @@ export default class MagChart {
                 chart.axisX[0].stripLines[0].set("startValue", null, false)
                 chart.axisX[0].stripLines[0].set("endValue", null)
             })
+            this.resizeHandler({ trigger: "zoom", axisX: this.chart.axisX, chart: this.chart })
         }
     }
 
@@ -173,22 +174,24 @@ export default class MagChart {
             if (e.trigger === "reset") {
                 chart.options.axisX.viewportMinimum = chart.options.axisX.viewportMaximum = null;
                 chart.options.axisY.viewportMinimum = chart.options.axisY.viewportMaximum = null;
+                MagChart.handleMarkers(chart, e, count)
                 chart.render();
             } else if (chart !== e.chart) {
                 chart.options.axisX.viewportMinimum = e.axisX[0].viewportMinimum;
                 chart.options.axisX.viewportMaximum = e.axisX[0].viewportMaximum;
+                MagChart.handleMarkers(chart, e, count)
                 chart.render();
             } else {
+                MagChart.handleMarkers(chart, e, count)
                 chart.render();
             }
-            MagChart.handleMarkers(chart, e, count)
         })
     }
 
     static handleMarkers(chart, e, count) {
         chart.data[0].dataPoints.forEach((point, i) => {
             if (e.trigger != "reset" && count < 500 &&
-                ((point.x >= e.chart.axisX[0].viewportMinimum) && (point.x <= e.chart.axisX[0].viewportMaximum))) {
+                ((point.x >= new Date(e.chart.axisX[0].viewportMinimum)) && (point.x <= new Date(e.chart.axisX[0].viewportMaximum)))) {
                 chart.data[0].dataPoints[i].markerType = "circle";
                 chart.data[0].dataPoints[i].markerSize = 6;
             } else {
