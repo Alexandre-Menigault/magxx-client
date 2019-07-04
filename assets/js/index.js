@@ -5,6 +5,9 @@ import NavLink from './components/navLinkComponent.js';
 
 window.addEventListener("DOMContentLoaded", (event) => {
 
+
+    // ================== Start UI creation =================
+
     $("#datetimepicker1").val("")
     $("#datetimepicker2").val("")
     $("#datetimepicker1").datetimepicker({
@@ -65,7 +68,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
             $("#datetimepicker2").datetimepicker("date", $("#datetimepicker1").datetimepicker("date").add(parseInt(selector.value[0]), selector.value[1]));
             $("#datetimepicker1").datetimepicker("hide");
             const posix = $("#datetimepicker1").datetimepicker("date").toDate().getTime() / 1000;
-            fetchAndPlot("1day", posix)
+            fetchAndPlot("raw", posix)
 
         }
     })
@@ -89,26 +92,29 @@ window.addEventListener("DOMContentLoaded", (event) => {
         months: ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"],
         ShoreMonths: ["Jan", "Fév", "Mar", "Avr", "Mai", "Juin", "Juil", "Août", "Sept", "Oct", "Nov", "Déc"]
     })
+    // ================== End UI creation =================
 
+    /**
+     * 
+     * @param {string} type 
+     * @param {number} posix 
+     */
     function fetchAndPlot(type, posix) {
-        let file = "";
-        if (type === "5min") file = `http://localhost/magxx/api/data/CLF3/${posix}/env`;
-        else if (type === "1day") file = `http://localhost/magxx/api/data/CLF3/${posix}/raw?interval=${$("#dateRangeSelector").val()}`;
-        const plot_time = Date.now();
+        let file = `http://localhost/magxx/api/data/CLF3/${posix}/${type}?interval=${$("#dateRangeSelector").val()}`;
+        // Appel de l'api (asynchrone)
         fetch(file)
             .then((response) => { return response.json() })
             .then((resJson) => {
-                resJson.pop();
+                resJson.pop(); // TO-FIX: On retire le dernier élement car il est vide
                 if (resJson[0].type === "raw") {
-                    console.log("Init charts duration: ", Date.now() - plot_time, "ms")
-                    // if (charts != null) charts.charts = []
+                    // On réutilise le plot déjà exisnant en lui passant un nouveau jeu de données
                     if (charts != null) charts.__createPlots(resJson)
                     else {
-                        console.log("Got all data", "Begin plotting ...");
                         charts = new Charts(resJson, "magxx_plots");
-                        resJson = null;
+                        resJson = null; // Libère la mémoire (TO-MONITOR: est-ce utile ?)
                     }
                 } else {
+                    // TODO: display env and log data in tables instead of displaying error
                     const alert = document.createElement('div');
                     alert.classList.add('alert', "alert-danger", "alert-fixed", "alert-dismissible");
                     const e = new Error("Error on fetch raw data. Got env, expected raw");
@@ -130,9 +136,6 @@ ${e.stack}
                     setTimeout(() => {
                         document.body.removeChild(alert);
                     }, 3000)
-                    // Don't plot log or env data
-                    // const magxx_text = document.getElementById("magxx_text");
-                    // magxx_text.textContent = JSON.stringify(resJson, null, 4);
                 }
             });
     }

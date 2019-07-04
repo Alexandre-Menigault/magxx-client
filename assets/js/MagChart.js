@@ -1,10 +1,17 @@
-export default class MagChart {
+/**
+ * @class MagChart
+ * @property {HTMLElement} canvas - The container of the canvas
+ * @property {Charts} parent
+ * @property {object} options
+ * @property {ChartData[]} data
+ */
+class MagChart {
 
     /**
-     * 
-     * @typedef ChartData
-     * @property {Date} x
-     * @property {number} y
+     * @typedef {Object} ChartEvent
+     * @property {Chart} chart 
+     * @property {string} trigger
+     * @property {Object[]} axisX
      */
 
     /**
@@ -12,7 +19,6 @@ export default class MagChart {
      * @param {ChartData[]} data
      * @param {Object} options
      * @param {Charts} parent
-     * @memberof MagChart
      */
     constructor(data, options, parent) {
         this.canvas = document.createElement("div");
@@ -34,6 +40,12 @@ export default class MagChart {
         this._isSelecting
     }
 
+    /**
+     * Updates the data used by the plot instead of creating an other one<br/>
+     * Chart must exists before updating
+     * 
+     * @param {ChartData} newData
+     */
     updateData(newData) {
         this.chart.destroy(); // Destroy previous chart to prevent memory leaks
         this.data = null;
@@ -43,6 +55,12 @@ export default class MagChart {
         this.chart.render()
     }
 
+
+    /**
+     * Initialize the plots with data<br/>
+     * Configures the Canvasjs lib
+     *
+     */
     initchart() {
         this.chart = new CanvasJS.Chart(this.canvas, {
             culture: "fr",
@@ -52,7 +70,7 @@ export default class MagChart {
             axisX: {
                 valueFormatString: "DD MMM YYYY HH:mm:ss",
                 labelFormatter: (e) => {
-                    // return ""
+                    // TODO: Display only to the last (or first) plot to save screen space
                     return CanvasJS.formatDate(e.value - (-e.value.getTimezoneOffset() * 60 * 1000), "DD MMMM YYYY HH:mm:ss", e.chart.culture)
                 },
                 stripLines: [{
@@ -75,7 +93,7 @@ export default class MagChart {
                 markerType: "circle",
                 markerSize: null,
                 dataPoints: this.data,
-                // xValueType: "dateTime",
+                xValueType: "dateTime",
                 showInLegend: true,
                 xValueFormatString: "DD MMMM YYYY HH:mm:ss",
             }],
@@ -85,9 +103,13 @@ export default class MagChart {
                 },
             },
             panEnabled: false,
+            // ===============================================================
+            // If we want to use zoom only, not select and zoom on right click
+            // ===============================================================
             // zoomEnabled: true,
             // zoomType: "x",
             // rangeChanging: this.resizeHandler.bind(this),
+            // ===============================================================
             toolTip: {
                 contentFormatter: function (e) {
                     return `<strong style="color: ${e.entries[0].dataSeries.color}">
@@ -98,12 +120,21 @@ export default class MagChart {
         })
     }
 
+    /**
+     * Reset the zoom level of the chart on double click on the chart<br/>
+     * Calls the resize handler afterwards
+     * @param {MouseEvent} e
+     */
     doubleClickHandler(e) {
         this._striplines = [-1, -1];
         this.resizeHandler({ trigger: "reset", chart: this.chart })
-        // this.chart.render()
     }
 
+    /**
+     *  Start the selection with the left click
+     * 
+     * @param {MouseEvent} e
+     */
     mouseDownHandler(e) {
         if (e.button == 0 && !this._isSelecting) {
             const c = $(this.canvas).find(".canvasjs-chart-canvas").first();
@@ -114,6 +145,12 @@ export default class MagChart {
             this._isSelecting = true;
         }
     }
+
+    /**
+     *  Update the selection and update the selection canvas
+     *
+     * @param {MouseEvent} e
+     */
     mouseMoveHandler(e) {
         if (e.buttons == 1 && this._isSelecting) {
 
@@ -133,6 +170,12 @@ export default class MagChart {
         }
     }
 
+    /**
+     * If leftclick: Ends the selection process and updates the selection canvas<br/>
+     * If rightlick: Zoom in the chart if there is a selection range
+     *
+     * @param {MouseEvent} e
+     */
     mouseUpHandler(e) {
         if (e.button == 0 && this._isSelecting) {
             this._isSelecting = false;
@@ -160,16 +203,15 @@ export default class MagChart {
         }
     }
 
+    /**
+     * Zoom-in the chart or reset the zoom level by default
+     *
+     * @param {ChartEvent} e
+     */
     resizeHandler(e) {
-        // Handle chart markers
         const count = MagChart.countVisiblePoints(this.chart, e);
         this.parent.charts.forEach((chart, i) => {
             chart = chart.chart;
-            if (!chart.options.axisX)
-                chart.options.axisX = {};
-
-            if (!chart.options.axisY)
-                chart.options.axisY = {};
 
             if (e.trigger === "reset") {
                 chart.options.axisX.viewportMinimum = chart.options.axisX.viewportMaximum = null;
@@ -188,6 +230,16 @@ export default class MagChart {
         })
     }
 
+    /**
+     * Handles where the markers will be displayed<br/>
+     * When the number of displayed points is less than the count param it puts markers on the displayed points<br/>
+     * Else it clears all the markers 
+     *
+     * @static
+     * @param {Chart} chart
+     * @param {ChartEvent} e
+     * @param {number} count - Max number of displayed markers. Prevents high memory usage
+     */
     static handleMarkers(chart, e, count) {
         chart.data[0].dataPoints.forEach((point, i) => {
             if (e.trigger != "reset" && count < 500 &&
@@ -201,6 +253,15 @@ export default class MagChart {
         })
     }
 
+    /**
+     *  Count the number of visible points in the plot<br/>
+     * Returns null if the event trigger is "reset"
+     *
+     * @static
+     * @param {Chart} chart
+     * @param {ChartEvent} e
+     * @returns {number|null} Number of displayed points in the chart. Or null if trigger is "reset"
+     */
     static countVisiblePoints(chart, e) {
         if (e.trigger == "reset") return null
         const min = new Date(e.axisX[0].viewportMinimum);
@@ -216,3 +277,5 @@ export default class MagChart {
 
 
 }
+
+export default MagChart;
