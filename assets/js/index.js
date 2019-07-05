@@ -65,7 +65,9 @@ window.addEventListener("DOMContentLoaded", (event) => {
             datetimepicker1LastUpdate = time;
             lastDate = $("#datetimepicker1").val()
             const selector = document.getElementById("dateRangeSelector")
+            if (selector.value[1] == "d") $("#datetimepicker1").datetimepicker("date", $("#datetimepicker1").datetimepicker("date").set({ hour: 0, minute: 0, second: 0, millisecond: 0 }))
             $("#datetimepicker2").datetimepicker("date", $("#datetimepicker1").datetimepicker("date").add(parseInt(selector.value[0]), selector.value[1]));
+            if (selector.value[1] == "d") $("#datetimepicker2").datetimepicker("date", $("#datetimepicker2").datetimepicker("date").subtract(1, "second"));
             $("#datetimepicker1").datetimepicker("hide");
             const posix = $("#datetimepicker1").datetimepicker("date").toDate().getTime() / 1000;
             fetchAndPlot("raw", posix)
