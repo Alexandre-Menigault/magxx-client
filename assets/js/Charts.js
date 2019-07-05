@@ -103,7 +103,7 @@ class Charts {
 
         console.log("Zoom in")
         if (chart != null) {
-            if (this.zoomHistory.viewportRanges.length - 1 != this.zoomHistory.currentIndex) this.zoomHistory.viewportRanges = this.zoomHistory.viewportRanges.splice(0, this.zoomHistory.currentIndex)
+            if (this.zoomHistory.viewportRanges.length - 1 != this.zoomHistory.currentIndex) this.zoomHistory.viewportRanges.splice(this.zoomHistory.currentIndex + 1)
             this.zoomHistory.viewportRanges.push({
                 minimum: chart.chart.axisX[0].viewportMinimum,
                 maximum: chart.chart.axisX[0].viewportMaximum

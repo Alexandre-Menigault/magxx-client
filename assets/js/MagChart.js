@@ -30,7 +30,7 @@ class MagChart {
         this.canvas.onmousedown = this.mouseDownHandler.bind(this);
         this.canvas.onmouseup = this.mouseUpHandler.bind(this);
         this.canvas.onmousemove = this.mouseMoveHandler.bind(this);
-        this.canvas.onwheel = this.keyDownHandler.bind(this)
+        this.canvas.onwheel = this.wheelHandler.bind(this)
         this.canvas.oncontextmenu = function (e) { return false; }
         this.parent = parent
         this.parent.container.appendChild(this.canvas)
@@ -139,8 +139,8 @@ class MagChart {
      *
      * @param {KeyboardEvent} e
      */
-    keyDownHandler(e) {
-        if (e.deltaY < 0) {
+    wheelHandler(e) {
+        if (e.deltaY > 0) {
             if (this.parent.zoomOut())
                 if (this.parent.zoomHistory.currentIndex == -1)
                     this.resizeHandler({ trigger: "reset", chart: this.chart })
@@ -151,7 +151,7 @@ class MagChart {
                             viewportMinimum: this.parent.zoomHistory.viewportRanges[this.parent.zoomHistory.currentIndex].minimum,
                         }]
                     })
-        } else if (e.deltaY > 0) {
+        } else if (e.deltaY < 0) {
             if (this.parent.zoomIn())
                 this.resizeHandler({
                     trigger: "zoom", chart: this.chart, axisX: [{
