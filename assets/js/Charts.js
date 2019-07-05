@@ -7,9 +7,23 @@ import MagChart from './MagChart.js'
  * @property {number} y - The value of the magnetic component (e.g: X, Y, Z, Fv-Fs)
  */
 
+/**
+ * @export
+ * @typedef {Object} ViewportRange The descriptor of a chart viewport range
+ * @property {number} minimum - The minimum range
+ * @property {number} maximum - The maximum range
+ */
 
 /**
- * 
+* @export
+* @typedef {Object} ZoomHistory The descriptor of the zoom history of charts
+* @property {number} currentIndex - The current index of history (-1 means no history)
+* @property {ViewportRange[]} viewportRanges - The saved viewport ranges
+*/
+
+
+/**
+ * @export
  * @typedef {Object} MagData The descriptor of one Mag measure 
  * @property {number} posix - The timestamp of the measure (UTC)
  * @property {number} x - The x value
@@ -25,11 +39,9 @@ import MagChart from './MagChart.js'
  * @class Charts
  * @property {MagChart[]} charts - All charts
  * @property {HTMLElement} container - The container of all charts
+ * @property {ZoomHistory} zoomHistory - The zoom history
  */
 class Charts {
-
-
-
     /**
      * Creates an instance of Charts.
      * Holds every chart
@@ -49,6 +61,11 @@ class Charts {
      * @private
      */
     __createPlots(jsonData) {
+
+        this.zoomHistory = {
+            currentIndex: -1,
+            viewportRanges: []
+        }
         let headers = jsonData[0].header
         // On supprime les headers posix et ms pour ne pas créer de plots avec ces données
         headers.splice(0, 2)
@@ -75,6 +92,41 @@ class Charts {
         }
     }
 
+    /**
+     * Zooms in chart<br/>
+     * If chart is provided, 
+     *
+     * @param {MagChart} [chart=null]
+     * @memberof Charts
+     */
+    zoomIn(chart = null) {
+
+        console.log("Zoom in")
+        if (chart != null) {
+            if (this.zoomHistory.viewportRanges.length - 1 != this.zoomHistory.currentIndex) this.zoomHistory.viewportRanges = this.zoomHistory.viewportRanges.splice(0, this.zoomHistory.currentIndex)
+            this.zoomHistory.viewportRanges.push({
+                minimum: chart.chart.axisX[0].viewportMinimum,
+                maximum: chart.chart.axisX[0].viewportMaximum
+            })
+            this.zoomHistory.currentIndex = this.zoomHistory.viewportRanges.length - 1;
+        } else {
+            if (this.zoomHistory.viewportRanges.length - 1 <= this.zoomHistory.currentIndex)
+                return false
+            this.zoomHistory.currentIndex++;
+        }
+        return true
+    }
+    zoomOut() {
+        console.log("Zoom Out")
+        if (this.zoomHistory.currentIndex <= -1)
+            return false
+        this.zoomHistory.currentIndex--;
+        return true;
+    }
+    resetZoom() {
+        this.zoomHistory.currentIndex = -1;
+        this.zoomHistory.viewportRanges = [];
+    }
 }
 
 export default Charts

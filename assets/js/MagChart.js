@@ -1,3 +1,5 @@
+import Charts from "./Charts.js"
+
 /**
  * @class MagChart
  * @property {HTMLElement} canvas - The container of the canvas
@@ -28,6 +30,7 @@ class MagChart {
         this.canvas.onmousedown = this.mouseDownHandler.bind(this);
         this.canvas.onmouseup = this.mouseUpHandler.bind(this);
         this.canvas.onmousemove = this.mouseMoveHandler.bind(this);
+        this.canvas.onwheel = this.keyDownHandler.bind(this)
         this.canvas.oncontextmenu = function (e) { return false; }
         this.parent = parent
         this.parent.container.appendChild(this.canvas)
@@ -127,7 +130,37 @@ class MagChart {
      */
     doubleClickHandler(e) {
         this._striplines = [-1, -1];
+        this.parent.resetZoom()
         this.resizeHandler({ trigger: "reset", chart: this.chart })
+    }
+
+    /**
+     *
+     *
+     * @param {KeyboardEvent} e
+     */
+    keyDownHandler(e) {
+        if (e.deltaY < 0) {
+            if (this.parent.zoomOut())
+                if (this.parent.zoomHistory.currentIndex == -1)
+                    this.resizeHandler({ trigger: "reset", chart: this.chart })
+                else
+                    this.resizeHandler({
+                        trigger: "zoom-out", chart: this.chart, axisX: [{
+                            viewportMaximum: this.parent.zoomHistory.viewportRanges[this.parent.zoomHistory.currentIndex].maximum,
+                            viewportMinimum: this.parent.zoomHistory.viewportRanges[this.parent.zoomHistory.currentIndex].minimum,
+                        }]
+                    })
+        } else if (e.deltaY > 0) {
+            if (this.parent.zoomIn())
+                this.resizeHandler({
+                    trigger: "zoom", chart: this.chart, axisX: [{
+                        viewportMaximum: this.parent.zoomHistory.viewportRanges[this.parent.zoomHistory.currentIndex].maximum,
+                        viewportMinimum: this.parent.zoomHistory.viewportRanges[this.parent.zoomHistory.currentIndex].minimum,
+                    }]
+                })
+        }
+        console.log(this.parent.zoomHistory)
     }
 
     /**
@@ -199,6 +232,7 @@ class MagChart {
                 chart.axisX[0].stripLines[0].set("startValue", null, false)
                 chart.axisX[0].stripLines[0].set("endValue", null)
             })
+            this.parent.zoomIn(this)
             this.resizeHandler({ trigger: "zoom", axisX: this.chart.axisX, chart: this.chart })
         }
     }
@@ -210,23 +244,18 @@ class MagChart {
      */
     resizeHandler(e) {
         const count = MagChart.countVisiblePoints(this.chart, e);
+        console.log(this.parent.zoomHistory)
         this.parent.charts.forEach((chart, i) => {
             chart = chart.chart;
-
             if (e.trigger === "reset") {
                 chart.options.axisX.viewportMinimum = chart.options.axisX.viewportMaximum = null;
                 chart.options.axisY.viewportMinimum = chart.options.axisY.viewportMaximum = null;
-                MagChart.handleMarkers(chart, e, count)
-                chart.render();
-            } else if (chart !== e.chart) {
+            } else {
                 chart.options.axisX.viewportMinimum = e.axisX[0].viewportMinimum;
                 chart.options.axisX.viewportMaximum = e.axisX[0].viewportMaximum;
-                MagChart.handleMarkers(chart, e, count)
-                chart.render();
-            } else {
-                MagChart.handleMarkers(chart, e, count)
-                chart.render();
             }
+            MagChart.handleMarkers(chart, e, count)
+            chart.render();
         })
     }
 
