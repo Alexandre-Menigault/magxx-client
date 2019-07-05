@@ -59,9 +59,16 @@ window.addEventListener("DOMContentLoaded", (event) => {
     const selector = document.getElementById("dateRangeSelector")
     $("#datetimepicker1").datetimepicker("date", moment().format("DD/MM/YYYY H:mm"))
     $("#datetimepicker2").datetimepicker("date", $("#datetimepicker1").datetimepicker("date").add(parseInt(selector.value[0]), selector.value[1]))
-    $("#datetimepicker1").on("hide.datetimepicker", (e) => {
+    $("#datetimepicker1").on("hide.datetimepicker", prepareFetch)
+
+    $("#dateRangeSelector").change((e) => {
+        $("#datetimepicker2").datetimepicker("date", $("#datetimepicker1").datetimepicker("date").add(parseInt(e.target.value[0]), e.target.value[1]))
+        prepareFetch()
+    })
+
+    function prepareFetch(e) {
         const time = Date.now();
-        if (lastDate != $("#datetimepicker1").val() && time - datetimepicker1LastUpdate > 1000) {
+        if (time - datetimepicker1LastUpdate > 1000) {
             datetimepicker1LastUpdate = time;
             lastDate = $("#datetimepicker1").val()
             const selector = document.getElementById("dateRangeSelector")
@@ -73,11 +80,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
             fetchAndPlot("raw", posix)
 
         }
-    })
-
-    $("#dateRangeSelector").change((e) => {
-        $("#datetimepicker2").datetimepicker("date", $("#datetimepicker1").datetimepicker("date").add(parseInt(e.target.value[0]), e.target.value[1]))
-    })
+    }
 
     let charts = null;
     const navbarConiatiner = document.getElementById("navbarContainer")
