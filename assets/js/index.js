@@ -6,21 +6,21 @@ import NavLink from './components/navLinkComponent.js';
 window.addEventListener("DOMContentLoaded", (event) => {
 
 
+    let pages = { graph: "/magxx-client/", env: "/magxx-client/env.html", log: "/magxx-client/log.html" }
+
+
     // ================== Start UI creation =================
 
     $("#datetimepicker1").val("")
     $("#datetimepicker2").val("")
     $("#datetimepicker1").datetimepicker({
         locale: 'fr',
-        useCurrent: "minute",
+        // useCurrent: "minute",
         icons: {
             time: 'fa fa-clock',
             today: 'fa fa-calendar-check',
         },
-        buttons: {
-            showToday: true,
-        },
-        maxDate: moment("2019-07-07T23:59:59.999"),
+        maxDate: moment("2019-07-08T23:59:59.999"),
         minDate: moment("2019-01-01T00:00:00.000"),
         tooltips: {
             today: "Ajouurd'hui",
@@ -48,10 +48,17 @@ window.addEventListener("DOMContentLoaded", (event) => {
 
     $("#datetimepicker2").datetimepicker({
         locale: 'fr',
-        maxDate: moment("2019-07-08T23:59:59.999"),
+        maxDate: moment("2019-07-09T00:00:00.000"),
         minDate: moment("2019-01-01T00:00:00.000"),
         keepInvalid: true
     });
+
+    if (sessionStorage.getItem("startDate")) {
+        const interval = sessionStorage.getItem("interval");
+        $("#dateRangeSelector").val(interval)
+        $("#datetimepicker1").datetimepicker("date", (moment(sessionStorage.getItem("startDate"))))
+        $("#datetimepicker2").datetimepicker("date", moment(sessionStorage.getItem("startDate")).add(parseInt(interval[0]), interval[1]))
+    }
 
     let lastDate = "";
     let datetimepicker1LastUpdate = Date.now();
@@ -67,8 +74,10 @@ window.addEventListener("DOMContentLoaded", (event) => {
     })
 
     function prepareFetch(e) {
+
         const time = Date.now();
         if (time - datetimepicker1LastUpdate > 1000) {
+
             datetimepicker1LastUpdate = time;
             lastDate = $("#datetimepicker1").val()
             const selector = document.getElementById("dateRangeSelector")
@@ -77,15 +86,23 @@ window.addEventListener("DOMContentLoaded", (event) => {
             if (selector.value[1] == "d") $("#datetimepicker2").datetimepicker("date", $("#datetimepicker2").datetimepicker("date").subtract(1, "second"));
             $("#datetimepicker1").datetimepicker("hide");
             const posix = $("#datetimepicker1").datetimepicker("date").toDate().getTime() / 1000;
-            fetchAndPlot("raw", posix)
+            sessionStorage.setItem("startDate", $("#datetimepicker1").datetimepicker("date").toISOString());
+            sessionStorage.setItem("interval", $("#dateRangeSelector").val());
+            if (window.location.pathname === pages.graph) {
+                fetchAndPlot("raw", posix)
 
+            }
         }
     }
 
     let charts = null;
     const navbarConiatiner = document.getElementById("navbarContainer")
-    const navbarLink = new NavLink("Nav link", "#", { active: true })
+    const navbarLink = new NavLink("Graphs", pages.graph, { active: window.location.pathname == pages.graph })
+    const navbarLink2 = new NavLink("Env", pages.env, { active: window.location.pathname == pages.env })
+    const navbarLink3 = new NavLink("Log", pages.log, { active: window.location.pathname == pages.log })
     navbarLink.draw(navbarConiatiner)
+    navbarLink2.draw(navbarConiatiner)
+    navbarLink3.draw(navbarConiatiner)
 
     CanvasJS.addCultureInfo("fr", {
         decimalSeparator: ",",
