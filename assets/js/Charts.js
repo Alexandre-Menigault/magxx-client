@@ -32,21 +32,16 @@ import MagChart from './MagChart.js'
  * @property {number} f - The fv value
  */
 
-/**
- *
- *
- * @export
- * @class Charts
- * @property {MagChart[]} charts - All charts
- * @property {HTMLElement} container - The container of all charts
- * @property {ZoomHistory} zoomHistory - The zoom history
- */
 class Charts {
     /**
      * Creates an instance of Charts.
      * Holds every chart
      * @param {MagData[]} plots_data 
      * @param {string} parentId
+     * 
+     * @property {MagChart[]} charts - All charts
+     * @property {HTMLElement} container - The container of all charts
+     * @property {ZoomHistory} zoomHistory - The zoom history
      */
     constructor(plots_data, parentId) {
         this.charts = []
@@ -94,10 +89,13 @@ class Charts {
 
     /**
      * Zooms in chart<br/>
-     * If chart is provided, 
-     *
+     * If [chart]{@link Magchart} is provided, add current viewport range and erase remaining history <br/>
+     * If not, if there is still history, increment index and returns true <br/>
+     * If no history remains, returns false
+     * 
      * @param {MagChart} [chart=null]
-     * @memberof Charts
+     * 
+     * @returns {boolean}
      */
     zoomIn(chart = null) {
 
@@ -116,6 +114,13 @@ class Charts {
         }
         return true
     }
+
+    /**
+     * Zooms out all charts according to {@link ZoomHistory} <br/>
+     * If history index is less than 0 zoom out fails and returns false <br/>
+     * Returns true otherwise <br/>
+     * @returns {boolean}
+     */
     zoomOut() {
         console.log("Zoom Out")
         if (this.zoomHistory.currentIndex <= -1)
@@ -123,6 +128,10 @@ class Charts {
         this.zoomHistory.currentIndex--;
         return true;
     }
+
+    /**
+     * Reset the {@link ZoomHistory} to it's default value
+     */
     resetZoom() {
         this.zoomHistory.currentIndex = -1;
         this.zoomHistory.viewportRanges = [];

@@ -1,12 +1,5 @@
 import Charts from "./Charts.js"
 
-/**
- * @class MagChart
- * @property {HTMLElement} canvas - The container of the canvas
- * @property {Charts} parent
- * @property {object} options
- * @property {ChartData[]} data
- */
 class MagChart {
 
     /**
@@ -21,6 +14,11 @@ class MagChart {
      * @param {ChartData[]} data
      * @param {Object} options
      * @param {Charts} parent
+     * 
+     * @property {HTMLElement} canvas - The container of the canvas
+     * @property {Charts} parent
+     * @property {object} options
+     * @property {ChartData[]} data
      */
     constructor(data, options, parent) {
         this.canvas = document.createElement("div");
@@ -135,9 +133,9 @@ class MagChart {
     }
 
     /**
+     * Zooms in or out in the zoom {@link ZoomHistory} of the {@link Charts|parent}
      *
-     *
-     * @param {KeyboardEvent} e
+     * @param {WheelEvent} e
      */
     wheelHandler(e) {
         if (e.deltaY > 0) {
