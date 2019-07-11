@@ -7,18 +7,19 @@ class MagChart {
      * @property {Chart} chart 
      * @property {string} trigger
      * @property {Object[]} axisX
+     * @memberof MagChart
      */
 
     /**
      *Creates an instance of Chart.
-     * @param {ChartData[]} data
+     * @param {Charts.ChartData[]} data
      * @param {Object} options
      * @param {Charts} parent
      * 
      * @property {HTMLElement} canvas - The container of the canvas
      * @property {Charts} parent
      * @property {object} options
-     * @property {ChartData[]} data
+     * @property {Charts.ChartData[]} data
      */
     constructor(data, options, parent) {
         this.canvas = document.createElement("div");
@@ -45,7 +46,7 @@ class MagChart {
      * Updates the data used by the plot instead of creating an other one<br/>
      * Chart must exists before updating
      * 
-     * @param {ChartData} newData
+     * @param {Charts.ChartData} newData
      */
     updateData(newData) {
         this.chart.destroy(); // Destroy previous chart to prevent memory leaks
@@ -133,7 +134,7 @@ class MagChart {
     }
 
     /**
-     * Zooms in or out in the zoom {@link ZoomHistory} of the {@link Charts|parent}
+     * Zooms in or out in the zoom {@link Charts.ZoomHistory} of the {@link Charts|parent}
      *
      * @param {WheelEvent} e
      */
@@ -238,7 +239,7 @@ class MagChart {
     /**
      * Zoom-in the chart or reset the zoom level by default
      *
-     * @param {ChartEvent} e
+     * @param {MagChart.ChartEvent} e
      */
     resizeHandler(e) {
         const count = MagChart.countVisiblePoints(this.chart, e);
@@ -264,7 +265,7 @@ class MagChart {
      *
      * @static
      * @param {Chart} chart
-     * @param {ChartEvent} e
+     * @param {MagChart.ChartEvent} e
      * @param {number} count - Max number of displayed markers. Prevents high memory usage
      */
     static handleMarkers(chart, e, count) {
@@ -286,7 +287,7 @@ class MagChart {
      *
      * @static
      * @param {Chart} chart
-     * @param {ChartEvent} e
+     * @param {MagChart.ChartEvent} e
      * @returns {number|null} Number of displayed points in the chart. Or null if trigger is "reset"
      */
     static countVisiblePoints(chart, e) {

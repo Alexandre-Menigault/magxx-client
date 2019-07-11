@@ -1,7 +1,16 @@
 import Component from "./baseComponent.js";
 
 
-export default class Button extends Component {
+class Button extends Component {
+
+    /**
+     *Creates an instance of Button.
+     
+     * @extends {Component}
+     * @param {string} text
+     * @param {*} options
+     * @memberof Components
+     */
     constructor(text, options) {
         super(options);
         this.text = text;
@@ -9,6 +18,12 @@ export default class Button extends Component {
         this.init()
     }
 
+    /**
+     *
+     * @static
+     * @returns {Object} 
+     * @memberof Components
+     */
     static Types() {
         return {
             WARNING: "btn-warning",
@@ -26,6 +41,5 @@ export default class Button extends Component {
         this.baseHTMLElement.innerText = this.text;
     }
 }
-/**
- * @type {import('./baseComponent').ComponentType}
- */
+
+export default Button;

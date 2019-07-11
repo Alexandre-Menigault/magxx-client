@@ -1,7 +1,16 @@
 import Component from "./baseComponent.js";
 
-export default class NavLinkComponent extends Component {
+class NavLinkComponent extends Component {
 
+    /**
+     * Creates an instance of NavLinkComponent.
+     * @param {string} text
+     * @param {string} link
+     * @param {Object} options
+     * 
+     * @extends Component
+     * @memberof Components
+     */
     constructor(text, link, options) {
         super(options);
         this.text = text;
@@ -25,3 +34,5 @@ export default class NavLinkComponent extends Component {
         this.baseHTMLElement.appendChild(a);
     }
 }
+
+export default NavLinkComponent

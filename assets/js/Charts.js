@@ -5,6 +5,7 @@ import MagChart from './MagChart.js'
  * @typedef {Object} ChartData The descriptor of the data of each chart
  * @property {Date} x - The timestamp of the measurement
  * @property {number} y - The value of the magnetic component (e.g: X, Y, Z, Fv-Fs)
+ * @memberof Charts
  */
 
 /**
@@ -12,13 +13,15 @@ import MagChart from './MagChart.js'
  * @typedef {Object} ViewportRange The descriptor of a chart viewport range
  * @property {number} minimum - The minimum range
  * @property {number} maximum - The maximum range
+ * @memberof Charts
  */
 
 /**
 * @export
 * @typedef {Object} ZoomHistory The descriptor of the zoom history of charts
 * @property {number} currentIndex - The current index of history (-1 means no history)
-* @property {ViewportRange[]} viewportRanges - The saved viewport ranges
+* @property {Charts.ViewportRange[]} viewportRanges - The saved viewport ranges
+* @memberof Charts
 */
 
 
@@ -30,18 +33,19 @@ import MagChart from './MagChart.js'
  * @property {number} y - The y value
  * @property {number} z - The z value
  * @property {number} f - The fv value
+ * @memberof Charts
  */
 
 class Charts {
     /**
      * Creates an instance of Charts.
      * Holds every chart
-     * @param {MagData[]} plots_data 
+     * @param {Charts.MagData[]} plots_data 
      * @param {string} parentId
      * 
      * @property {MagChart[]} charts - All charts
      * @property {HTMLElement} container - The container of all charts
-     * @property {ZoomHistory} zoomHistory - The zoom history
+     * @property {Charts.ZoomHistory} zoomHistory - The zoom history
      */
     constructor(plots_data, parentId) {
         this.charts = []
@@ -52,7 +56,7 @@ class Charts {
 
     /**
      * Creates or updates all plots from the data sent by the server
-     * @param {MagData[]} jsonData - The data transmited by the server. Json formated
+     * @param {Charts.MagData[]} jsonData - The data transmited by the server. Json formated
      * @private
      */
     __createPlots(jsonData) {
@@ -67,7 +71,7 @@ class Charts {
         const colors = jsonData[0].colors;
         let i = 0;
         for (let header of headers) {
-            /** @type {ChartData[]} */
+            /** @type {Charts.ChartData[]} */
             const chartData = jsonData.reduce((data, line, j) => {
                 if (j !== 0) {
                     const x = new Date(line.t * 1000);
@@ -116,7 +120,7 @@ class Charts {
     }
 
     /**
-     * Zooms out all charts according to {@link ZoomHistory} <br/>
+     * Zooms out all charts according to {@link Charts.ZoomHistory} <br/>
      * If history index is less than 0 zoom out fails and returns false <br/>
      * Returns true otherwise <br/>
      * @returns {boolean}
@@ -130,7 +134,7 @@ class Charts {
     }
 
     /**
-     * Reset the {@link ZoomHistory} to it's default value
+     * Reset the {@link Charts.ZoomHistory} to it's default value
      */
     resetZoom() {
         this.zoomHistory.currentIndex = -1;

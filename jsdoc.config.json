@@ -4,8 +4,7 @@
     ],
     "source": {
         "include": [
-            "./assets/js/",
-            "./assets/js/components"
+            "./assets/js/"
         ],
         "exclude": [
             "./assets/js/vendor/"

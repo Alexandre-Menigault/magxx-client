@@ -2,5 +2,5 @@
 
 ## Generate doc
 ```shell
-jsdoc ./assets/js/ -d ../magxx-client-doc -R ./README.md
+jsdoc -c ./jsdoc.config.json
 ```

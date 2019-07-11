@@ -97,12 +97,12 @@ window.addEventListener("DOMContentLoaded", (event) => {
 
     let charts = null;
     const navbarConiatiner = document.getElementById("navbarContainer")
+    const navbarComponent = new Component({ parent: navbarConiatiner });
     const navbarLink = new NavLink("Graphs", pages.graph, { active: window.location.pathname == pages.graph })
     const navbarLink2 = new NavLink("Env", pages.env, { active: window.location.pathname == pages.env })
     const navbarLink3 = new NavLink("Log", pages.log, { active: window.location.pathname == pages.log })
-    navbarLink.draw(navbarConiatiner)
-    navbarLink2.draw(navbarConiatiner)
-    navbarLink3.draw(navbarConiatiner)
+    navbarComponent.appendChildren(navbarLink, navbarLink2, navbarLink3);
+    navbarComponent.draw()
 
     CanvasJS.addCultureInfo("fr", {
         decimalSeparator: ",",
