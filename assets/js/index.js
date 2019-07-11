@@ -2,12 +2,16 @@ import Charts from "./Charts.js";
 import Button from './components/buttonComponent.js';
 import Component from './components/baseComponent.js';
 import NavLink from './components/navLinkComponent.js';
+import NavBar from './components/navBarComponent.js';
 
 window.addEventListener("DOMContentLoaded", (event) => {
 
 
     let pages = { graph: "/magxx-client/", env: "/magxx-client/env.html", log: "/magxx-client/log.html" }
 
+    const nav = document.getElementById("navbar")
+    const navbar = new NavBar({ parent: nav });
+    navbar.draw();
 
     // ================== Start UI creation =================
 
@@ -95,14 +99,10 @@ window.addEventListener("DOMContentLoaded", (event) => {
         }
     }
 
+
     let charts = null;
-    const navbarConiatiner = document.getElementById("navbarContainer")
-    const navbarComponent = new Component({ parent: navbarConiatiner });
-    const navbarLink = new NavLink("Graphs", pages.graph, { active: window.location.pathname == pages.graph })
-    const navbarLink2 = new NavLink("Env", pages.env, { active: window.location.pathname == pages.env })
-    const navbarLink3 = new NavLink("Log", pages.log, { active: window.location.pathname == pages.log })
-    navbarComponent.appendChildren(navbarLink, navbarLink2, navbarLink3);
-    navbarComponent.draw()
+
+
 
     CanvasJS.addCultureInfo("fr", {
         decimalSeparator: ",",
