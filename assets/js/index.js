@@ -14,17 +14,18 @@ window.addEventListener("DOMContentLoaded", (event) => {
     navbar.draw();
 
     // ================== Start UI creation =================
-
+    moment.locale("fr")
     $("#datetimepicker1").val("")
     $("#datetimepicker2").val("")
     $("#datetimepicker1").datetimepicker({
         locale: 'fr',
+        sideBySide: true,
         // useCurrent: "minute",
         icons: {
             time: 'fa fa-clock',
             today: 'fa fa-calendar-check',
         },
-        maxDate: moment("2019-07-09T23:59:59.999"),
+        maxDate: moment("2019-07-15T23:59:59.999"),
         minDate: moment("2019-01-01T00:00:00.000"),
         tooltips: {
             today: "Ajouurd'hui",
@@ -52,7 +53,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
 
     $("#datetimepicker2").datetimepicker({
         locale: 'fr',
-        maxDate: moment("2019-07-10T00:00:00.000"),
+        maxDate: moment("2019-07-16T00:00:00.000"),
         minDate: moment("2019-01-01T00:00:00.000"),
         keepInvalid: true
     });
@@ -70,17 +71,24 @@ window.addEventListener("DOMContentLoaded", (event) => {
     const selector = document.getElementById("dateRangeSelector")
     $("#datetimepicker1").datetimepicker("date", moment().format("DD/MM/YYYY H:mm"))
     $("#datetimepicker2").datetimepicker("date", $("#datetimepicker1").datetimepicker("date").add(parseInt(selector.value[0]), selector.value[1]))
-    $("#datetimepicker1").on("hide.datetimepicker", prepareFetch)
-
+    $("#datetimepicker1").on("hide.datetimepicker", prepareFetch);
+    $("#prev-interval").click((e) => {
+        $("#datetimepicker1").datetimepicker("date", $("#datetimepicker1").datetimepicker("date").subtract(parseInt(selector.value[0]), selector.value[1]))
+        prepareFetch(true);
+    })
+    $("#next-interval").click((e) => {
+        $("#datetimepicker1").datetimepicker("date", $("#datetimepicker1").datetimepicker("date").add(parseInt(selector.value[0]), selector.value[1]))
+        prepareFetch(true);
+    })
     $("#dateRangeSelector").change((e) => {
         $("#datetimepicker2").datetimepicker("date", $("#datetimepicker1").datetimepicker("date").add(parseInt(e.target.value[0]), e.target.value[1]))
-        prepareFetch()
+        prepareFetch(true)
     })
 
-    function prepareFetch(e) {
+    function prepareFetch(force = false) {
 
         const time = Date.now();
-        if (time - datetimepicker1LastUpdate > 1000) {
+        if (force || time - datetimepicker1LastUpdate > 1000) {
 
             datetimepicker1LastUpdate = time;
             lastDate = $("#datetimepicker1").val()
@@ -92,10 +100,15 @@ window.addEventListener("DOMContentLoaded", (event) => {
             const posix = $("#datetimepicker1").datetimepicker("date").toDate().getTime() / 1000;
             sessionStorage.setItem("startDate", $("#datetimepicker1").datetimepicker("date").toISOString());
             sessionStorage.setItem("interval", $("#dateRangeSelector").val());
+
             if (window.location.pathname === pages.graph) {
                 fetchAndPlot("raw", posix)
-
+            } else if (window.location.pathname === pages.env) {
+                fetchEnv("env", posix)
+            } else if (window.location.pathname === pages.log) {
+                fetchLog("log", posix)
             }
+
         }
     }
 
@@ -116,6 +129,97 @@ window.addEventListener("DOMContentLoaded", (event) => {
     })
     // ================== End UI creation =================
 
+    function fetchEnv(type, posix) {
+        let file = `http://localhost/magxx/api/data/CLF3/${posix}/${type}?interval=${$("#dateRangeSelector").val()}`;
+        const loading = document.getElementById("loadingSpinner");
+        loading.style.visibility = "visible"
+        fetch(file)
+            .then((res) => res.json())
+            .then((resJson) => {
+
+                resJson.pop();
+                const utcOffset = moment().utcOffset();
+                const table = $('#env-table');
+                const body = document.querySelector("#env-table>tbody");
+                body.innerHTML = "";
+                const headers = resJson[0].header
+
+                let i = 0
+                for (let line of resJson) {
+                    const tr = document.createElement("tr")
+                    if (i !== 0) {
+                        for (let header of headers) {
+                            const td = document.createElement("td");
+                            td.classList.add("text-center")
+                            if (header == "ms") continue;
+                            if (header == "t") {
+                                const time = line[header] - (utcOffset * 60);
+                                const date = moment(parseInt(`${time}${line["ms"]}`)).format("DD/MM/YYYY H:mm:ss.SSS");
+                                td.innerText = date;
+                            } else {
+                                td.innerText = line[header];
+                            }
+                            tr.appendChild(td);
+                        }
+                    }
+                    body.appendChild(tr);
+                    i++;
+                }
+
+                loading.style.visibility = "hidden"
+            });
+    }
+
+    function fetchLog(type, posix) {
+        let file = `http://localhost/magxx/api/data/CLF3/${posix}/${type}?interval=${$("#dateRangeSelector").val()}`;
+        const loading = document.getElementById("loadingSpinner");
+        loading.style.visibility = "visible"
+        fetch(file)
+            .then((res) => res.json())
+            .then((resJson) => {
+                resJson.pop();
+                const utcOffset = moment().utcOffset();
+                const table = $('#log-table');
+                const body = document.querySelector("#log-table>tbody");
+                body.innerHTML = "";
+                const headers = resJson[0].header
+
+                let i = 0;
+                for (let line of resJson) {
+                    const tr = document.createElement("tr")
+                    if (i !== 0) {
+                        for (let header of headers) {
+                            const td = document.createElement("td");
+                            td.classList.add("text-center")
+                            if (header == "ms") continue;
+                            if (header == "t") {
+                                const time = line[header] - (utcOffset * 60);
+                                const date = moment(parseInt(`${time}${line["ms"]}`)).format("DD/MM/YYYY H:mm:ss.SSS");
+                                td.innerText = date;
+                            } else if (header == "Level") {
+                                const p = document.createElement("p");
+                                const level = line[header];
+                                p.innerText = level;
+                                p.style.marginBottom = "0px";
+                                if (level == "INFO") p.classList.add("text-white", "bg-primary")
+                                else if (level == "WARNING") p.classList.add("text-dark", "bg-warning")
+                                else if (level == "ERROR") p.classList.add("text-white", "bg-danger")
+                                td.appendChild(p);
+                            }
+                            else {
+                                td.innerText = line[header];
+                            }
+                            tr.appendChild(td);
+                        }
+                    }
+                    body.appendChild(tr);
+                    i++;
+                }
+
+                loading.style.visibility = "hidden"
+            });
+    }
+
     /**
      * 
      * @param {string} type 
@@ -123,6 +227,9 @@ window.addEventListener("DOMContentLoaded", (event) => {
      */
     function fetchAndPlot(type, posix) {
         let file = `http://localhost/magxx/api/data/CLF3/${posix}/${type}?interval=${$("#dateRangeSelector").val()}`;
+
+        const loading = document.getElementById("loadingSpinner");
+        loading.style.visibility = "visible"
         // Appel de l'api (asynchrone)
         fetch(file)
             .then((response) => { return response.json() })
@@ -159,6 +266,8 @@ ${e.stack}
                         document.body.removeChild(alert);
                     }, 3000)
                 }
+
+                loading.style.visibility = "hidden"
             });
     }
 })

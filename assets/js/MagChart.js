@@ -26,9 +26,6 @@ class MagChart {
         this.canvas.id = "canvas" + options.type
         this.canvas.classList.add("canvas-container", "mx-0", "container-fluid", "bd-highlight")
         this.canvas.ondblclick = this.doubleClickHandler.bind(this);
-        this.canvas.onmousedown = this.mouseDownHandler.bind(this);
-        this.canvas.onmouseup = this.mouseUpHandler.bind(this);
-        this.canvas.onmousemove = this.mouseMoveHandler.bind(this);
         this.canvas.onwheel = this.wheelHandler.bind(this)
         this.canvas.oncontextmenu = function (e) { return false; }
         this.parent = parent
@@ -108,9 +105,9 @@ class MagChart {
             // ===============================================================
             // If we want to use zoom only, not select and zoom on right click
             // ===============================================================
-            // zoomEnabled: true,
-            // zoomType: "x",
-            // rangeChanging: this.resizeHandler.bind(this),
+            zoomEnabled: true,
+            zoomType: "x",
+            rangeChanging: this.resizeHandler.bind(this),
             // ===============================================================
             toolTip: {
                 contentFormatter: function (e) {
@@ -162,79 +159,7 @@ class MagChart {
         console.log(this.parent.zoomHistory)
     }
 
-    /**
-     *  Start the selection with the left click
-     * 
-     * @param {MouseEvent} e
-     */
-    mouseDownHandler(e) {
-        if (e.button == 0 && !this._isSelecting) {
-            const c = $(this.canvas).find(".canvasjs-chart-canvas").first();
-            const parentOffset = c.parent().offset();
-            const relX = e.pageX - parentOffset.left;
-            const xVal = Math.round(this.chart.axisX[0].convertPixelToValue(relX))
-            this._striplines[0] = xVal;
-            this._isSelecting = true;
-        }
-    }
 
-    /**
-     *  Update the selection and update the selection canvas
-     *
-     * @param {MouseEvent} e
-     */
-    mouseMoveHandler(e) {
-        if (e.buttons == 1 && this._isSelecting) {
-
-            const c = $(this.canvas).find(".canvasjs-chart-canvas").first();
-            const parentOffset = c.parent().offset();
-            const relX = e.pageX - parentOffset.left;
-            const xVal = Math.round(this.chart.axisX[0].convertPixelToValue(relX))
-            this._striplines[1] = xVal;
-            if (this._striplines[0] < this._striplines[1]) {
-                this.chart.axisX[0].stripLines[0].set("startValue", this._striplines[0], false)
-                this.chart.axisX[0].stripLines[0].set("endValue", this._striplines[1])
-            } else {
-                this.chart.axisX[0].stripLines[0].set("startValue", this._striplines[1], false)
-                this.chart.axisX[0].stripLines[0].set("endValue", this._striplines[0])
-            }
-
-        }
-    }
-
-    /**
-     * If leftclick: Ends the selection process and updates the selection canvas<br/>
-     * If rightlick: Zoom in the chart if there is a selection range
-     *
-     * @param {MouseEvent} e
-     */
-    mouseUpHandler(e) {
-        if (e.button == 0 && this._isSelecting) {
-            this._isSelecting = false;
-            const startValue = this.chart.axisX[0].stripLines[0].get("startValue")
-            const endValue = this.chart.axisX[0].stripLines[0].get("endValue")
-
-            this.parent.charts.forEach((c, i) => {
-                const chart = c.chart;
-                chart.axisX[0].stripLines[0].set("startValue", startValue, false)
-                chart.axisX[0].stripLines[0].set("endValue", endValue)
-            })
-        } else if (e.button == 2 && !this._isSelecting) {
-            const startValue = this.chart.axisX[0].stripLines[0].get("startValue")
-            const endValue = this.chart.axisX[0].stripLines[0].get("endValue")
-            this.parent.charts.forEach((c, i) => {
-                const chart = c.chart;
-
-                chart.axisX[0].set("viewportMinimum", startValue, false)
-                chart.axisX[0].set("viewportMaximum", endValue, false)
-
-                chart.axisX[0].stripLines[0].set("startValue", null, false)
-                chart.axisX[0].stripLines[0].set("endValue", null)
-            })
-            this.parent.zoomIn(this)
-            this.resizeHandler({ trigger: "zoom", axisX: this.chart.axisX, chart: this.chart })
-        }
-    }
 
     /**
      * Zoom-in the chart or reset the zoom level by default
@@ -244,18 +169,20 @@ class MagChart {
     resizeHandler(e) {
         const count = MagChart.countVisiblePoints(this.chart, e);
         console.log(this.parent.zoomHistory)
+        if (e.trigger === "zoom") this.parent.zoomIn(this);
         this.parent.charts.forEach((chart, i) => {
             chart = chart.chart;
             if (e.trigger === "reset") {
                 chart.options.axisX.viewportMinimum = chart.options.axisX.viewportMaximum = null;
                 chart.options.axisY.viewportMinimum = chart.options.axisY.viewportMaximum = null;
             } else {
-                chart.options.axisX.viewportMinimum = e.axisX[0].viewportMinimum;
-                chart.options.axisX.viewportMaximum = e.axisX[0].viewportMaximum;
+                chart.axisX[0].set("viewportMinimum", e.axisX[0].viewportMinimum, false);
+                chart.axisX[0].set("viewportMaximum", e.axisX[0].viewportMaximum, false);
             }
             MagChart.handleMarkers(chart, e, count)
             chart.render();
-        })
+        });
+
     }
 
     /**

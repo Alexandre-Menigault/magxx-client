@@ -1,5 +1,6 @@
 import Component from "./baseComponent.js";
 import NavLink from "./navLinkComponent.js";
+import Button from "./buttonComponent.js";
 
 let pages = { graph: "/magxx-client/", env: "/magxx-client/env.html", log: "/magxx-client/log.html" }
 
@@ -60,6 +61,18 @@ class NavBarComponent extends Component {
         navLinksDiv.appendChild(navLinksUl);
         this.baseHTMLElement.appendChild(navLinksDiv);
 
+        // Loading spinner
+        const spinnerDiv = document.createElement('div');
+        spinnerDiv.style.visibility = "hidden"
+        spinnerDiv.id = "loadingSpinner";
+        spinnerDiv.classList.add("spinner-border", "text-primary");
+        spinnerDiv.setAttribute("role", "status");
+        const loadingTextSpan = document.createElement("span")
+        loadingTextSpan.innerText = "Loading ..."
+        loadingTextSpan.classList.add("sr-only")
+        spinnerDiv.appendChild(loadingTextSpan)
+        this.baseHTMLElement.appendChild(spinnerDiv);
+
         // Create interval selector
         const dateTimeForm = document.createElement("form");
         dateTimeForm.classList.add("form-inline", "px-1")
@@ -77,6 +90,24 @@ class NavBarComponent extends Component {
         intervalSelect.appendChild(interval_1d);
         intervalSelect.appendChild(interval_2h);
         datetimeFormGroup.appendChild(intervalSelect);
+
+        //Creating next-prev interval
+
+        const intervalGroup = document.createElement("div");
+        intervalGroup.classList.add("btn-group", "mx-2");
+        const prevButton = document.createElement("a");
+        prevButton.id = "prev-interval";
+        prevButton.classList.add("btn", "btn-light");
+        prevButton.innerHTML = '<i class="fa fa-chevron-left"></i>'
+        prevButton.title = "Intervale précédent"
+        const nextButton = document.createElement("a");
+        nextButton.id = "next-interval";
+        nextButton.classList.add("btn", "btn-light");
+        nextButton.innerHTML = '<i class="fa fa-chevron-right"></i>'
+        nextButton.title = "Intervale suivant"
+        intervalGroup.appendChild(prevButton);
+        intervalGroup.appendChild(nextButton);
+        datetimeFormGroup.appendChild(intervalGroup);
 
         // Create datetime inputs
         const dateTimeInputGroup = document.createElement("div");

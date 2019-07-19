@@ -89,6 +89,7 @@ class Charts {
             }
             i++;
         }
+
     }
 
     /**
