@@ -156,7 +156,6 @@ class MagChart {
                     }]
                 })
         }
-        console.log(this.parent.zoomHistory)
     }
 
 
@@ -168,17 +167,19 @@ class MagChart {
      */
     resizeHandler(e) {
         const count = MagChart.countVisiblePoints(this.chart, e);
-        console.log(this.parent.zoomHistory)
         if (e.trigger === "zoom") this.parent.zoomIn(this);
         this.parent.charts.forEach((chart, i) => {
             chart = chart.chart;
             if (e.trigger === "reset") {
                 chart.options.axisX.viewportMinimum = chart.options.axisX.viewportMaximum = null;
                 chart.options.axisY.viewportMinimum = chart.options.axisY.viewportMaximum = null;
+                chart.data[0].set("type", "line")
             } else {
                 chart.axisX[0].set("viewportMinimum", e.axisX[0].viewportMinimum, false);
                 chart.axisX[0].set("viewportMaximum", e.axisX[0].viewportMaximum, false);
             }
+            if (chart.data[0].type == "line" && count <= 500) chart.data[0].set("type", "spline");
+            else if (chart.data[0].type == "spline" && count > 500) chart.data[0].set("type", "line");
             MagChart.handleMarkers(chart, e, count)
             chart.render();
         });
@@ -198,7 +199,7 @@ class MagChart {
     static handleMarkers(chart, e, count) {
         chart.data[0].dataPoints.forEach((point, i) => {
             if (e.trigger != "reset" && count < 500 &&
-                ((point.x >= new Date(e.chart.axisX[0].viewportMinimum)) && (point.x <= new Date(e.chart.axisX[0].viewportMaximum)))) {
+                ((point.x >= new Date(e.axisX[0].viewportMinimum)) && (point.x <= new Date(e.axisX[0].viewportMaximum)))) {
                 chart.data[0].dataPoints[i].markerType = "circle";
                 chart.data[0].dataPoints[i].markerSize = 6;
             } else {

@@ -25,7 +25,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
             time: 'fa fa-clock',
             today: 'fa fa-calendar-check',
         },
-        maxDate: moment("2019-07-15T23:59:59.999"),
+        maxDate: moment("2019-07-21T23:59:59.999"),
         minDate: moment("2019-01-01T00:00:00.000"),
         tooltips: {
             today: "Ajouurd'hui",
@@ -53,7 +53,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
 
     $("#datetimepicker2").datetimepicker({
         locale: 'fr',
-        maxDate: moment("2019-07-16T00:00:00.000"),
+        maxDate: moment("2019-07-22T00:00:00.000"),
         minDate: moment("2019-01-01T00:00:00.000"),
         keepInvalid: true
     });
@@ -89,7 +89,6 @@ window.addEventListener("DOMContentLoaded", (event) => {
 
         const time = Date.now();
         if (force || time - datetimepicker1LastUpdate > 1000) {
-
             datetimepicker1LastUpdate = time;
             lastDate = $("#datetimepicker1").val()
             const selector = document.getElementById("dateRangeSelector")
@@ -108,7 +107,6 @@ window.addEventListener("DOMContentLoaded", (event) => {
             } else if (window.location.pathname === pages.log) {
                 fetchLog("log", posix)
             }
-
         }
     }
 

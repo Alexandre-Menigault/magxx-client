@@ -104,7 +104,6 @@ class Charts {
      */
     zoomIn(chart = null) {
 
-        console.log("Zoom in")
         if (chart != null) {
             if (this.zoomHistory.viewportRanges.length - 1 != this.zoomHistory.currentIndex) this.zoomHistory.viewportRanges.splice(this.zoomHistory.currentIndex + 1)
             this.zoomHistory.viewportRanges.push({
@@ -127,7 +126,6 @@ class Charts {
      * @returns {boolean}
      */
     zoomOut() {
-        console.log("Zoom Out")
         if (this.zoomHistory.currentIndex <= -1)
             return false
         this.zoomHistory.currentIndex--;
