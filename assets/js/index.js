@@ -131,10 +131,18 @@ window.addEventListener("DOMContentLoaded", (event) => {
         let file = `http://localhost/magxx/api/data/CLF3/${posix}/${type}?interval=${$("#dateRangeSelector").val()}`;
         const loading = document.getElementById("loadingSpinner");
         loading.style.visibility = "visible"
+        let done = true;
         fetch(file)
-            .then((res) => res.json())
+            .then((res) => {
+                if (res.ok != true) done = false;
+                return res.json();
+            })
             .then((resJson) => {
-
+                if (!done) {
+                    displayErrorAlert(resJson.message, JSON.stringify(resJson.trace, null, 4), true);
+                    loading.style.visibility = "hidden"
+                    return;
+                }
                 resJson.pop();
                 const utcOffset = moment().utcOffset();
                 const table = $('#env-table');
@@ -172,9 +180,19 @@ window.addEventListener("DOMContentLoaded", (event) => {
         let file = `http://localhost/magxx/api/data/CLF3/${posix}/${type}?interval=${$("#dateRangeSelector").val()}`;
         const loading = document.getElementById("loadingSpinner");
         loading.style.visibility = "visible"
+
+        let done = true;
         fetch(file)
-            .then((res) => res.json())
+            .then((res) => {
+                if (res.ok != true) done = false;
+                return res.json();
+            })
             .then((resJson) => {
+                if (!done) {
+                    displayErrorAlert(resJson.message, JSON.stringify(resJson.trace, null, 4), true);
+                    loading.style.visibility = "hidden"
+                    return;
+                }
                 resJson.pop();
                 const utcOffset = moment().utcOffset();
                 const table = $('#log-table');
@@ -228,44 +246,66 @@ window.addEventListener("DOMContentLoaded", (event) => {
 
         const loading = document.getElementById("loadingSpinner");
         loading.style.visibility = "visible"
+        let done = true;
         // Appel de l'api (asynchrone)
         fetch(file)
-            .then((response) => { return response.json() })
+            .then((res) => {
+                if (res.ok != true) done = false;
+                return res.json();
+            })
             .then((resJson) => {
+                if (!done) {
+                    displayErrorAlert(resJson.message, JSON.stringify(resJson.trace, null, 4), true);
+                    loading.style.visibility = "hidden"
+                    return;
+                }
                 resJson.pop(); // TO-FIX: On retire le dernier élement car il est vide
-                if (resJson[0].type === "raw") {
-                    // On réutilise le plot déjà exisnant en lui passant un nouveau jeu de données
-                    if (charts != null) charts.__createPlots(resJson)
-                    else {
-                        charts = new Charts(resJson, "magxx_plots");
-                        resJson = null; // Libère la mémoire (TO-MONITOR: est-ce utile ?)
-                    }
-                } else {
-                    // TODO: display env and log data in tables instead of displaying error
-                    const alert = document.createElement('div');
-                    alert.classList.add('alert', "alert-danger", "alert-fixed", "alert-dismissible");
-                    const e = new Error("Error on fetch raw data. Got env, expected raw");
-                    console.error(e);
-                    alert.innerHTML = `
+                // On réutilise le plot déjà exisnant en lui passant un nouveau jeu de données
+                if (charts != null) charts.__createPlots(resJson)
+                else {
+                    charts = new Charts(resJson, "magxx_plots");
+                    resJson = null; // Libère la mémoire (TO-MONITOR: est-ce utile ?)
+                }
+
+                loading.style.visibility = "hidden"
+            })
+    }
+})
+
+function displayErrorAlert(message, trace = "", fixed = false) {
+    const alert = document.createElement('div');
+    alert.classList.add('alert', "alert-danger", "alert-fixed", "alert-dismissible");
+    const e = new Error("Error on fetch data");
+    console.error(e.message, e.stack);
+    alert.innerHTML = `
 <strong>Attention: </strong> Erreur lors de la récupération des données
 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
         <span aria-hidden="true">&times;</span>
 </button>
 <hr>
-<pre class="mb-0"><code>
-${e.message}
-${e.stack}
+<pre style="max-height: 90vh; overflow-y: auto; overflox-x:none" class="mb-0"><code>
+${message}
+${escapeHtml(trace)}
 </code></pre>`;
-                    alert.setAttribute("role", "alert")
-                    alert.id = "wrong-type-alert"
+    alert.setAttribute("role", "alert")
+    alert.id = "wrong-type-alert"
 
-                    document.body.appendChild(alert);
-                    setTimeout(() => {
-                        document.body.removeChild(alert);
-                    }, 3000)
-                }
-
-                loading.style.visibility = "hidden"
-            });
+    document.body.appendChild(alert);
+    if (!fixed) {
+        setTimeout(() => {
+            document.body.removeChild(alert);
+        }, 3000)
     }
-})
+}
+
+function escapeHtml(str) {
+    var map =
+    {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+    };
+    return str.replace(/[&<>"']/g, function (m) { return map[m]; });
+}
