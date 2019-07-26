@@ -25,7 +25,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
             time: 'fa fa-clock',
             today: 'fa fa-calendar-check',
         },
-        maxDate: moment("2019-07-21T23:59:59.999"),
+        maxDate: moment("2019-07-24T23:59:59.999"),
         minDate: moment("2019-01-01T00:00:00.000"),
         tooltips: {
             today: "Ajouurd'hui",
@@ -53,7 +53,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
 
     $("#datetimepicker2").datetimepicker({
         locale: 'fr',
-        maxDate: moment("2019-07-22T00:00:00.000"),
+        maxDate: moment("2019-07-25T00:00:00.000"),
         minDate: moment("2019-01-01T00:00:00.000"),
         keepInvalid: true
     });
@@ -61,6 +61,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
     if (sessionStorage.getItem("startDate")) {
         const interval = sessionStorage.getItem("interval");
         $("#dateRangeSelector").val(interval)
+        $("#obsSelector").val(sessionStorage.getItem("obs"))
         $("#datetimepicker1").datetimepicker("date", (moment(sessionStorage.getItem("startDate"))))
         $("#datetimepicker2").datetimepicker("date", moment(sessionStorage.getItem("startDate")).add(parseInt(interval[0]), interval[1]))
     }
@@ -80,6 +81,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
         $("#datetimepicker1").datetimepicker("date", $("#datetimepicker1").datetimepicker("date").add(parseInt(selector.value[0]), selector.value[1]))
         prepareFetch(true);
     })
+    $("#obsSelector").change((e) => { prepareFetch(true) });
     $("#dateRangeSelector").change((e) => {
         $("#datetimepicker2").datetimepicker("date", $("#datetimepicker1").datetimepicker("date").add(parseInt(e.target.value[0]), e.target.value[1]))
         prepareFetch(true)
@@ -99,6 +101,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
             const posix = $("#datetimepicker1").datetimepicker("date").toDate().getTime() / 1000;
             sessionStorage.setItem("startDate", $("#datetimepicker1").datetimepicker("date").toISOString());
             sessionStorage.setItem("interval", $("#dateRangeSelector").val());
+            sessionStorage.setItem("obs", $("#obsSelector").val());
 
             if (window.location.pathname === pages.graph) {
                 fetchAndPlot("raw", posix)
@@ -128,7 +131,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
     // ================== End UI creation =================
 
     function fetchEnv(type, posix) {
-        let file = `http://localhost/magxx/api/data/CLF3/${posix}/${type}?interval=${$("#dateRangeSelector").val()}`;
+        let file = `http://localhost/magxx/api/data/${$("#obsSelector").val()}/${posix}/${type}?interval=${$("#dateRangeSelector").val()}`;
         const loading = document.getElementById("loadingSpinner");
         loading.style.visibility = "visible"
         let done = true;
@@ -177,7 +180,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
     }
 
     function fetchLog(type, posix) {
-        let file = `http://localhost/magxx/api/data/CLF3/${posix}/${type}?interval=${$("#dateRangeSelector").val()}`;
+        let file = `http://localhost/magxx/api/data/${$("#obsSelector").val()}/${posix}/${type}?interval=${$("#dateRangeSelector").val()}`;
         const loading = document.getElementById("loadingSpinner");
         loading.style.visibility = "visible"
 
@@ -242,7 +245,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
      * @param {number} posix 
      */
     function fetchAndPlot(type, posix) {
-        let file = `http://localhost/magxx/api/data/CLF3/${posix}/${type}?interval=${$("#dateRangeSelector").val()}`;
+        let file = `http://localhost/magxx/api/data/${$("#obsSelector").val()}/${posix}/${type}?interval=${$("#dateRangeSelector").val()}`;
 
         const loading = document.getElementById("loadingSpinner");
         loading.style.visibility = "visible"

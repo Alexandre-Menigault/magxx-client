@@ -73,11 +73,28 @@ class NavBarComponent extends Component {
         spinnerDiv.appendChild(loadingTextSpan)
         this.baseHTMLElement.appendChild(spinnerDiv);
 
-        // Create interval selector
+        // Create form group
         const dateTimeForm = document.createElement("form");
         dateTimeForm.classList.add("form-inline", "px-1")
         const datetimeFormGroup = document.createElement("div");
         datetimeFormGroup.classList.add("form-group");
+
+        // Create Obs selector
+        const obsSelect = document.createElement("select");
+        obsSelect.id = "obsSelector";
+        obsSelect.classList.add("custom-select", "mr-2");
+        // TODO: récupérer la liste des observatoires sur le serveur
+        const clf = document.createElement("option");
+        clf.value = "CLF";
+        clf.innerText = "CLF";
+        const clf3 = document.createElement("option");
+        clf3.value = "CLF3";
+        clf3.innerText = "CLF3";
+        obsSelect.appendChild(clf);
+        obsSelect.appendChild(clf3);
+        datetimeFormGroup.appendChild(obsSelect);
+
+        // Create interval selector
         const intervalSelect = document.createElement("select");
         intervalSelect.id = "dateRangeSelector";
         intervalSelect.classList.add("custom-select", "mr-2");
