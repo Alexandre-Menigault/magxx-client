@@ -1,0 +1,18 @@
+{
+    "plugins": [
+        "plugins/markdown"
+    ],
+    "source": {
+        "include": [
+            "./assets/js/"
+        ],
+        "exclude": [
+            "./assets/js/vendor/"
+        ]
+    },
+    "opts": {
+        "destination": "../magxx-client-doc",
+        "readme": "./README.md",
+        "rescurse": true
+    }
+}

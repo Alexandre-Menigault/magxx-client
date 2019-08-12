@@ -38,11 +38,11 @@ const plot = Plotly.react("monElement" [{
 ```
 
 ## Performences
-|                       |300 points |86400 points   |
-|-----------------------|-----------|---------------|
-|**webGL + plotting**   |1800ms     |2100ms         |
-|**plotting**           |100ms      |800ms          |
-|**Différence**         |1100ms     |1300ms         |
+|                      | 300 points | 86400 points |
+| -------------------- | ---------- | ------------ |
+| **webGL + plotting** | 1800ms     | 2100ms       |
+| **plotting**         | 100ms      | 800ms        |
+| **Différence**       | 1100ms     | 1300ms       |
     
 Le contexte webGL est créé lorsque le premier graph est affiché
 
