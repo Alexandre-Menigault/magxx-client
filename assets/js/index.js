@@ -7,7 +7,7 @@ import NavBar from './components/navBarComponent.js';
 window.addEventListener("DOMContentLoaded", (event) => {
 
 
-    let pages = { graph: "/magxx-client/", env: "/magxx-client/env.html", log: "/magxx-client/log.html" }
+    let pages = { graph: "/magxx-client/", env: "/magxx-client/env.html", log: "/magxx-client/log.html", abs: "/magxx-client/abs-mes.html" }
 
     const nav = document.getElementById("navbar")
     const navbar = new NavBar({ parent: nav });

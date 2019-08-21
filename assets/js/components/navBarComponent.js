@@ -2,7 +2,7 @@ import Component from "./baseComponent.js";
 import NavLink from "./navLinkComponent.js";
 import Button from "./buttonComponent.js";
 
-let pages = { graph: "/magxx-client/", env: "/magxx-client/env.html", log: "/magxx-client/log.html" }
+let pages = { graph: "/magxx-client/", env: "/magxx-client/env.html", log: "/magxx-client/log.html", abs: "/magxx-client/abs-mes.html" }
 
 class NavBarComponent extends Component {
 
@@ -56,7 +56,8 @@ class NavBarComponent extends Component {
         const navbarLink = new NavLink("Graphs", pages.graph, { active: window.location.pathname == pages.graph })
         const navbarLink2 = new NavLink("Env", pages.env, { active: window.location.pathname == pages.env })
         const navbarLink3 = new NavLink("Log", pages.log, { active: window.location.pathname == pages.log })
-        navbarComponent.appendChildren(navbarLink, navbarLink2, navbarLink3);
+        const navbarLink4 = new NavLink("Abs", pages.abs, { active: window.location.pathname == pages.abs })
+        navbarComponent.appendChildren(navbarLink, navbarLink2, navbarLink3, navbarLink4);
         navbarComponent.draw()
         navLinksDiv.appendChild(navLinksUl);
         this.baseHTMLElement.appendChild(navLinksDiv);
