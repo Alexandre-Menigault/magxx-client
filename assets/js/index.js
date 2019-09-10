@@ -16,7 +16,8 @@ window.addEventListener("DOMContentLoaded", (event) => {
     // ================== Start UI creation =================
     moment.locale("fr")
     $("#datetimepicker1").val("")
-    $("#datetimepicker2").val("")
+    $("#datetimepicker1").val("")
+    $("#input-date").val("")
     $("#datetimepicker1").datetimepicker({
         locale: 'fr',
         sideBySide: true,
@@ -25,7 +26,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
             time: 'fa fa-clock',
             today: 'fa fa-calendar-check',
         },
-        maxDate: moment("2019-07-24T23:59:59.999"),
+        maxDate: moment("2019-08-18T23:59:59.999"),
         minDate: moment("2019-01-01T00:00:00.000"),
         tooltips: {
             today: "Ajouurd'hui",
@@ -53,10 +54,48 @@ window.addEventListener("DOMContentLoaded", (event) => {
 
     $("#datetimepicker2").datetimepicker({
         locale: 'fr',
-        maxDate: moment("2019-07-25T00:00:00.000"),
+        maxDate: moment("2019-08-19T00:00:00.000"),
         minDate: moment("2019-01-01T00:00:00.000"),
         keepInvalid: true
     });
+
+    $("#input-date").datetimepicker({
+        locale: 'fr',
+        format: "L",
+        sideBySide: true,
+        focusOnShow: false,
+        keepOpen: true,
+        allowInputToggle: true,
+        // useCurrent: "day",
+        icons: {
+            time: 'fa fa-clock',
+            today: 'fa fa-calendar-check',
+        },
+        keepInvalid: false,
+        maxDate: moment(),
+        minDate: moment("2019-01-01"),
+        tooltips: {
+            today: "Ajourd'hui",
+            close: 'Fermer',
+            selectMonth: 'Selectionner mois',
+            prevMonth: 'Mois précédent',
+            nextMonth: 'Mois suivant',
+            selectYear: 'Sélectionner année',
+            prevYear: 'Année précédente',
+            nextYear: 'Année suivante',
+            incrementHour: 'Incrémenter heure',
+            pickHour: 'Choisir heure',
+            decrementHour: 'Décrémenter heure',
+            incrementMinute: 'Incrémenter minute',
+            pickMinute: 'Choisir minute',
+            decrementMinute: 'Décrémenter minute',
+            incrementSecond: 'Incrémenter seconde',
+            pickSecond: 'Choisir seconde',
+            decrementSecond: 'Décrémenter seconde',
+            selectTime: "Sélectionner temps",
+            selectDate: "Sélectionner date"
+        },
+    })
 
     if (sessionStorage.getItem("startDate")) {
         const interval = sessionStorage.getItem("interval");
@@ -116,7 +155,9 @@ window.addEventListener("DOMContentLoaded", (event) => {
 
     let charts = null;
 
+    //================== Abs meas form ===================
 
+    //================== End Abs meas form ===================
 
     CanvasJS.addCultureInfo("fr", {
         decimalSeparator: ",",

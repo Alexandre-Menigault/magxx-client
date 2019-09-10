@@ -15,7 +15,7 @@
 <body>
     <div class="container-fluid" style="min-height: 100%; min-width: 100vw; max-width: 100vw; padding: 0px"
         class="px-0">
-        <nav id="navbar" class="sticky-top navbar navbar-expand-lg navbar-dark bg-dark">
+        <nav id="navbar" tabindex="-1" class="sticky-top navbar navbar-expand-lg navbar-dark bg-dark">
 
         </nav>
         <form id="abs-mes-form" class="needs-validation">
@@ -27,11 +27,12 @@
                     <div class="d-flex flex-column">
                         <div class="d-flex flex-row flex-wrap w-75">
                             <!-- Panneau nouvelles mesures -->
-                            <button class="btn btn-primary mb-3 mx-4 w-25 " type="submit">Soumettre la
+                            <button type="submit" tabindex="46" class="btn btn-primary mb-3 mx-4 w-25 "
+                                type="submit">Soumettre la
                                 mesure</button>
                             <div class="input-group mb-3 w-50 align-self-center">
                                 <!-- Grade ou Degree -->
-                                <div class="custom-control custom-radio custom-control-inline">
+                                <!-- <div class="custom-control custom-radio custom-control-inline">
                                     <input type="radio" id="input-grade" name="input-measure-type" checked="true"
                                         class="custom-control-input">
                                     <label class="custom-control-label" for="input-grade">Grade</label>
@@ -40,108 +41,133 @@
                                     <input type="radio" id="input-degree" name="input-measure-type"
                                         class="custom-control-input">
                                     <label class="custom-control-label" for="input-degree">Degree</label>
-                                </div>
+                                </div> -->
                             </div>
                             <div class="input-group mb-3 mx-3 w-45">
                                 <!-- OBS -->
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text" id="input-obs">OBS</span>
+                                    <span class="input-group-text" id="input-label-obs">OBS</span>
                                 </div>
-                                <input type="text" class="form-control" placeholder="CLF" aria-label="OBS"
-                                    aria-describedby="input-obs" required>
+                                <select tabindex="1" name="obs" id="input-obs" class="custom-select" placeholder="CLF"
+                                    aria-label="OBS" aria-describedby="input-label-obs">
+                                    <option disabled selected>Choose an observatoy</option>
+                                </select>
                             </div>
                             <div class="input-group mb-3 mx-2 w-45">
                                 <!-- Di-Flux -->
-                                <div class=" input-group-prepend">
-                                    <span class="input-group-text" id="input-DI-Flux">DI-Flux</span>
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="input-label-DI-Flux">DI-Flux</span>
                                 </div>
-                                <input type="text" class="form-control" placeholder="000.00" aria-label="DI-Flux"
-                                    aria-describedby="input-DI-Flux">
+                                <input type="text" tabindex="-1" id="input-DI-Flux" class="form-control"
+                                    placeholder="000.00" aria-label="DI-Flux" aria-describedby="input-DI-Flux">
                             </div>
                             <div class="input-group mb-3 mx-3 w-45">
                                 <!-- Observer -->
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text" id="input-observer">Observer</span>
+                                    <span class="input-group-text" id="input-label-observer">Observer</span>
                                 </div>
-                                <input type="text" class="form-control" placeholder="Prénom Nom" aria-label="Observer"
-                                    aria-describedby="input-observer">
+                                <select tabindex="1" name="obs" id="input-observer" class="custom-select"
+                                    placeholder="CLF" aria-label="OBS" aria-describedby="input-label-observer">
+                                    <option value="-1" disabled selected>Select a observer</option>
+                                </select>
                             </div>
                             <div class="input-group mb-3 mx-2 w-45">
                                 <!-- Di-Flux Sensitivity -->
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text" id="input-DI-Flux-sensitivity">DI-Flux-sensi.</span>
+                                    <span class="input-group-text"
+                                        id="input-label-DI-Flux-sensitivity">DI-Flux-sensi.</span>
                                 </div>
-                                <input type="text" class="form-control" placeholder="0.999" aria-label="DI-Flux-sensi"
-                                    aria-describedby="input-DI-Flux-sensitivity">
+                                <input type="text" tabindex="-1" id="input-DI-Flux-sensitivity" class="form-control"
+                                    placeholder="0.0000" aria-label="DI-Flux-sensi"
+                                    aria-describedby="input-label-DI-Flux-sensitivity">
                             </div>
                             <!-- TODO: Changer par une datetime input; Copier sur la nav bar -->
                             <div class="input-group mb-3 mx-3 w-45">
                                 <!-- Date -->
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text" id="input-date">Date</span>
+                                    <span class="input-group-text" id="input-label-date">Date</span>
                                 </div>
-                                <input type="text" class="form-control" placeholder="16/08/2019" aria-label="Date"
-                                    aria-describedby="input-date">
+                                <input type="text" tabindex="2" id="input-date"
+                                    class="form-control datetimepicker-input" placeholder="16/08/2019" aria-label="Date"
+                                    aria-describedby="input-label-date" data-target="#input-date"
+                                    data-toggle="datetimepicker">
                             </div>
                             <div class="input-group mb-3 mx-2 w-45">
                                 <!-- Azimuth ref.  -->
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text" id="input-azimuth-ref">Azimuth ref.</span>
+                                    <span class="input-group-text" id="input-label-azimuth-ref">Azimuth ref.</span>
                                 </div>
-                                <input type="text" class="form-control" placeholder="00.00gr" aria-label="Azimuth ref."
-                                    aria-describedby="input-azimuth-ref">
+                                <input type="text" tabindex="-1" id="input-azimuth-ref" class="form-control"
+                                    placeholder="00.00gr" aria-label="Azimuth ref."
+                                    aria-describedby="input-label-azimuth-ref">
+                            </div>
+                        </div>
+                        <div class="d-flex flex-column flex-wrap w-100">
+                            <p>DF Pillar Measurement</p>
+                            <div class="input-group mb-3 mx-3 w-75">
+                                <!-- delta PMA.  -->
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="input-label-delta-pma">Delta PMA</span>
+                                </div>
+                                <input type="text" tabindex="3" tabindex="-1" id="input-delta-pma" class="form-control"
+                                    placeholder="00.00nT" aria-label="Azimuth ref."
+                                    aria-describedby="input-label-delta-pma">
+                                <div class="input-group-append">
+                                    <span class="input-group-text" id="input-label-delta-pma">nT</span>
+                                </div>
+                                <button type="button" class="btn btn-outline-secondary mx-3">Add Measure</button>
                             </div>
                         </div>
                         <div class="d-flex flex-row flex-wrap w-100">
                             <p class="w-100">Azimuth Mark Sighting</p> <br>
                             <!-- Cibles -->
-                            <div class="input-group mb-3 mx-3 w-25">
+                            <div class="order-1 input-group mb-3 mx-3 w-25">
                                 <!-- V1  -->
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text" id="input-cible-v1">V1</span>
+                                    <span class="input-group-text" id="input-label-cible-v1">V1</span>
                                 </div>
-                                <input type="text" class="form-control" placeholder="00.00gr" aria-label="V1"
-                                    aria-describedby="input-cible-v1">
+                                <input type="text" tabindex="3" class="form-control" placeholder="00.00gr"
+                                    aria-label="V1" aria-describedby="input-label-cible-v1">
                             </div>
-                            <div class="input-group mb-3 mx-3 w-25">
+                            <div class="order-4 input-group mb-3 mx-3 w-25">
                                 <!-- V2 -->
                                 <div class="input-group-prepend">
                                     <span class="input-group-text" id="input-cible-v2">V2</span>
                                 </div>
-                                <input type="text" class="form-control" placeholder="00.00gr" aria-label="V2"
-                                    aria-describedby="input-cible-v2">
+                                <input type="text" tabindex="3" class="form-control" placeholder="00.00gr"
+                                    aria-label="V2" aria-describedby="input-cible-v2">
                             </div>
-                            <div class="input-group mb-3 mx-3 w-25">
+                            <div class="order-2 input-group mb-3 mx-3 w-25">
                                 <!-- V3  -->
                                 <div class="input-group-prepend">
                                     <span class="input-group-text" id="input-cible-v3">V3</span>
                                 </div>
-                                <input type="text" class="form-control" placeholder="00.00gr" aria-label="V3"
-                                    aria-describedby="input-cible-v3">
+                                <input type="text" tabindex="24" class="form-control" placeholder="00.00gr"
+                                    aria-label="V3" aria-describedby="input-cible-v3">
                             </div>
-                            <div class="input-group mb-3 mx-3 w-25">
-                                <!-- V3  -->
+                            <div class="order-5 input-group mb-3 mx-3 w-25">
+                                <!-- V4  -->
                                 <div class="input-group-prepend">
                                     <span class="input-group-text" id="input-cible-v4">V4</span>
                                 </div>
-                                <input type="text" class="form-control" placeholder="00.00gr" aria-label="V4"
-                                    aria-describedby="input-cible-v4">
+                                <input type="text" tabindex="25" class="form-control" placeholder="00.00gr"
+                                    aria-label="V4" aria-describedby="input-cible-v4">
                             </div>
-                            <div class="input-group mb-3 mx-3 w-25">
-                                <!-- V4  -->
+                            <div class="order-3 input-group mb-3 mx-3 w-25">
+                                <!-- V5 -->
                                 <div class="input-group-prepend">
                                     <span class="input-group-text" id="input-cible-v5">V5</span>
                                 </div>
-                                <input type="text" class="form-control" placeholder="00.00gr" aria-label="V5"
-                                    aria-describedby="input-cible-v5">
+                                <input type="text" tabindex="44" class="form-control" placeholder="00.00gr"
+                                    aria-label="V5" aria-describedby="input-cible-v5">
                             </div>
-                            <div class="input-group mb-3 mx-3 w-25">
-                                <!-- V3  -->
+                            <div class="order-6 input-group mb-3 mx-3 w-25">
+                                <!-- V6  -->
                                 <div class="input-group-prepend">
                                     <span class="input-group-text" id="input-cible-v6">V6</span>
                                 </div>
-                                <input type="text" class="form-control" placeholder="00.00gr" aria-label="V6"
-                                    aria-describedby="input-cible-v6">
+                                <input type="text" tabindex="45" class="form-control" placeholder="00.00gr"
+                                    aria-label="V6" aria-describedby="input-cible-v6">
                             </div>
                         </div>
                     </div>
@@ -149,186 +175,229 @@
 
                 <div class="d-flex flex-grow-1 flex-column align-items-stretch mx-2">
                     <!-- Panneau de saisie des mesures -->
-                    <div id="index-measurement-1 class=" d-flex flex-grow-1 flex-column">
+                    <div id="index-measurement-a" class=" d-flex flex-grow-1 flex-column">
                         <!-- Haut -->
                         <h2 style="text-align: center">Index Measurement a</h2>
+
                         <div class="d-flex  flex-row">
                             <!-- Panneau de gauche -->
                             <div class="f-flex flex-column mx-3">
                                 <div class="input-group mb-3">
-                                    <!-- Dabs 1.  -->
+                                    <!-- Starting position for D Measurement  -->
                                     <div class="input-group-prepend">
-                                        <span class="input-group-text" id="input-dabs-1">Dabs</span>
+                                        <span class="input-group-text" id="input-label-a-start-d-pos">Starting pos.
+                                            D.</span>
                                     </div>
-                                    <input type="text" class="form-control" placeholder="hh:mm:ss"
-                                        aria-label="Dabs time" aria-describedby="input-dabs-1">
-                                    <input type="text" class="form-control" placeholder="-000.0000"
-                                        aria-label="Dabs value" aria-describedby="input-dabs-1">
+                                    <input type="text" tabindex="4" id="input-start-a-d-pos" class="form-control"
+                                        placeholder="00.0000gr" aria-label="Dabs time"
+                                        aria-describedby="input-label-a-start-d-pos">
                                 </div>
                                 <div class="input-group mb-3">
-                                    <!-- Habs 1.  -->
+                                    <!-- 1 -->
                                     <div class="input-group-prepend">
-                                        <span class="input-group-text" id="input-habs-1">Habs</span>
+                                        <span class="input-group-text" id="input-label-a-1">1</span>
                                     </div>
-                                    <input type="text" class="form-control" placeholder="hh:mm:ss"
-                                        aria-label="Habs time" aria-describedby="input-habs-1">
-                                    <input type="text" class="form-control" placeholder="-000.0000"
-                                        aria-label="Habs value" aria-describedby="input-habs-1">
+                                    <input type="text" tabindex="5" id="input-a-time-1" class="form-control"
+                                        placeholder="hh:mm:ss" aria-label="1 time" aria-describedby="input-label-a-1">
+                                    <input type="text" tabindex="9" id="input-a-value-1" class="form-control"
+                                        placeholder="-000.0000" aria-label="1 value" aria-describedby="input-label-a-1">
                                 </div>
                                 <div class="input-group mb-3">
-                                    <!-- Zabs 1.  -->
+                                    <!-- 2 -->
                                     <div class="input-group-prepend">
-                                        <span class="input-group-text" id="input-zabs-1">Zabs</span>
+                                        <span class="input-group-text" id="input-label-a-2">2</span>
                                     </div>
-                                    <input type="text" class="form-control" placeholder="hh:mm:ss"
-                                        aria-label="Zabs time" aria-describedby="input-zabs-1">
-                                    <input type="text" class="form-control" placeholder="-000.0000"
-                                        aria-label="Zabs value" aria-describedby="input-zabs-1">
+                                    <input type="text" tabindex="6" id="input-a-time-2" class="form-control"
+                                        placeholder="hh:mm:ss" aria-label="2 time" aria-describedby="input-label-a-2">
+                                    <input type="text" tabindex="10" id="input-a-value-2" class="form-control"
+                                        placeholder="-000.0000" aria-label="2 value" aria-describedby="input-label-a-2">
                                 </div>
                                 <div class="input-group mb-3">
-                                    <!-- Iabs 1.  -->
+                                    <!-- 3 -->
                                     <div class="input-group-prepend">
-                                        <span class="input-group-text" id="input-iabs-1">Iabs</span>
+                                        <span class="input-group-text" id="input-label-a-3">3</span>
                                     </div>
-                                    <input type="text" class="form-control" placeholder="hh:mm:ss"
-                                        aria-label="Iabs time" aria-describedby="input-iabs-1">
-                                    <input type="text" class="form-control" placeholder="-000.0000"
-                                        aria-label="Iabs value" aria-describedby="input-iabs-1">
+                                    <input type="text" tabindex="7" id="input-a-time-3" class="form-control"
+                                        placeholder="hh:mm:ss" aria-label="3 time" aria-describedby="input-label-a-3">
+                                    <input type="text" tabindex="11" id="input-a-value-3" class="form-control"
+                                        placeholder="-000.0000" aria-label="3 value" aria-describedby="input-label-a-3">
+                                </div>
+                                <div class="input-group mb-3">
+                                    <!-- 4 -->
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="input-label-a-4">4</span>
+                                    </div>
+                                    <input type="text" tabindex="8" id="input-a-time-4" class="form-control"
+                                        placeholder="hh:mm:ss" aria-label="4 time" aria-describedby="input-label-a-4">
+                                    <input type="text" tabindex="12" id="input-a-value-4" class="form-control"
+                                        placeholder="-000.0000" aria-label="4 value" aria-describedby="input-label-a-4">
                                 </div>
                             </div>
                             <div class="f-flex flex-column mx-3">
                                 <!-- Panneau de droite -->
                                 <div class="input-group mb-3">
-                                    <!-- Do 1.  -->
+                                    <!-- Starting position for I Measurement  -->
                                     <div class="input-group-prepend">
-                                        <span class="input-group-text" id="input-do-1">Do</span>
+                                        <span class="input-group-text" id="input-label-a-start-i-pos">Starting pos.
+                                            I.</span>
                                     </div>
-                                    <input type="text" class="form-control" placeholder="hh:mm:ss" aria-label="Do time"
-                                        aria-describedby="input-do-1">
-                                    <input type="text" class="form-control" placeholder="00.000nT" aria-label="Do value"
-                                        aria-describedby="input-do-1">
+                                    <input type="text" tabindex="15" id="input-start-a-i-pos" class="form-control"
+                                        placeholder="00.0000gr" aria-label="Dabs time"
+                                        aria-describedby="input-label-start-a-i-pos">
                                 </div>
                                 <div class="input-group mb-3">
-                                    <!-- Ho 1.  -->
+                                    <!-- 5 -->
                                     <div class="input-group-prepend">
-                                        <span class="input-group-text" id="input-ho-1">Ho</span>
+                                        <span class="input-group-text" id="input-label-a-5">5</span>
                                     </div>
-                                    <input type="text" class="form-control" placeholder="hh:mm:ss" aria-label="Ho time"
-                                        aria-describedby="input-ho-1">
-                                    <input type="text" class="form-control" placeholder="00.000nT" aria-label="Ho value"
-                                        aria-describedby="input-ho-1">
+                                    <input type="text" tabindex="16" id="input-a-time-5" class="form-control"
+                                        placeholder="hh:mm:ss" aria-label="5 time" aria-describedby="input-label-a-5">
+                                    <input type="text" tabindex="20" id="input-a-value-5" class="form-control"
+                                        placeholder="-000.0000" aria-label="5 value" aria-describedby="input-label-a-5">
                                 </div>
                                 <div class="input-group mb-3">
-                                    <!-- Zo 1.  -->
+                                    <!-- 6 -->
                                     <div class="input-group-prepend">
-                                        <span class="input-group-text" id="input-ho-1">Zo</span>
+                                        <span class="input-group-text" id="input-label-a-6">6</span>
                                     </div>
-                                    <input type="text" class="form-control" placeholder="hh:mm:ss" aria-label="Zo time"
-                                        aria-describedby="input-zo-1">
-                                    <input type="text" class="form-control" placeholder="00.000nT" aria-label="Zo value"
-                                        aria-describedby="input-zo-1">
+                                    <input type="text" tabindex="17" id="input-a-time-6" class="form-control"
+                                        placeholder="hh:mm:ss" aria-label="6 time" aria-describedby="input-label-a-6">
+                                    <input type="text" tabindex="21" id="input-a-value-6" class="form-control"
+                                        placeholder="-000.0000" aria-label="6 value" aria-describedby="input-label-a-6">
                                 </div>
                                 <div class="input-group mb-3">
-                                    <!-- Fabs 1.  -->
+                                    <!-- 7 -->
                                     <div class="input-group-prepend">
-                                        <span class="input-group-text" id="input-fabs-1">Fabs</span>
+                                        <span class="input-group-text" id="input-label-a-7">7</span>
                                     </div>
-                                    <input type="text" class="form-control" placeholder="hh:mm:ss"
-                                        aria-label="Fabs time" aria-describedby="input-fabs-1">
-                                    <input type="text" class="form-control" placeholder="-000.0000"
-                                        aria-label="Fabs value" aria-describedby="input-fabs-1">
+                                    <input type="text" tabindex="18" id="input-a-time-7" class="form-control"
+                                        placeholder="hh:mm:ss" aria-label="7 time" aria-describedby="input-label-a-7">
+                                    <input type="text" tabindex="22" id="input-a-value-7" class="form-control"
+                                        placeholder="-000.0000" aria-label="7 value" aria-describedby="input-label-a-7">
+                                </div>
+                                <div class="input-group mb-3">
+                                    <!-- 8 -->
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="input-label-a-8">8</span>
+                                    </div>
+                                    <input type="text" tabindex="19" id="input-a-time-8" class="form-control"
+                                        placeholder="hh:mm:ss" aria-label="8 time" aria-describedby="input-label-a-8">
+                                    <input type="text" tabindex="23" id="input-a-value-8" class="form-control"
+                                        placeholder="-000.0000" aria-label="8 value" aria-describedby="input-label-a-8">
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div id="index-measurement-2" class="d-flex flex-grow-1 flex-column">
-                        <!-- BAS -->
+                    <div id="index-measurement-b" class=" d-flex flex-grow-1 flex-column">
+                        <!-- Bas -->
                         <h2 style="text-align: center">Index Measurement b</h2>
+
                         <div class="d-flex  flex-row">
                             <!-- Panneau de gauche -->
                             <div class="f-flex flex-column mx-3">
                                 <div class="input-group mb-3">
-                                    <!-- Dabs 2.  -->
+                                    <!-- Starting position for D Measurement  -->
                                     <div class="input-group-prepend">
-                                        <span class="input-group-text" id="input-dabs-2">Dabs</span>
+                                        <span class="input-group-text" id="input-label-b-start-d-pos">Starting pos.
+                                            D.</span>
                                     </div>
-                                    <input type="text" class="form-control" placeholder="hh:mm:ss"
-                                        aria-label="Dabs time" aria-describedby="input-dabs-2">
-                                    <input type="text" class="form-control" placeholder="-000.0000"
-                                        aria-label="Dabs value" aria-describedby="input-dabs-2">
+                                    <input type="text" tabindex="26" id="input-start-b-d-pos" class="form-control"
+                                        placeholder="00.0000gr" aria-label="Dabs time"
+                                        aria-describedby="input-label-b-start-d-pos">
                                 </div>
                                 <div class="input-group mb-3">
-                                    <!-- Habs 2.  -->
+                                    <!-- 1 -->
                                     <div class="input-group-prepend">
-                                        <span class="input-group-text" id="input-habs-2">Habs</span>
+                                        <span class="input-group-text" id="input-label-a-1">1</span>
                                     </div>
-                                    <input type="text" class="form-control" placeholder="hh:mm:ss"
-                                        aria-label="Habs time" aria-describedby="input-habs-2">
-                                    <input type="text" class="form-control" placeholder="-000.0000"
-                                        aria-label="Habs value" aria-describedby="input-habs-2">
+                                    <input type="text" tabindex="27" id="input-b-time-1" class="form-control"
+                                        placeholder="hh:mm:ss" aria-label="1 time" aria-describedby="input-label-b-1">
+                                    <input type="text" tabindex="31" id="input-b-value-1" class="form-control"
+                                        placeholder="-000.0000" aria-label="1 value"
+                                        aria-describedby="input-label-bb-1">
                                 </div>
                                 <div class="input-group mb-3">
-                                    <!-- Zabs 2.  -->
+                                    <!-- 2 -->
                                     <div class="input-group-prepend">
-                                        <span class="input-group-text" id="input-zabs-2">Zabs</span>
+                                        <span class="input-group-text" id="input-label-b-2">2</span>
                                     </div>
-                                    <input type="text" class="form-control" placeholder="hh:mm:ss"
-                                        aria-label="Zabs time" aria-describedby="input-zabs-2">
-                                    <input type="text" class="form-control" placeholder="-000.0000"
-                                        aria-label="Zabs value" aria-describedby="input-zabs-2">
+                                    <input type="text" tabindex="28" id="input-b-time-2" class="form-control"
+                                        placeholder="hh:mm:ss" aria-label="2 time" aria-describedby="input-label-b-2">
+                                    <input type="text" tabindex="32" id="input-b-value-2" class="form-control"
+                                        placeholder="-000.0000" aria-label="2 value" aria-describedby="input-label-b-2">
                                 </div>
                                 <div class="input-group mb-3">
-                                    <!-- Iabs 2.  -->
+                                    <!-- 3 -->
                                     <div class="input-group-prepend">
-                                        <span class="input-group-text" id="input-iabs-2">Iabs</span>
+                                        <span class="input-group-text" id="input-label-b-3">3</span>
                                     </div>
-                                    <input type="text" class="form-control" placeholder="hh:mm:ss"
-                                        aria-label="Iabs time" aria-describedby="input-iabs-2">
-                                    <input type="text" class="form-control" placeholder="-000.0000"
-                                        aria-label="Iabs value" aria-describedby="input-iabs-2">
+                                    <input type="text" tabindex="29" id="input-b-time-3" class="form-control"
+                                        placeholder="hh:mm:ss" aria-label="3 time" aria-describedby="input-label-b-3">
+                                    <input type="text" tabindex="33" id="input-b-value-3" class="form-control"
+                                        placeholder="-000.0000" aria-label="3 value" aria-describedby="input-label-b-3">
+                                </div>
+                                <div class="input-group mb-3">
+                                    <!-- 4 -->
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="input-label-b-4">4</span>
+                                    </div>
+                                    <input type="text" tabindex="30" id="input-b-time-4" class="form-control"
+                                        placeholder="hh:mm:ss" aria-label="4 time" aria-describedby="input-label-b-4">
+                                    <input type="text" tabindex="34" id="input-b-value-4" class="form-control"
+                                        placeholder="-000.0000" aria-label="4 value" aria-describedby="input-label-b-4">
                                 </div>
                             </div>
                             <div class="f-flex flex-column mx-3">
                                 <!-- Panneau de droite -->
                                 <div class="input-group mb-3">
-                                    <!-- Do 2.  -->
+                                    <!-- Starting position for I Measurement  -->
                                     <div class="input-group-prepend">
-                                        <span class="input-group-text" id="input-do-2">Do</span>
+                                        <span class="input-group-text" id="input-label-b-start-i-pos">Starting pos.
+                                            I.</span>
                                     </div>
-                                    <input type="text" class="form-control" placeholder="hh:mm:ss" aria-label="Do time"
-                                        aria-describedby="input-do-2">
-                                    <input type="text" class="form-control" placeholder="00.000nT" aria-label="Do value"
-                                        aria-describedby="input-do-2">
+                                    <input type="text" tabindex="35" id="input-start-b-i-pos" class="form-control"
+                                        placeholder="00.0000gr" aria-label="Dabs time"
+                                        aria-describedby="input-label-start-b-i-pos">
                                 </div>
                                 <div class="input-group mb-3">
-                                    <!-- Ho 2.  -->
+                                    <!-- 5 -->
                                     <div class="input-group-prepend">
-                                        <span class="input-group-text" id="input-ho-2">Ho</span>
+                                        <span class="input-group-text" id="input-label-b-5">5</span>
                                     </div>
-                                    <input type="text" class="form-control" placeholder="hh:mm:ss" aria-label="Ho time"
-                                        aria-describedby="input-ho-2">
-                                    <input type="text" class="form-control" placeholder="00.000nT" aria-label="Ho value"
-                                        aria-describedby="input-ho-2">
+                                    <input type="text" tabindex="36" id="input-b-time-5" class="form-control"
+                                        placeholder="hh:mm:ss" aria-label="5 time" aria-describedby="input-label-b-5">
+                                    <input type="text" tabindex="40" id="input-b-value-5" class="form-control"
+                                        placeholder="-000.0000" aria-label="5 value" aria-describedby="input-label-b-5">
                                 </div>
                                 <div class="input-group mb-3">
-                                    <!-- Zo 2.  -->
+                                    <!-- 6 -->
                                     <div class="input-group-prepend">
-                                        <span class="input-group-text" id="input-zo-2">Zo</span>
+                                        <span class="input-group-text" id="input-label-b-6">6</span>
                                     </div>
-                                    <input type="text" class="form-control" placeholder="hh:mm:ss" aria-label="Zo time"
-                                        aria-describedby="input-zo-2">
-                                    <input type="text" class="form-control" placeholder="00.000nT" aria-label="Zo value"
-                                        aria-describedby="input-zo-2">
+                                    <input type="text" tabindex="37" id="input-b-time-6" class="form-control"
+                                        placeholder="hh:mm:ss" aria-label="6 time" aria-describedby="input-label-b-6">
+                                    <input type="text" tabindex="41" id="input-b-value-6" class="form-control"
+                                        placeholder="-000.0000" aria-label="6 value" aria-describedby="input-label-b-6">
                                 </div>
                                 <div class="input-group mb-3">
-                                    <!-- Fabs 2.  -->
+                                    <!-- 7 -->
                                     <div class="input-group-prepend">
-                                        <span class="input-group-text" id="input-fabs-2">Fabs</span>
+                                        <span class="input-group-text" id="input-label-b-7">7</span>
                                     </div>
-                                    <input type="text" class="form-control" placeholder="hh:mm:ss"
-                                        aria-label="Fabs time" aria-describedby="input-fabs-2">
-                                    <input type="text" class="form-control" placeholder="-000.0000"
-                                        aria-label="Fabs value" aria-describedby="input-fabs-2">
+                                    <input type="text" tabindex="38" id="input-b-time-7" class="form-control"
+                                        placeholder="hh:mm:ss" aria-label="7 time" aria-describedby="input-label-b-7">
+                                    <input type="text" tabindex="42" id="input-b-value-7" class="form-control"
+                                        placeholder="-000.0000" aria-label="7 value" aria-describedby="input-label-b-7">
+                                </div>
+                                <div class="input-group mb-3">
+                                    <!-- 8 -->
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="input-label-b-8">8</span>
+                                    </div>
+                                    <input type="text" tabindex="39" id="input-b-time-8" class="form-control"
+                                        placeholder="hh:mm:ss" aria-label="8 time" aria-describedby="input-label-b-8">
+                                    <input type="text" tabindex="43" id="input-b-value-8" class="form-control"
+                                        placeholder="-000.0000" aria-label="8 value" aria-describedby="input-label-b-8">
                                 </div>
                             </div>
                         </div>
@@ -344,6 +413,7 @@
     <script src="./assets/js/vendor/locale/fr.js"></script>
     <script src="./assets/js/vendor/tempusdominus-bootstrap-4.min.js"></script>
     <script src="./assets/js/index.js" type="module"></script>
+    <script src="./assets/js/abs-mes-form.js" type="module"></script>
 </body>
 
 </html>
