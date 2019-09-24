@@ -65,8 +65,6 @@ window.addEventListener("DOMContentLoaded", (event) => {
         sideBySide: true,
         focusOnShow: false,
         keepOpen: true,
-        allowInputToggle: true,
-        // useCurrent: "day",
         icons: {
             time: 'fa fa-clock',
             today: 'fa fa-calendar-check',
@@ -341,6 +339,8 @@ ${escapeHtml(trace)}
         }, 3000)
     }
 }
+
+
 
 function escapeHtml(str) {
     var map =

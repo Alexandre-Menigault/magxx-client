@@ -8,12 +8,12 @@ window.addEventListener("DOMContentLoaded", (event) => {
 
     $('#input-date').focusin(function (e) {
         e.preventDefault()
-        $('#input-date').datetimepicker("toggle")
+        $('#input-date').datetimepicker("show")
     })
-    // $('#input-date').focusout(function () {
-    //     $('#input-date').datetimepicker("hide")
-    // })
-    $('#input-date').on('hide.datetimepicker', function (e) { console.log(e) })
+    $('#input-date').focusout(function () {
+        $('#input-date').datetimepicker("hide")
+    })
+    // $('#input-date').on('hide.datetimepicker', function (e) { console.log(e) })
     const obs_selector = document.getElementById("input-obs");
     const observer_selector = document.getElementById("input-observer");
     obs_selector.onchange = function (ev) {
