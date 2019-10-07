@@ -16,10 +16,11 @@ window.addEventListener("DOMContentLoaded", (event) => {
     // ================== Start UI creation =================
     moment.locale("fr")
     $("#datetimepicker1").val("")
-    $("#datetimepicker1").val("")
+    $("#datetimepicker2").val("")
     $("#input-date").val("")
     $("#datetimepicker1").datetimepicker({
         locale: 'fr',
+        format: "LL",
         sideBySide: true,
         // useCurrent: "minute",
         icons: {
