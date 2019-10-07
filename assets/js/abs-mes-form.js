@@ -41,7 +41,8 @@ window.addEventListener("DOMContentLoaded", (event) => {
             if (input.data("negative") == true) {
                 min = -400;
             }
-            input.val(faker.random.number({ min: min, max: 400, precision: 0.5 / parseInt(input.data("decimal-precision")) }))
+            const precision = parseInt(input.data("decimal-precision"));
+            input.val(`${faker.random.number({ min: min, max: 400 })}.${faker.random.number({ min: 0, max: Math.pow(10, precision) - 1 })}`)
         }
         for (let input of time) {
             input = $(input);
@@ -91,7 +92,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
                 for (let i = lastObs.length - 1; i >= 0; i--) {
                     selector.prepend(new Option(lastObs[i].obs, lastObs[i].obs))
                 }
-                let lastUsedOption = new Option("Last used", "Last used");
+                let lastUsedOption = new Option("Last used", "");
                 lastUsedOption.disabled = true
                 selector.prepend(lastUsedOption)
             }
@@ -121,7 +122,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
                 selector.find('option[selected]')[0].selected = false;
                 const parsedLastUser = JSON.parse(lastUser);
                 selector.prepend(new Option(parsedLastUser["name"], parsedLastUser["login"], true))
-                let lastObserverOption = new Option("Last observer", "Last observer");
+                let lastObserverOption = new Option("Last observer", "");
                 lastObserverOption.disabled = true
                 selector.prepend(lastObserverOption)
             }
@@ -179,7 +180,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
                 isItemValid = validateItem(item, NumberValidator.Decimal(item.val(), precision, isNegativeAllowed));
             } else {
                 // Observatory, observer and DI-Flux
-                if (item.val() != null || item.val() != "") {
+                if (item.val() != null && item.val() != "") {
                     isItemValid = validateItem(item, true)
                 } else {
                     isItemValid = validateItem(item, false)
@@ -188,9 +189,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
 
             if (!isItemValid) _isFormValid = false;
         }
-
-        if (!_isFormValid) isFormValid(false)
-        else isFormValid(true)
+        isFormValid(_isFormValid)
 
     }
 
@@ -279,6 +278,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
                 },
                 error(xhr, status, error) {
                     displayErrorAlert("Erreur lors de l'envoi de la mesure", xhr.responseJSON.message);
+                    console.error(xhr.responseJSON.trace)
                     validateForm();
                 }
             })
@@ -310,6 +310,8 @@ window.addEventListener("DOMContentLoaded", (event) => {
         }
         $form.trigger("reset");
         $('#input-button-submit').addClass("disabled").prop("disabled", true)
+        const selector = $('#input-observer');
+        selector.val(JSON.parse(lastUser)["login"])
     }
 
     function displaySuccessAlert(message, fixed = false) {
