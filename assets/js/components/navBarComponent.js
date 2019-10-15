@@ -1,8 +1,9 @@
 import Component from "./baseComponent.js";
 import NavLink from "./navLinkComponent.js";
 import Button from "./buttonComponent.js";
+import config from "../../../config.js"
 
-let pages = { graph: "/magxx-client/", env: "/magxx-client/env.html", log: "/magxx-client/log.html", abs: "/magxx-client/abs-mes.html" }
+let pages = { graph: config.pathname, env: config.pathname + "/env.html", log: config.pathname + "/log.html", abs: config.pathname + "/abs-mes.html" }
 
 class NavBarComponent extends Component {
 
