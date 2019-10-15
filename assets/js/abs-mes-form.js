@@ -63,8 +63,8 @@ window.addEventListener("DOMContentLoaded", (event) => {
             fetchUser(observer_selector.value);
     }
 
-    $('#input-button-verify').click(function (e) {
-        validateForm();
+    $('#input-button-test').click(function (e) {
+        testMeasure()
     })
     $('#input-button-submit').click(function (e) {
         submitForm();
@@ -79,6 +79,10 @@ window.addEventListener("DOMContentLoaded", (event) => {
     fetchObsList();
     fetchObserverList();
     obs_selector.selectedIndex = 0;
+
+    function testMeasure() {
+        // TODO: 
+    }
 
     function fetchObsList() {
         // TODO: cache response
