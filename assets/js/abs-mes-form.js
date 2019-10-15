@@ -1,5 +1,6 @@
 import NumberValidator from "../../validators/numberValidator.js";
 import DateTimeValidator from "../../validators/dateTimeValidator.js";
+import config from "../../config.js";
 
 window.addEventListener("DOMContentLoaded", (event) => {
     let lastObsUsed = window.localStorage.getItem("lastObsUsed");
@@ -86,7 +87,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
 
     function fetchObsList() {
         // TODO: cache response
-        fetch("http://localhost/magxx/api/observatories").then((res) => {
+        fetch(config.serverBaseUrl + "/api/observatories").then((res) => {
             return res.json()
         }).then((obs) => {
             const selector = $('#input-obs');
@@ -110,7 +111,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
     }
     function fetchObserverList() {
         // TODO: cache response
-        fetch("http://localhost/magxx/api/users").then((res) => {
+        fetch(config.serverBaseUrl + "/api/users").then((res) => {
             return res.json()
         }).then((observers) => {
             const selector = $('#input-observer');
@@ -140,7 +141,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
     }
 
     function fetchObsConfig(obs) {
-        fetch(`http://localhost/magxx/api/observatory/${obs}`)
+        fetch(`${config.serverBaseUrl}/api/observatory/${obs}`)
             .then(res => { return res.json() })
             .then((obs_config) => {
 
@@ -155,7 +156,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
             })
     }
     function fetchUser(user) {
-        fetch(`http://localhost/magxx/api/users/${user}`)
+        fetch(`${config.serverBaseUrl}/api/users/${user}`)
             .then(res => { return res.json() })
             .then((user) => {
                 const lastUser = JSON.parse(window.localStorage.getItem("lastUser"));
@@ -271,7 +272,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
             }
 
             $.ajax({
-                url: 'http://localhost/magxx/api/measure/',
+                url: config.serverBaseUrl + '/api/measure/',
                 method: 'POST',
                 data: JSON.stringify(res),
                 dataType: "json",

@@ -171,7 +171,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
     // ================== End UI creation =================
 
     function fetchEnv(type, posix) {
-        let file = `http://localhost/magxx/api/data/${$("#obsSelector").val()}/${posix}/${type}?interval=${$("#dateRangeSelector").val()}`;
+        let file = `${config.serverBaseUrl}/api/data/${$("#obsSelector").val()}/${posix}/${type}?interval=${$("#dateRangeSelector").val()}`;
         const loading = document.getElementById("loadingSpinner");
         loading.style.visibility = "visible"
         let done = true;
@@ -220,7 +220,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
     }
 
     function fetchLog(type, posix) {
-        let file = `http://localhost/magxx/api/data/${$("#obsSelector").val()}/${posix}/${type}?interval=${$("#dateRangeSelector").val()}`;
+        let file = `${config.serverBaseUrl}/api/data/${$("#obsSelector").val()}/${posix}/${type}?interval=${$("#dateRangeSelector").val()}`;
         const loading = document.getElementById("loadingSpinner");
         loading.style.visibility = "visible"
 
@@ -285,7 +285,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
      * @param {number} posix 
      */
     function fetchAndPlot(type, posix) {
-        let file = `http://localhost/magxx/api/data/${$("#obsSelector").val()}/${posix}/${type}?interval=${$("#dateRangeSelector").val()}`;
+        let file = `${config.serverBaseUrl}/api/data/${$("#obsSelector").val()}/${posix}/${type}?interval=${$("#dateRangeSelector").val()}`;
 
         const loading = document.getElementById("loadingSpinner");
         loading.style.visibility = "visible"
