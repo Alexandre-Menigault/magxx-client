@@ -85,6 +85,7 @@ class MagChart {
                     if (!this.options.dispalayLabels) return "";
                     return CanvasJS.formatDate(e.value - (-e.value.getTimezoneOffset() * 60 * 1000), "DD MM YYYY HH:mm:ss", e.chart.culture)
                 },
+                labelAngle: -45,
                 stripLines: [{
                     color: "#000",
                     showOnTop: true,
@@ -180,23 +181,26 @@ class MagChart {
      */
     resizeHandler(e) {
         const count = MagChart.countVisiblePoints(this.chart, e);
+        if (e.trigger === "pan") return
         if (e.trigger === "zoom") this.parent.zoomIn(this);
-        this.parent.charts.forEach((chart, i) => {
+        for (let chart of this.parent.charts) {
             chart = chart.chart;
             if (e.trigger === "reset") {
                 chart.options.axisX.viewportMinimum = chart.options.axisX.viewportMaximum = null;
                 chart.options.axisY.viewportMinimum = chart.options.axisY.viewportMaximum = null;
-                chart.data[0].set("type", "line")
-            } else {
-                chart.axisX[0].set("viewportMinimum", e.axisX[0].viewportMinimum, false);
-                chart.axisX[0].set("viewportMaximum", e.axisX[0].viewportMaximum, false);
+                chart.data[0].type = "line"
+            } else if (chart != this.chart) {
+                chart.options.axisX.viewportMinimum = e.axisX[0].viewportMinimum;
+                chart.options.axisX.viewportMaximum = e.axisX[0].viewportMaximum;
             }
-            if (chart.data[0].type == "line" && count <= 500) chart.data[0].set("type", "spline");
-            else if (chart.data[0].type == "spline" && count > 500) chart.data[0].set("type", "line");
+            if (chart.data[0].type == "line" && count <= 500) chart.data[0].type = "spline";
+            else if (chart.data[0].type == "spline" && count > 500) chart.data[0].type = "line";
             MagChart.handleMarkers(chart, e, count)
-            chart.render();
-        });
+        }
 
+        for (let chart of this.parent.charts) {
+            chart.chart.render()
+        }
     }
 
     /**
