@@ -83,7 +83,11 @@ class Charts {
             // Si les plots existent déjà, on évite de les recréer à nouveau, on modifie juste le jeu de données
             if (this.charts[i] != undefined) this.charts[i].updateData(chartData);
             else {
-                const c = new MagChart(chartData, { label: `${header} value`, type: header, color: colors[i] != undefined ? colors[i] : colors[0] }, this)
+                const c = new MagChart(chartData, {
+                    label: `${header} value`,
+                    type: header, color: colors[i] != undefined ? colors[i] : colors[0],
+                    dispalayLabels: i == headers.length - 1
+                }, this)
                 this.charts.push(c);
                 c.chart.render()
             }

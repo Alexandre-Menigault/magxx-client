@@ -11,14 +11,24 @@ class MagChart {
      */
 
     /**
+     * @typedef {Object} ChartOptions
+     * 
+     * @property {string} label - The legend of chart
+     * @property {string} type - The type of data [eg. X, Y, Z, F]
+     * @property {string} color - The color of the lines
+     * @property {boolean} [dispalayLabels=false] - Whether display the labels at the bottom of the chart or not
+     * @memberof MagChart
+     */
+
+    /**
      *Creates an instance of Chart.
      * @param {Charts.ChartData[]} data
-     * @param {Object} options
+     * @param {ChartOptions} options
      * @param {Charts} parent
      * 
      * @property {HTMLElement} canvas - The container of the canvas
      * @property {Charts} parent
-     * @property {object} options
+     * @property {ChartOptions} options
      * @property {Charts.ChartData[]} data
      */
     constructor(data, options, parent) {
@@ -31,6 +41,7 @@ class MagChart {
         this.parent = parent
         this.parent.container.appendChild(this.canvas)
         this.options = options;
+        this.options.dispalayLabels = options.dispalayLabels || false;
         this.data = data;
 
         this.initchart();
@@ -64,13 +75,15 @@ class MagChart {
         this.chart = new CanvasJS.Chart(this.canvas, {
             culture: "fr",
             axisY: {
-                includeZero: false
+                includeZero: false,
+                valueFormatString: "00000.0"
             },
             axisX: {
-                valueFormatString: "DD MMM YYYY HH:mm:ss",
+                valueFormatString: "DD MM YYYY HH:mm:ss",
                 labelFormatter: (e) => {
                     // TODO: Display only to the last (or first) plot to save screen space
-                    return CanvasJS.formatDate(e.value - (-e.value.getTimezoneOffset() * 60 * 1000), "DD MMMM YYYY HH:mm:ss", e.chart.culture)
+                    if (!this.options.dispalayLabels) return "";
+                    return CanvasJS.formatDate(e.value - (-e.value.getTimezoneOffset() * 60 * 1000), "DD MM YYYY HH:mm:ss", e.chart.culture)
                 },
                 stripLines: [{
                     color: "#000",
@@ -94,7 +107,7 @@ class MagChart {
                 dataPoints: this.data,
                 xValueType: "dateTime",
                 showInLegend: true,
-                xValueFormatString: "DD MMMM YYYY HH:mm:ss",
+                xValueFormatString: "DD MM YYYY HH:mm:ss",
             }],
             options: {
                 scales: {
