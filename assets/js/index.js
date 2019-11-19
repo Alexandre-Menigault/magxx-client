@@ -4,6 +4,8 @@ import Component from './components/baseComponent.js';
 import NavLink from './components/navLinkComponent.js';
 import NavBar from './components/navBarComponent.js';
 import config from "../../config.js"
+import Teno from "./teno.js"
+import TenoFormatter from "./tenoFormtter.js"
 
 window.addEventListener("DOMContentLoaded", (event) => {
 
@@ -28,8 +30,8 @@ window.addEventListener("DOMContentLoaded", (event) => {
             time: 'fa fa-clock',
             today: 'fa fa-calendar-check',
         },
-        maxDate: moment("2019-08-18T23:59:59.999"),
-        minDate: moment("2019-01-01T00:00:00.000"),
+        maxDate: moment("2019-11-06T23:59:59.999"),
+        minDate: moment("2019-08-18T00:00:00.000"),
         tooltips: {
             today: "Ajouurd'hui",
             close: 'Fermer',
@@ -51,13 +53,14 @@ window.addEventListener("DOMContentLoaded", (event) => {
             selectTime: "Sélectionner temps",
             selectDate: "Sélectionner date"
         },
-        keepOpen: false
+        keepOpen: false,
+        keepInvaliid: true
     })
 
     $("#datetimepicker2").datetimepicker({
         locale: 'fr',
-        maxDate: moment("2019-08-19T00:00:00.000"),
-        minDate: moment("2019-01-01T00:00:00.000"),
+        maxDate: moment("2019-11-07T00:00:00.000"),
+        minDate: moment("2019-08-18T00:00:00.000"),
         keepInvalid: true
     });
 
@@ -109,8 +112,9 @@ window.addEventListener("DOMContentLoaded", (event) => {
     let datetimepicker1LastUpdate = Date.now();
 
     const selector = document.getElementById("dateRangeSelector")
-    $("#datetimepicker1").datetimepicker("date", moment().format("DD/MM/YYYY H:mm"))
-    $("#datetimepicker2").datetimepicker("date", $("#datetimepicker1").datetimepicker("date").add(parseInt(selector.value[0]), selector.value[1]))
+    // $("#datetimepicker1").datetimepicker("date", moment().format("DD/MM/YYYY HH:mm"))
+    // console.log($("#datetimepicker1"))
+    // $("#datetimepicker2").datetimepicker("date", $("#datetimepicker1").datetimepicker("date").add(parseInt(selector.value[0]), selector.value[1]))
     $("#datetimepicker1").on("hide.datetimepicker", prepareFetch);
     $("#prev-interval").click((e) => {
         $("#datetimepicker1").datetimepicker("date", $("#datetimepicker1").datetimepicker("date").subtract(parseInt(selector.value[0]), selector.value[1]))
@@ -221,7 +225,10 @@ window.addEventListener("DOMContentLoaded", (event) => {
     }
 
     function fetchLog(type, posix) {
-        let file = `${config.serverBaseUrl}/api/data/${$("#obsSelector").val()}/${posix}/${type}?interval=${$("#dateRangeSelector").val()}`;
+        const teno = Teno.fromTimestamp(posix * 1000);
+        console.log(posix, teno)
+        let file = `${config.serverBaseUrl}/api/data/${$("#obsSelector").val()}/${teno.teno}/${type}?interval=${$("#dateRangeSelector").val()}`;
+        console.log(file)
         const loading = document.getElementById("loadingSpinner");
         loading.style.visibility = "visible"
 
@@ -253,8 +260,10 @@ window.addEventListener("DOMContentLoaded", (event) => {
                             td.classList.add("text-center")
                             if (header == "ms") continue;
                             if (header == "t") {
-                                const time = line[header] - (utcOffset * 60);
-                                const date = moment(parseInt(`${time}${line["ms"]}`)).format("DD/MM/YYYY H:mm:ss.SSS");
+                                const time = line[header];
+                                const teno = Teno.toYYYYMMDDHHMMSS(parseInt(time))
+                                const date = TenoFormatter.format(teno, "%Y-%m-%D %H:%M:%S")
+                                // const date = moment(parseInt(`${time}${line["ms"]}`)).format("DD/MM/YYYY H:mm:ss.SSS");
                                 td.innerText = date;
                             } else if (header == "Level") {
                                 const p = document.createElement("p");
@@ -286,7 +295,10 @@ window.addEventListener("DOMContentLoaded", (event) => {
      * @param {number} posix 
      */
     function fetchAndPlot(type, posix) {
-        let file = `${config.serverBaseUrl}/api/data/${$("#obsSelector").val()}/${posix}/${type}?interval=${$("#dateRangeSelector").val()}`;
+
+        const teno = Teno.fromTimestamp(posix * 1000);
+
+        let file = `${config.serverBaseUrl}/api/data/${$("#obsSelector").val()}/${teno.teno}/${type}?interval=${$("#dateRangeSelector").val()}`;
 
         const loading = document.getElementById("loadingSpinner");
         loading.style.visibility = "visible"

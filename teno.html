@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="./assets/css/vendor/bootstrap.css">
+    <link rel="stylesheet" href="./assets/css/vendor/font-awesome.all.min.css">
+    <link rel="stylesheet" href="./assets/css/vendor/tempusdominus-bootstrap-4.min.css">
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <title>Document</title>
+</head>
+
+<body class="container-fluid">
+    <div class="d(flex flex-column w-50">
+        <p>Teno</p>
+        <input type="text" class="form-control" name="" id="teno">
+    </div>
+    <p>
+        UTC: <span id="utc"></span>
+    </p>
+    <div class="d-flex flex-row w-50">
+        <!-- <select class="select-date custom-select" id="year"></select>
+        <select class="select-date custom-select" id="month"></select>
+        <select class="select-date custom-select" id="day"></select>
+        <select class="select-date custom-select" id="hours"></select>
+        <select class="select-date custom-select" id="minutes"></select>
+        <select class="select-date custom-select" id="seconds"></select> -->
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                                <i class="fa fa-calendar-alt"></i>
+                            </div>
+                        </div>
+                        <input type="text" class="form-control datetimepicker-input" id="datepicker-utc"
+                            data-toggle="datetimepicker" data-target="#datepicker-utc" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <p>
+        TENO: <span id="tenoResult"></span>
+    </p>
+</body>
+
+
+<script src="./assets/js/vendor/jquery-3.4.1.js"></script>
+<script src="./assets/js/vendor/bootstrap.bundle.js"></script>
+<script src="./assets/js/vendor/moment-2.22.2.min.js"></script>
+<script src="./assets/js/vendor/locale/fr.js"></script>
+<script src="./assets/js/vendor/tempusdominus-bootstrap-4.min.js"></script>
+
+<script type="module">
+    import Teno from "./assets/js/teno.js"
+    import TenoFormatter from "./assets/js/tenoFormtter.js"
+
+    const $teno = document.getElementById("teno")
+    const $utc = document.getElementById("utc")
+
+    $teno.value = "";
+    $utc.innerHTML = "";
+    $teno.oninput = function (e) {
+        const tenoV = parseInt($teno.value);
+        const teno = Teno.toYYYYMMDDHHMMSS(tenoV);
+        $utc.innerHTML = TenoFormatter.format(teno, "%Y-%m-%D %H:%M:%S");
+    }
+
+    const datetimepickerUTC = $('#datepicker-utc');
+    const $tenoRes = document.getElementById("tenoResult")
+    $tenoRes.innerHTML = "";
+
+    // moment.locale("fr")
+    moment.utc();
+    datetimepickerUTC.val("")
+    datetimepickerUTC.datetimepicker({
+        sideBySide: true,
+        minDate: moment("2000-01-01T00:00:00.000"),
+        format: "YYYY-MM-DD HH:mm:ss"
+    });
+
+    datetimepickerUTC.on("hide.datetimepicker", (e) => {
+        console.log(e.date.year())
+        const teno = Teno.fromYYYYMMDDHHMMSS({
+            yyyy: e.date.year(),
+            mmmm: e.date.month() + 1,
+            dddd: e.date.date(),
+            hh: e.date.hour(),
+            mm: e.date.minute(),
+            ss: e.date.second(),
+        });
+        console.log(teno);
+        $tenoRes.innerHTML = teno.teno;
+    })
+
+
+    // const $dateElems = document.getElementsByClassName("select-date");
+    // for (let i = 0; i < $dateElems.length; i++) {
+    //     $dateElems[i].oninput = function () {
+    //         const teno = Teno.fromYYYYMMDDHHMMSS({
+    //             yyyy: parseInt($year.value),
+    //             mmmm: parseInt($month.value),
+    //             dddd: parseInt($day.value),
+    //             hh: parseInt($hours.value),
+    //             mm: parseInt($minutes.value),
+    //             ss: parseInt($seconds.value),
+    //         })
+
+    //         const $tenoRes = document.getElementById("tenoResult")
+    //         $tenoRes.innerHTML = teno.teno;
+
+    //     }
+    // };
+
+
+
+</script>
+
+</html>

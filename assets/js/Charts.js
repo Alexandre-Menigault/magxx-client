@@ -74,7 +74,7 @@ class Charts {
             /** @type {Charts.ChartData[]} */
             const chartData = jsonData.reduce((data, line, j) => {
                 if (j !== 0) {
-                    const x = new Date(line.t * 1000);
+                    const x = parseInt(line.t);
                     const y = parseFloat(line[header]);
                     data.push({ x, y });
                 }

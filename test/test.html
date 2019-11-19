@@ -17,10 +17,13 @@
     <script class="mocha-init">
         mocha.setup('bdd');
         mocha.checkLeaks();
+        mocha.growl();
     </script>
     <script src="../assets/js/vendor/moment-2.22.2.min.js"></script>
     <script type="module" src="numberValidation.test.js"></script>
     <script type="module" src="dateTimeValidation.test.js"></script>
+    <script type="module" src="teno.test.js"></script>
+    <script type="module" src="tenoFormatter.test.js"></script>
     <script type="module" class="mocha-exec">
         mocha.run();
     </script>

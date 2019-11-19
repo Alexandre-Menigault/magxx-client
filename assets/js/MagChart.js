@@ -1,5 +1,8 @@
 import Charts from "./Charts.js"
 
+import Teno from "./teno.js"
+import TenoFormatter from "./tenoFormtter.js"
+
 class MagChart {
 
     /**
@@ -72,6 +75,7 @@ class MagChart {
      *
      */
     initchart() {
+
         this.chart = new CanvasJS.Chart(this.canvas, {
             culture: "fr",
             axisY: {
@@ -79,11 +83,10 @@ class MagChart {
                 valueFormatString: "00000.0"
             },
             axisX: {
-                valueFormatString: "DD MM YYYY HH:mm:ss",
+                // valueFormatString: "DD MM YYYY HH:mm:ss",
                 labelFormatter: (e) => {
-                    // TODO: Display only to the last (or first) plot to save screen space
                     if (!this.options.dispalayLabels) return "";
-                    return CanvasJS.formatDate(e.value - (-e.value.getTimezoneOffset() * 60 * 1000), "DD MM YYYY HH:mm:ss", e.chart.culture)
+                    return TenoFormatter.format(Teno.toYYYYMMDDHHMMSS(parseInt(e.value)), "%Y-%m-%D %H:%M:%S")
                 },
                 labelAngle: -45,
                 stripLines: [{
@@ -106,15 +109,9 @@ class MagChart {
                 markerType: "circle",
                 markerSize: null,
                 dataPoints: this.data,
-                xValueType: "dateTime",
+                xValueType: "number",
                 showInLegend: true,
-                xValueFormatString: "DD MM YYYY HH:mm:ss",
             }],
-            options: {
-                scales: {
-                    xAxes: [{ type: "time" }]
-                },
-            },
             panEnabled: false,
             // ===============================================================
             // If we want to use zoom only, not select and zoom on right click
@@ -126,7 +123,7 @@ class MagChart {
             toolTip: {
                 contentFormatter: function (e) {
                     return `<strong style="color: ${e.entries[0].dataSeries.color}">
-                        ${CanvasJS.formatDate(e.entries[0].dataPoint.x - (-e.entries[0].dataPoint.x.getTimezoneOffset() * 60 * 1000), "DD MMMM YYYY HH:mm:ss", e.chart.culture)}</strong>: 
+                        ${TenoFormatter.format(Teno.toYYYYMMDDHHMMSS(e.entries[0].dataPoint.x), "%Y-%m-%D %H:%M:%S")}</strong>: 
                         ${e.entries[0].dataPoint.y} nT`;
                 }
             },
