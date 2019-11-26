@@ -13,7 +13,7 @@
 </head>
 
 <body class="container-fluid">
-    <div class="d(flex flex-column w-50">
+    <div class="d-flex flex-column w-50">
         <p>Teno</p>
         <input type="text" class="form-control" name="" id="teno">
     </div>
@@ -38,6 +38,9 @@
                         </div>
                         <input type="text" class="form-control datetimepicker-input" id="datepicker-utc"
                             data-toggle="datetimepicker" data-target="#datepicker-utc" />
+                        <div class="input-group-append">
+                            <select class="select-date custom-select" id="seconds"></select>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -62,6 +65,11 @@
     const $teno = document.getElementById("teno")
     const $utc = document.getElementById("utc")
 
+    const $seconds = document.getElementById("seconds")
+
+    for (let i = 0; i <= 60; i++)
+        $seconds.add(new Option(i + " s", i));
+
     $teno.value = "";
     $utc.innerHTML = "";
     $teno.oninput = function (e) {
@@ -79,23 +87,29 @@
     datetimepickerUTC.val("")
     datetimepickerUTC.datetimepicker({
         sideBySide: true,
+        useCurrent: "minute",
+        defaultDate: "2000-01-01T00:00:00.000",
         minDate: moment("2000-01-01T00:00:00.000"),
-        format: "YYYY-MM-DD HH:mm:ss"
+        format: "YYYY-MM-DD HH:mm",
     });
 
-    datetimepickerUTC.on("hide.datetimepicker", (e) => {
-        console.log(e.date.year())
+    datetimepickerUTC.on("hide.datetimepicker", utcToTeno)
+    datetimepickerUTC.on("change.datetimepicker", utcToTeno)
+    $seconds.onchange = utcToTeno;
+
+    function utcToTeno() {
+        const date = datetimepickerUTC.datetimepicker("date");
         const teno = Teno.fromYYYYMMDDHHMMSS({
-            yyyy: e.date.year(),
-            mmmm: e.date.month() + 1,
-            dddd: e.date.date(),
-            hh: e.date.hour(),
-            mm: e.date.minute(),
-            ss: e.date.second(),
+            yyyy: date.year(),
+            mmmm: date.month() + 1,
+            dddd: date.date(),
+            hh: date.hour(),
+            mm: date.minute(),
+            ss: parseInt($seconds.value, 10),
         });
         console.log(teno);
         $tenoRes.innerHTML = teno.teno;
-    })
+    }
 
 
     // const $dateElems = document.getElementsByClassName("select-date");

@@ -1,6 +1,7 @@
 import NumberValidator from "../../validators/numberValidator.js";
 import DateTimeValidator from "../../validators/dateTimeValidator.js";
 import config from "../../config.js";
+import fetchTimeout from "./vendor/fetch-timeout.js";
 
 window.addEventListener("DOMContentLoaded", (event) => {
     let lastObsUsed = window.localStorage.getItem("lastObsUsed");
@@ -156,7 +157,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
             })
     }
     function fetchUser(user) {
-        fetch(`${config.serverBaseUrl}/api/users/${user}`)
+        fetchTimeout(`${config.serverBaseUrl}/api/users/${user}`, {}, 100, "Fetch users timeout")
             .then(res => { return res.json() })
             .then((user) => {
                 const lastUser = JSON.parse(window.localStorage.getItem("lastUser"));
@@ -164,6 +165,10 @@ window.addEventListener("DOMContentLoaded", (event) => {
                     window.localStorage.setItem("lastUser", JSON.stringify(user))
                 }
 
+            })
+            .catch((err) => {
+                console.error("[" + now.toLocaleDateString() + " " + now.toLocaleTimeString() + "]", "Fetch users", error + " - ", "Emitted by " + observer)
+                displayErrorAlert("Impossible de contacter le serveur, veuillez réessayer plus tard", "Impossible de récupérer la liste des utilisateurs");
             })
     }
 
@@ -277,13 +282,20 @@ window.addEventListener("DOMContentLoaded", (event) => {
                 data: JSON.stringify(res),
                 dataType: "json",
                 contentType: 'application/json',
+                timeout: 3000,
                 success: function (data, status) {
                     displaySuccessAlert("La mesure a bien été créée");
                     resetForm($form)
                 },
                 error(xhr, status, error) {
-                    displayErrorAlert("Erreur lors de l'envoi de la mesure", xhr.responseJSON.message);
-                    console.error(xhr.responseJSON.trace)
+                    if (error == "timeout") {
+                        const now = new Date();
+                        console.error("[" + now.toLocaleDateString() + " " + now.toLocaleTimeString() + "]", "Absolute measurement", error + " - ", "Emitted by " + observer)
+                        displayErrorAlert("Impossible de contacter le serveur, veuillez réessayer plus tard", "Envoi de la mesure absolue annulée !");
+                    } else {
+                        displayErrorAlert("Erreur lors de l'envoi de la mesure", xhr.responseJSON.message);
+                        console.error(xhr.responseJSON.trace)
+                    }
                     validateForm();
                 }
             })
