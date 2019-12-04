@@ -17,8 +17,9 @@ function fetchObsList() {
         for (let index = 0; index < obs.length; index++) {
             const o = obs[index];
             const curObs = sessionStorage.getItem("obs")
+            console.log(curObs);
             if (curObs == o)
-                selector.append(new Option(o, o, true));
+                selector.append(new Option(o, o, false, true));
             else
                 selector.append(new Option(o, o));
         }
