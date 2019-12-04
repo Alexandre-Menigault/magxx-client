@@ -275,29 +275,31 @@ window.addEventListener("DOMContentLoaded", (event) => {
                 measurementA,
                 measurementB
             }
-
+            $('#input-button-submit').addClass("disabled")
+            $('#input-button-submit').disabled = true;
             $.ajax({
                 url: config.serverBaseUrl + '/api/measure/',
                 method: 'POST',
                 data: JSON.stringify(res),
                 dataType: "json",
                 contentType: 'application/json',
-                timeout: 3000,
+                timeout: 1000,
                 success: function (data, status) {
                     displaySuccessAlert("La mesure a bien été créée");
                     resetForm($form)
                 },
                 error(xhr, status, error) {
+                    console.log(error)
                     if (error == "timeout") {
                         const now = new Date();
                         console.error("[" + now.toLocaleDateString() + " " + now.toLocaleTimeString() + "]", "Absolute measurement", error + " - ", "Emitted by " + observer)
                         displayErrorAlert("Impossible de contacter le serveur, veuillez réessayer plus tard", "Envoi de la mesure absolue annulée !");
                     } else {
-                        displayErrorAlert("Erreur lors de l'envoi de la mesure", xhr.responseJSON.message);
-                        console.error(xhr.responseJSON.trace)
+                        displayErrorAlert("Erreur lors de l'envoi de la mesure", xhr.responseJSON);
+                        console.error(xhr.responseJSON)
                     }
                     validateForm();
-                }
+                },
             })
         }
     }

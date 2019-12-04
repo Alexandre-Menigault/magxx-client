@@ -48,3 +48,7 @@
 button.disabled {
     cursor: not-allowed;
 }
+
+#abs-mes-form .input-group-text{
+    font-family: Helvetica serif;
+}
