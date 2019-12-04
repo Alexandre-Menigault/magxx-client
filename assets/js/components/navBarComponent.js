@@ -5,6 +5,22 @@ import config from "../../../config.js"
 
 let pages = { graph: config.pathname, env: config.pathname + "/env.html", log: config.pathname + "/log.html", abs: config.pathname + "/abs-mes.html" }
 
+function fetchObsList() {
+    // TODO: cache response
+    fetch(config.serverBaseUrl + "/api/observatories").then((res) => {
+        return res.json()
+    }).then((obs) => {
+        const selector = $('#obsSelector');
+        // const lastObs = JSON.parse(window.localStorage.getItem("lastObsUsed"));
+        // Add last used observatories to the list
+
+        for (let index = 0; index < obs.length; index++) {
+            const o = obs[index];
+            selector.append(new Option(o, o));
+        }
+    })
+}
+
 class NavBarComponent extends Component {
 
     /**
@@ -19,6 +35,7 @@ class NavBarComponent extends Component {
         this.baseHTMLElement = options.parent;
         this.init();
     }
+
 
     init() {
         // Navbar-brand
@@ -85,16 +102,8 @@ class NavBarComponent extends Component {
         const obsSelect = document.createElement("select");
         obsSelect.id = "obsSelector";
         obsSelect.classList.add("custom-select", "mr-2");
-        // TODO: récupérer la liste des observatoires sur le serveur
-        const clf = document.createElement("option");
-        clf.value = "CLF";
-        clf.innerText = "CLF";
-        const clf3 = document.createElement("option");
-        clf3.value = "CLF3";
-        clf3.innerText = "CLF3";
-        obsSelect.appendChild(clf);
-        obsSelect.appendChild(clf3);
         datetimeFormGroup.appendChild(obsSelect);
+        fetchObsList()
 
         // Create interval selector
         const intervalSelect = document.createElement("select");
