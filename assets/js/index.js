@@ -30,7 +30,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
             time: 'fa fa-clock',
             today: 'fa fa-calendar-check',
         },
-        maxDate: moment("2019-11-06T23:59:59.999"),
+        maxDate: moment(),
         minDate: moment("2019-08-18T00:00:00.000"),
         tooltips: {
             today: "Ajouurd'hui",
@@ -59,7 +59,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
 
     $("#datetimepicker2").datetimepicker({
         locale: 'fr',
-        maxDate: moment("2019-11-07T00:00:00.000"),
+        maxDate: moment(),
         minDate: moment("2019-08-18T00:00:00.000"),
         keepInvalid: true
     });
