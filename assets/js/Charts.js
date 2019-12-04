@@ -68,7 +68,7 @@ class Charts {
         let headers = jsonData[0].header
         // On supprime les headers posix et ms pour ne pas créer de plots avec ces données
         headers.splice(0, 2)
-        headers.splice(headers.length - 1)
+        headers.splice(headers.length)
         const colors = jsonData[0].colors;
         let i = 0;
         for (let header of headers) {
