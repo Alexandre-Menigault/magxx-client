@@ -16,7 +16,11 @@ function fetchObsList() {
 
         for (let index = 0; index < obs.length; index++) {
             const o = obs[index];
-            selector.append(new Option(o, o));
+            const curObs = sessionStorage.getItem("obs")
+            if (curObs == o)
+                selector.append(new Option(o, o, true));
+            else
+                selector.append(new Option(o, o));
         }
     })
 }
@@ -103,6 +107,21 @@ class NavBarComponent extends Component {
         obsSelect.id = "obsSelector";
         obsSelect.classList.add("custom-select", "mr-2");
         datetimeFormGroup.appendChild(obsSelect);
+        // TODO: récupérer la liste des observatoires sur le serveur
+        // const clf = document.createElement("option");
+        // clf.value = "CLF";
+        // clf.innerText = "CLF";
+        // const clf3 = document.createElement("option");
+        // clf3.value = "CLF3";
+        // clf3.innerText = "CLF3";
+        // obsSelect.appendChild(clf);
+        // const clf5 = document.createElement("option");
+        // clf5.value = "CLF5";
+        // clf5.innerText = "CLF5";
+        // // obsSelect.appendChild(clf);
+        // obsSelect.appendChild(clf3);
+        // obsSelect.appendChild(clf5);
+
         fetchObsList()
 
         // Create interval selector
