@@ -68,7 +68,7 @@ class Charts {
         let headers = jsonData[0].header
         // On supprime les headers posix et ms pour ne pas créer de plots avec ces données
         headers.splice(0, 2)
-        headers.splice(headers.length)
+        headers.splice(headers.length - 2, 1)
         const colors = jsonData[0].colors;
         let i = 0;
         for (let header of headers) {
@@ -76,7 +76,7 @@ class Charts {
             const chartData = jsonData.reduce((data, line, j) => {
                 if (j !== 0 && parseInt(line.flag) != 0) {
                     const x = parseInt(line.t);
-                    const y = parseFloat(line[header]);
+                    const y = parseFloat(line[header]); // TODO: Change to null if flag is 0 OR y = 9999.0
                     data.push({ x, y });
                 }
                 return data
