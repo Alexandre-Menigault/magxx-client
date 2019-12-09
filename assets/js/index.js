@@ -176,7 +176,9 @@ window.addEventListener("DOMContentLoaded", (event) => {
     // ================== End UI creation =================
 
     function fetchEnv(type, posix) {
-        let file = `${config.serverBaseUrl}/api/data/${$("#obsSelector").val()}/${posix}/${type}?interval=${$("#dateRangeSelector").val()}`;
+
+        const teno = Teno.fromTimestamp(posix * 1000);
+        let file = `${config.serverBaseUrl}/api/data/${$("#obsSelector").val()}/${teno.teno}/${type}?interval=${$("#dateRangeSelector").val()}`;
         const loading = document.getElementById("loadingSpinner");
         loading.style.visibility = "visible"
         let done = true;
@@ -225,10 +227,9 @@ window.addEventListener("DOMContentLoaded", (event) => {
     }
 
     function fetchLog(type, posix) {
+
         const teno = Teno.fromTimestamp(posix * 1000);
-        console.log(posix, teno)
         let file = `${config.serverBaseUrl}/api/data/${$("#obsSelector").val()}/${teno.teno}/${type}?interval=${$("#dateRangeSelector").val()}`;
-        console.log(file)
         const loading = document.getElementById("loadingSpinner");
         loading.style.visibility = "visible"
 
