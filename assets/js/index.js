@@ -209,8 +209,9 @@ window.addEventListener("DOMContentLoaded", (event) => {
                             td.classList.add("text-center")
                             if (header == "ms") continue;
                             if (header == "t") {
-                                const time = line[header] - (utcOffset * 60);
-                                const date = moment(parseInt(`${time}${line["ms"]}`)).format("DD/MM/YYYY H:mm:ss.SSS");
+                                const time = parseInt(line[header]) /*- (utcOffset * 60)*/;
+                                const date = Teno.toYYYYMMDDHHMMSS(time).format()
+                                // const date = moment(parseInt(`${time}${line["ms"]}`)).format("DD/MM/YYYY H:mm:ss.SSS");
                                 td.innerText = date;
                             } else {
                                 td.innerText = line[header];
