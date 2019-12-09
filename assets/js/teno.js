@@ -216,7 +216,8 @@ class Teno {
     static toYYYYMMDDHHMMSS(teno) {
         if (teno < 0) return new Teno(0, { hh: 0, mm: 0, ss: 0, yyyy: 2000, mmmm: 1, dddd: 1 });
 
-        const nld = Teno._getNumberOfLeaps(teno);
+        // const nld = Teno._getNumberOfLeaps(teno);
+        const nld = 0;
         const s = Teno.mod(teno - nld, 86400);
 
         //Time 
@@ -271,7 +272,7 @@ class Teno {
         total += mm * 60;
         total += hh * 3600;
         total += Teno._countDaysUntil(dddd, mmmm, yyyy) * 86400;
-        total += Teno._getNumberOfLeaps(total);
+        //total += Teno._getNumberOfLeaps(total);
         return new Teno(total, yyyymmddhhmmss);
     }
 
