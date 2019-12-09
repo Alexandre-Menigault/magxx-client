@@ -88,7 +88,7 @@ class MagChart {
                     if (!this.options.dispalayLabels) return "";
                     return TenoFormatter.format(Teno.toYYYYMMDDHHMMSS(parseInt(e.value)), "%Y-%m-%D %H:%M:%S")
                 },
-                labelAngle: -45,
+                labelAngle: 0,
                 stripLines: [{
                     color: "#000",
                     showOnTop: true,
