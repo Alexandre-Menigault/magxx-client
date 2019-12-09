@@ -210,7 +210,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
                             if (header == "ms") continue;
                             if (header == "t") {
                                 const time = parseInt(line[header]) /*- (utcOffset * 60)*/;
-                                const date = Teno.toYYYYMMDDHHMMSS(time).format()
+                                const date = TenoFormatter.format(Teno.toYYYYMMDDHHMMSS(time), "%Y-%m-%D  %H:%M:%S")
                                 // const date = moment(parseInt(`${time}${line["ms"]}`)).format("DD/MM/YYYY H:mm:ss.SSS");
                                 td.innerText = date;
                             } else {
