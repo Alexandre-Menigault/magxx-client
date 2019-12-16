@@ -83,7 +83,31 @@ window.addEventListener("DOMContentLoaded", (event) => {
     obs_selector.selectedIndex = 0;
 
     function testMeasure() {
-        // TODO: 
+        const res = getFormData();
+        $.ajax({
+            url: config.serverBaseUrl + '/api/measure/test',
+            method: 'POST',
+            data: JSON.stringify(res),
+            // dataType: "json",
+            // contentType: 'plain/text',
+            success: function (data, status) {
+                displaySuccessAlert(data);
+                console.log(data);
+            },
+            error(xhr, status, error) {
+                console.log(error)
+                if (error == "timeout") {
+                    const now = new Date();
+                    console.error("[" + now.toLocaleDateString() + " " + now.toLocaleTimeString() + "]", "Absolute measurement", error + " - ", "Emitted by " + observer)
+                    displayErrorAlert("Impossible de contacter le serveur, veuillez réessayer plus tard", "Envoi de la mesure absolue annulée !");
+                } else {
+                    displayErrorAlert("Erreur lors du test de la mesure", xhr.responseText);
+                    console.error(xhr.responseText)
+                }
+                validateForm();
+            },
+        })
+
     }
 
     function fetchObsList() {
@@ -153,7 +177,13 @@ window.addEventListener("DOMContentLoaded", (event) => {
                 $('#input-DI-Flux').val(obs_config["di-flux_ref"]);
                 $('#input-DI-Flux-sensitivity').val(obs_config["di-flux_sensitivity"]);
                 $('#input-azimuth-ref').val(obs_config["azimmuth_reference"]);
-                validateForm()
+                const fp_fs = obs_config["fa-fm"];
+                if (fp_fs != null) {
+                    $('#input-fp-fs').val(obs_config["fa-fm"]);
+                    $('#input-fabs-fp').val("0");
+                }
+                $("#pillar-meas-manual .form-control:required").removeAttr("needs-validation").removeAttr("required").removeClass("is-valid").removeClass("is-invalid").attr("disabled", "true").val("");
+                validateForm();
             })
     }
     function fetchUser(user) {
@@ -221,7 +251,8 @@ window.addEventListener("DOMContentLoaded", (event) => {
         }
     }
 
-    function submitForm() {
+
+    function getFormData() {
         const $form = $('#abs-mes-form');
         if ($form.hasClass("valid")) {
             const obs = $('#input-obs').val();
@@ -231,6 +262,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
             const pillarMeasurements = []
 
             // Get all pilars measurements
+            const azimuth_ref = $('#input-azimuth-ref').val();
             for (let i = 1; i <= 6; i++) {
                 pillarMeasurements.push({
                     "value": $(`#input-df-value-${i}`).val(),
@@ -267,41 +299,54 @@ window.addEventListener("DOMContentLoaded", (event) => {
                 })
             }
 
+
+            const fp_fs = $('#input-fp-fs').val();
+            const fabs_fp = $('#input-fabs-fp').val();
+
             const res = {
                 obs,
                 observer,
                 date,
                 pillarMeasurements,
+                azimuth_ref,
                 measurementA,
-                measurementB
+                measurementB,
+                fp_fs,
+                fabs_fp,
+
             }
-            $('#input-button-submit').addClass("disabled")
-            $('#input-button-submit').disabled = true;
-            $.ajax({
-                url: config.serverBaseUrl + '/api/measure/',
-                method: 'POST',
-                data: JSON.stringify(res),
-                dataType: "json",
-                contentType: 'application/json',
-                timeout: 1000,
-                success: function (data, status) {
-                    displaySuccessAlert("La mesure a bien été créée");
-                    resetForm($form)
-                },
-                error(xhr, status, error) {
-                    console.log(error)
-                    if (error == "timeout") {
-                        const now = new Date();
-                        console.error("[" + now.toLocaleDateString() + " " + now.toLocaleTimeString() + "]", "Absolute measurement", error + " - ", "Emitted by " + observer)
-                        displayErrorAlert("Impossible de contacter le serveur, veuillez réessayer plus tard", "Envoi de la mesure absolue annulée !");
-                    } else {
-                        displayErrorAlert("Erreur lors de l'envoi de la mesure", xhr.responseJSON);
-                        console.error(xhr.responseJSON)
-                    }
-                    validateForm();
-                },
-            })
+            return res;
         }
+    }
+
+    function submitForm() {
+        const res = getFormData();
+        $('#input-button-submit').addClass("disabled")
+        $('#input-button-submit').disabled = true;
+        $.ajax({
+            url: config.serverBaseUrl + '/api/measure/',
+            method: 'POST',
+            data: JSON.stringify(res),
+            dataType: "json",
+            contentType: 'application/json',
+            timeout: 1000,
+            success: function (data, status) {
+                displaySuccessAlert("La mesure a bien été créée");
+                resetForm($form)
+            },
+            error(xhr, status, error) {
+                console.log(error)
+                if (error == "timeout") {
+                    const now = new Date();
+                    console.error("[" + now.toLocaleDateString() + " " + now.toLocaleTimeString() + "]", "Absolute measurement", error + " - ", "Emitted by " + observer)
+                    displayErrorAlert("Impossible de contacter le serveur, veuillez réessayer plus tard", "Envoi de la mesure absolue annulée !");
+                } else {
+                    displayErrorAlert("Erreur lors de l'envoi de la mesure", xhr.responseJSON);
+                    console.error(xhr.responseJSON)
+                }
+                validateForm();
+            },
+        })
     }
 
     function validateItem($item, condition) {
