@@ -84,18 +84,41 @@ window.addEventListener("DOMContentLoaded", (event) => {
 
     function testMeasure() {
         const res = getFormData();
+        $('#input-button-test').addClass("disabled").attr("disabled", "true")
+        $('#results-modal .modal-body').html(`<h5>Loading ...</h5>`);
+        $('#results-modal .btn').addClass("disabled").attr("disabled", "true");
+        $('#results-modal').modal("show");
         $.ajax({
             url: config.serverBaseUrl + '/api/measure/test',
             method: 'POST',
             data: JSON.stringify(res),
             // dataType: "json",
             // contentType: 'plain/text',
+
             success: function (data, status) {
-                displaySuccessAlert(data);
+                // displaySuccessAlert(data);
                 console.log(data);
+                /** @type {string[]} */
+                const d = data.split(",").map(d => d.trim());
+                $('#input-button-test').removeClass("disabled").removeAttr("disabled")
+                $('#results-modal .modal-body').html(`
+<ul class="list-unstyled text-center">
+<li><label class="font-weight-bold float">Date: </label>${d[2]}</li>
+<li><label class="font-weight-bold">Observer: </label>${d[13]}</li>
+<li><label class="font-weight-bold">H0: </label>${d[3]}</li>
+<li><label class="font-weight-bold">D0: </label>${d[4]}</li>
+<li><label class="font-weight-bold">Z0: </label>${d[5]}</li>
+<li><label class="font-weight-bold">F0: </label>${d[6]}</li>
+<li><label class="font-weight-bold">D: </label>${d[8]}</li>
+<li><label class="font-weight-bold">I: </label>${d[10]}</li>
+<li><label class="font-weight-bold">F: </label>${d[12]}</li>
+</ul>
+                `);
+                $('#results-modal .btn').removeClass("disabled").removeAttr("disabled");
             },
             error(xhr, status, error) {
                 console.log(error)
+                $('#input-button-test').removeClass("disabled").removeAttr("disabled")
                 if (error == "timeout") {
                     const now = new Date();
                     console.error("[" + now.toLocaleDateString() + " " + now.toLocaleTimeString() + "]", "Absolute measurement", error + " - ", "Emitted by " + observer)
