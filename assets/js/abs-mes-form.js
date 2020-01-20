@@ -71,6 +71,10 @@ window.addEventListener("DOMContentLoaded", (event) => {
     $('#input-button-submit').click(function (e) {
         submitForm();
     })
+    $('#button-modal-save').click(function (e) {
+        submitForm();
+    })
+
     // $('select.needs-validation').change(function (e) {
     //     validateForm()
     // })
@@ -121,7 +125,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
                 $('#input-button-test').removeClass("disabled").removeAttr("disabled")
                 if (error == "timeout") {
                     const now = new Date();
-                    console.error("[" + now.toLocaleDateString() + " " + now.toLocaleTimeString() + "]", "Absolute measurement", error + " - ", "Emitted by " + observer)
+                    console.error("[" + now.toLocaleDateString() + " " + now.toLocaleTimeString() + "]", "Absolute measurement", error)
                     displayErrorAlert("Impossible de contacter le serveur, veuillez réessayer plus tard", "Envoi de la mesure absolue annulée !");
                 } else {
                     displayErrorAlert("Erreur lors du test de la mesure", xhr.responseText);
@@ -350,9 +354,9 @@ window.addEventListener("DOMContentLoaded", (event) => {
             url: config.serverBaseUrl + '/api/measure/',
             method: 'POST',
             data: JSON.stringify(res),
-            dataType: "json",
-            contentType: 'application/json',
-            timeout: 1000,
+            // dataType: "json",
+            // contentType: 'application/json',
+            timeout: 5000,
             success: function (data, status) {
                 displaySuccessAlert("La mesure a bien été créée");
                 resetForm($form)
@@ -361,7 +365,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
                 console.log(error)
                 if (error == "timeout") {
                     const now = new Date();
-                    console.error("[" + now.toLocaleDateString() + " " + now.toLocaleTimeString() + "]", "Absolute measurement", error + " - ", "Emitted by " + observer)
+                    console.error("[" + now.toLocaleDateString() + " " + now.toLocaleTimeString() + "]", "Absolute measurement", error)
                     displayErrorAlert("Impossible de contacter le serveur, veuillez réessayer plus tard", "Envoi de la mesure absolue annulée !");
                 } else {
                     displayErrorAlert("Erreur lors de l'envoi de la mesure", xhr.responseJSON);
