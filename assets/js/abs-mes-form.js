@@ -72,7 +72,9 @@ window.addEventListener("DOMContentLoaded", (event) => {
         submitForm();
     })
     $('#button-modal-save').click(function (e) {
-        submitForm();
+        submitForm(() => {
+            $('#results-modal').modal("hide");
+        });
     })
 
     // $('select.needs-validation').change(function (e) {
@@ -263,17 +265,22 @@ window.addEventListener("DOMContentLoaded", (event) => {
     function isFormValid(condition) {
         const $item = $('#abs-mes-form')
         const $validateButton = $('#input-button-submit')
+        const $testButton = $('#input-button-test')
         if (condition) {
             $item.removeClass('invalid')
             $item.addClass("valid")
             $validateButton.removeClass("disabled")
             $validateButton.prop("disabled", false)
+            $testButton.removeClass("disabled")
+            $testButton.prop("disabled", false)
             return true
         } else {
             $item.removeClass('valid')
             $item.addClass("invalid")
             $validateButton.addClass("disabled")
             $validateButton.prop("disabled", true)
+            $testButton.addClass("disabled")
+            $testButton.prop("disabled", true)
             return false
         }
     }
@@ -346,7 +353,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
         }
     }
 
-    function submitForm() {
+    function submitForm(callback) {
         const res = getFormData();
         $('#input-button-submit').addClass("disabled")
         $('#input-button-submit').disabled = true;
@@ -358,8 +365,9 @@ window.addEventListener("DOMContentLoaded", (event) => {
             // contentType: 'application/json',
             timeout: 5000,
             success: function (data, status) {
+                callback()
                 displaySuccessAlert("La mesure a bien été créée");
-                resetForm($form)
+                resetForm($('#abs-mes-form'))
             },
             error(xhr, status, error) {
                 console.log(error)
@@ -405,7 +413,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
         selector.val(JSON.parse(lastUser)["login"])
     }
 
-    function displaySuccessAlert(message, fixed = false) {
+    function displaySuccessAlert(message, callback, fixed = false) {
         const alert = document.createElement('div');
         alert.classList.add('alert', "alert-success", "alert-fixed-sm", "alert-dismissible");
         alert.innerHTML = `
@@ -430,6 +438,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
                 easing: "linear",
                 complete: function () {
                     document.body.removeChild(alert);
+                    if (typeof callback == "function") callback();
                 }
             })
 
