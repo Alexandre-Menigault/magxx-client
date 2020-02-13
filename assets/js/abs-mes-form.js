@@ -2,6 +2,7 @@ import NumberValidator from "../../validators/numberValidator.js";
 import DateTimeValidator from "../../validators/dateTimeValidator.js";
 import config from "../../config.js";
 import fetchTimeout from "./vendor/fetch-timeout.js";
+import BaselineCharts from "./BaselineCharts.js";
 
 window.addEventListener("DOMContentLoaded", (event) => {
     let lastObsUsed = window.localStorage.getItem("lastObsUsed");
@@ -88,6 +89,43 @@ window.addEventListener("DOMContentLoaded", (event) => {
     fetchObserverList();
     obs_selector.selectedIndex = 0;
 
+    function displayTestResults(measure1, measure2) {
+        return `
+            <div class="d-flex flex-row">
+                <div class="p-2 flex-fill text-center">
+                    <p class="font-weight-bold">Measure 1</p>
+                    <ul class="list-unstyled">
+                        <li><label class="font-weight-bold float">Date: </label>${measure1[2]}</li>
+                        <li><label class="font-weight-bold">Observer: </label>${measure1[13]}</li>
+                        <li><label class="font-weight-bold">H0: </label>${measure1[3]}</li>
+                        <li><label class="font-weight-bold">D0: </label>${measure1[4]}</li>
+                        <li><label class="font-weight-bold">Z0: </label>${measure1[5]}</li>
+                        <li><label class="font-weight-bold">F0: </label>${measure1[6]}</li>
+                        <li><label class="font-weight-bold">D: </label>${measure1[8]}</li>
+                        <li><label class="font-weight-bold">I: </label>${measure1[10]}</li>
+                        <li><label class="font-weight-bold">F: </label>${measure1[12]}</li>
+                    </ul>
+                </div>
+                <div class="p-2 flex-fill text-center">
+                    <p class="font-weight-bold">Measure 2</p>
+                    <ul class="list-unstyled">
+                        <li><label class="font-weight-bold float">Date: </label>${measure2[2]}</li>
+                        <li><label class="font-weight-bold">Observer: </label>${measure2[13]}</li>
+                        <li><label class="font-weight-bold">H0: </label>${measure2[3]}</li>
+                        <li><label class="font-weight-bold">D0: </label>${measure2[4]}</li>
+                        <li><label class="font-weight-bold">Z0: </label>${measure2[5]}</li>
+                        <li><label class="font-weight-bold">F0: </label>${measure2[6]}</li>
+                        <li><label class="font-weight-bold">D: </label>${measure2[8]}</li>
+                        <li><label class="font-weight-bold">I: </label>${measure2[10]}</li>
+                        <li><label class="font-weight-bold">F: </label>${measure2[12]}</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div id="test_measure_baseline"></div>
+        `
+    }
+
     function testMeasure() {
         const res = getFormData();
         $('#input-button-test').addClass("disabled").attr("disabled", "true")
@@ -105,21 +143,14 @@ window.addEventListener("DOMContentLoaded", (event) => {
                 // displaySuccessAlert(data);
                 console.log(data);
                 /** @type {string[]} */
-                const d = data.split(",").map(d => d.trim());
+                const measure1 = data[0].split(",").map(d => d.trim());
+                let measure2 = new Array(14).fill("N/A");
+                if (data.length == 2) {
+                    measure2 = data[1].split(",").map(d => d.trim());
+                }
                 $('#input-button-test').removeClass("disabled").removeAttr("disabled")
-                $('#results-modal .modal-body').html(`
-<ul class="list-unstyled text-center">
-<li><label class="font-weight-bold float">Date: </label>${d[2]}</li>
-<li><label class="font-weight-bold">Observer: </label>${d[13]}</li>
-<li><label class="font-weight-bold">H0: </label>${d[3]}</li>
-<li><label class="font-weight-bold">D0: </label>${d[4]}</li>
-<li><label class="font-weight-bold">Z0: </label>${d[5]}</li>
-<li><label class="font-weight-bold">F0: </label>${d[6]}</li>
-<li><label class="font-weight-bold">D: </label>${d[8]}</li>
-<li><label class="font-weight-bold">I: </label>${d[10]}</li>
-<li><label class="font-weight-bold">F: </label>${d[12]}</li>
-</ul>
-                `);
+                $('#results-modal .modal-body').html(displayTestResults(measure1, measure2));
+                LoadBaseline(res.obs, parseInt(res.date.split("-")[0]))
                 $('#results-modal .btn').removeClass("disabled").removeAttr("disabled");
             },
             error(xhr, status, error) {
@@ -137,6 +168,16 @@ window.addEventListener("DOMContentLoaded", (event) => {
             },
         })
 
+    }
+
+
+    // TODO: Add test point to the plots
+    function LoadBaseline(obs, year) {
+        fetch(config.serverBaseUrl + `/api/measure?obs=${obs}&year=${year}`)
+            .then(res => res.json())
+            .then(data => {
+                new BaselineCharts(data, 'test_measure_baseline')
+            })
     }
 
     function fetchObsList() {
@@ -363,7 +404,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
             data: JSON.stringify(res),
             // dataType: "json",
             // contentType: 'application/json',
-            timeout: 5000,
+            timeout: 10000, // 10s
             success: function (data, status) {
                 callback()
                 displaySuccessAlert("La mesure a bien été créée");
