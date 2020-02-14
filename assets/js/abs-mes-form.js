@@ -210,13 +210,13 @@ window.addEventListener("DOMContentLoaded", (event) => {
             return res.json()
         }).then((observers) => {
             const selector = $('#input-observer');
-            try {
-                faker.locale = "fr";
-                observers.push({
-                    name: faker.fake("{{name.firstName}} {{name.lastName}}"),
-                    login: faker.name.firstName(),
-                })
-            } catch (e) { }
+            // try {
+            //     faker.locale = "fr";
+            //     observers.push({
+            //         name: faker.fake("{{name.firstName}} {{name.lastName}}"),
+            //         login: faker.name.firstName(),
+            //     })
+            // } catch (e) { }
             // Add last used observatories to the list
             if (lastUser != '{}') {
                 selector.find('option[selected]')[0].selected = false;
