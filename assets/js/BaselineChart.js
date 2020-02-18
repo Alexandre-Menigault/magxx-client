@@ -42,17 +42,19 @@ class BaselineChart {
                 legendText: this.options.label,
                 xValueType: "number",
                 showInLegend: true,
-            }, {
-                type: "line",
-                markerType: "none",
-                dataPoints: this.data,
-                lineDashType: "dot",
-                color: this.options.color,
-                legendText: this.options.label,
-                xValueType: "number",
-                showInLegend: false,
-            }],
-
+            },
+                // {
+                //     type: "line",
+                //     markerType: "none",
+                //     dataPoints: this.data,
+                //     lineDashType: "dot",
+                //     color: this.options.color,
+                //     legendText: this.options.label,
+                //     xValueType: "number",
+                //     showInLegend: false,
+                // }
+            ],
+            zoomEnabled: true,
             zoomType: "x",
             toolTip: {
                 contentFormatter: function (e) {

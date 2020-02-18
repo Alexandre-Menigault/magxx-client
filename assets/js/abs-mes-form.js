@@ -141,7 +141,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
 
             success: function (data, status) {
                 // displaySuccessAlert(data);
-                console.log(data);
+                // console.log(data);
                 /** @type {string[]} */
                 const measure1 = data[0].split(",").map(d => d.trim());
                 let measure2 = new Array(14).fill("N/A");

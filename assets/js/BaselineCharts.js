@@ -48,10 +48,10 @@ class BaselineCharts {
             // jsonData[this.times[i]] => the time of the header component
             // e.g => jsonData[this.times[0]] = tenoI
             for (const d of jsonData) {
-
-                data.push({ x: parseInt(d[this.times[i]]), y: parseFloat(d[header]) })
+                // Prevent adding rejected measurements
+                if (d["tag"] == 'V') data.push({ x: parseInt(d[this.times[i]]), y: parseFloat(d[header]) })
             }
-            console.log(data);
+            // console.log(data);
             charts.push(new BaselineChart(data, {
                 label: `${header} value`,
                 type: header,
