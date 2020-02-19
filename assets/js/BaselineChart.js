@@ -20,7 +20,10 @@ class BaselineChart {
             culture: 'fr',
             axisY: {
                 includeZero: false,
-                valueFormatString: "000000.0"
+                valueFormatString: "###0.00",
+                labelMaxWidth: 40,
+                labelWrap: false,
+                labelAutoFit: false
             },
             axisX: {
                 labelFormatter: (e) => {
