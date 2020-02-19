@@ -45,7 +45,7 @@
     transition: none !important;
 }
 
-button.disabled {
+.form-control:disabled {
     cursor: not-allowed;
 }
 
