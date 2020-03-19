@@ -7,7 +7,7 @@ let pages = { graph: config.pathname, env: config.pathname + "/env.html", log: c
 
 function fetchObsList() {
     // TODO: cache response
-    fetch(config.serverBaseUrl + "/api/observatories").then((res) => {
+    fetch(location.protocol + "//"+ location.hostname + config.serverBaseUrl  + "/api/observatories").then((res) => {
         return res.json()
     }).then((obs) => {
         const selector = $('#obsSelector');

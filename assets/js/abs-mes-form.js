@@ -133,7 +133,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
         $('#results-modal .btn').addClass("disabled").attr("disabled", "true");
         $('#results-modal').modal("show");
         $.ajax({
-            url: config.serverBaseUrl + '/api/measure/test',
+            url: location.protocol + "//"+ location.hostname + config.serverBaseUrl + '/api/measure/test',
             method: 'POST',
             data: JSON.stringify(res),
             // dataType: "json",
@@ -173,7 +173,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
 
     // TODO: Add test point to the plots
     function LoadBaseline(obs, year) {
-        fetch(config.serverBaseUrl + `/api/measure?obs=${obs}&year=${year}`)
+        fetch(location.protocol + "//"+ location.hostname + config.serverBaseUrl + `/api/measure?obs=${obs}&year=${year}`)
             .then(res => res.json())
             .then(data => {
                 new BaselineCharts(data, 'test_measure_baseline')
@@ -182,7 +182,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
 
     function fetchObsList() {
         // TODO: cache response
-        fetch(config.serverBaseUrl + "/api/observatories").then((res) => {
+        fetch(location.protocol + "//"+ location.hostname + config.serverBaseUrl + "/api/observatories").then((res) => {
             return res.json()
         }).then((obs) => {
             const selector = $('#input-obs');
@@ -206,7 +206,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
     }
     function fetchObserverList() {
         // TODO: cache response
-        fetch(config.serverBaseUrl + "/api/users").then((res) => {
+        fetch(location.protocol + "//"+ location.hostname + config.serverBaseUrl + "/api/users").then((res) => {
             return res.json()
         }).then((observers) => {
             const selector = $('#input-observer');
@@ -236,7 +236,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
     }
 
     function fetchObsConfig(obs) {
-        fetch(`${config.serverBaseUrl}/api/observatory/${obs}`)
+        fetch(`${location.protocol}//${location.hostname}${config.serverBaseUrl}/api/observatory/${obs}`)
             .then(res => { return res.json() })
             .then((obs_config) => {
 
@@ -257,7 +257,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
             })
     }
     function fetchUser(user) {
-        fetchTimeout(`${config.serverBaseUrl}/api/users/${user}`, {}, 100, "Fetch users timeout")
+        fetchTimeout(`${location.protocol}//${location.hostname}${config.serverBaseUrl}/api/users/${user}`, {}, 100, "Fetch users timeout")
             .then(res => { return res.json() })
             .then((user) => {
                 const lastUser = JSON.parse(window.localStorage.getItem("lastUser"));
@@ -399,7 +399,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
         $('#input-button-submit').addClass("disabled")
         $('#input-button-submit').disabled = true;
         $.ajax({
-            url: config.serverBaseUrl + '/api/measure/',
+            url: location.protocol + "//"+ location.hostname + config.serverBaseUrl + '/api/measure/',
             method: 'POST',
             data: JSON.stringify(res),
             // dataType: "json",
