@@ -74,9 +74,9 @@ class Charts {
         for (let header of headers) {
             /** @type {Charts.ChartData[]} */
             const chartData = jsonData.reduce((data, line, j) => {
-                if (j !== 0 && parseInt(line.flag) != 0) {
+                const y = parseFloat(line[header]); // TODO: Change to null if flag is 0 OR y = 9999.0
+                if (j !== 0 && parseInt(line.flag) != 0 && y < 99999) {
                     const x = parseInt(line.t);
-                    const y = parseFloat(line[header]); // TODO: Change to null if flag is 0 OR y = 9999.0
                     data.push({ x, y });
                 }
                 return data
