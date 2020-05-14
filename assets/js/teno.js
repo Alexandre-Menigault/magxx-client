@@ -113,11 +113,21 @@ class Teno {
         let remainingDays = daysOfYear;
         let monthCounter = 1;
         for (let daysInMonth of Teno.DAYS_IN_MONTH(year)) {
-            if (remainingDays >= daysInMonth) {
+            if (remainingDays > daysInMonth) {
                 monthCounter++;
                 remainingDays -= daysInMonth;
             } else {
                 break;
+            }
+        }
+        // C'est des rustines mais ça fonctionne donc pas touche pour l'instant
+        if (Teno._IS_BISEXTILE_YEAR(year)) {
+            if ((monthCounter == 2 && remainingDays + 1 == 30)) {
+                return { mmmm: 3, dddd: 0 }
+            } else if ((monthCounter == 1 && remainingDays + 1 == 32)) {
+                return { mmmm: 2, dddd: 1 }
+            } else if (monthCounter >= 3) {
+                return { mmmm: monthCounter, dddd: remainingDays }
             }
         }
         return { mmmm: monthCounter, dddd: remainingDays + 1 };
