@@ -55,6 +55,16 @@ class Teno {
         ];
     }
 
+    static _get29FebOfYear(yyyy) {
+        const startYearTeno = Teno.fromYYYYMMDDHHMMSS({yyyy, mmmm: 1, dddd: 1, hh: 0, mm: 0, ss: 0});
+        const endYearTeno = Teno.fromYYYYMMDDHHMMSS({yyyy, mmmm: 12, dddd: 31, hh: 23, mm: 59, ss: 59});
+        for(let feb29 of Teno.FEBUARY_29s) {
+            if(feb29.start > startYearTeno.teno && feb29.end < endYearTeno.teno) {
+                return feb29;
+            }
+        }
+    }
+
     /**
      * Get the modulus of a number
      *
@@ -107,12 +117,14 @@ class Teno {
      * 
      * @param {number} year 
      * @param {number} daysOfYear The count of days in year
+     * @param {number} teno The count of days in year
      * @return {{mmmm: number, dddd: number}}
      */
-    static _getMonthNumberAndDayOfMonth(year, daysOfYear) {
+    static _getMonthNumberAndDayOfMonth(year, daysOfYear, teno) {
         let remainingDays = daysOfYear;
         let monthCounter = 1;
-        for (let daysInMonth of Teno.DAYS_IN_MONTH(year)) {
+        const daysInMonthYear = Teno.DAYS_IN_MONTH(year);
+        for (let daysInMonth of daysInMonthYear) {
             if (remainingDays > daysInMonth) {
                 monthCounter++;
                 remainingDays -= daysInMonth;
@@ -120,16 +132,23 @@ class Teno {
                 break;
             }
         }
-        // C'est des rustines mais ça fonctionne donc pas touche pour l'instant
+
         if (Teno._IS_BISEXTILE_YEAR(year)) {
-            if ((monthCounter == 2 && remainingDays + 1 == 30)) {
-                return { mmmm: 3, dddd: 0 }
-            } else if ((monthCounter == 1 && remainingDays + 1 == 32)) {
-                return { mmmm: 2, dddd: 1 }
-            } else if (monthCounter >= 3) {
-                return { mmmm: monthCounter, dddd: remainingDays }
+            const feb29 = Teno._get29FebOfYear(year)
+            if(teno >= feb29.end) {
+                remainingDays +=2
+                if (remainingDays > daysInMonthYear[monthCounter-1]) {
+                    remainingDays -= daysInMonthYear[monthCounter-1]+1;
+                    monthCounter++;
+                }
+            } else if(teno < feb29.start) {
+                if (remainingDays +1 > daysInMonthYear[monthCounter-1]) {
+                    remainingDays -= daysInMonthYear[monthCounter-1];
+                    monthCounter++;
+                }
             }
         }
+
         return { mmmm: monthCounter, dddd: remainingDays + 1 };
     }
 
@@ -215,6 +234,20 @@ class Teno {
         return 0;
     }
 
+    _getZeros(len) {
+        let res = "";
+        for (let i = 0; i < len; i++) {
+            res = res + "0";
+        }
+        return res
+    }
+
+    fixedTeno() {
+        let tenoLen = `${this.teno}`.length;
+        const zerosToAdd = 10 - tenoLen;
+        return this._getZeros(zerosToAdd) + this.teno
+    }
+
     /**
      * Converts the speficied Teno time to YYYY MM DD HH MM SS
      *
@@ -240,10 +273,11 @@ class Teno {
         const nb = Teno._getNumberOfBisextile(teno);
         const ndb = nd - nb;
 
-        const doyb = Teno.mod(ndb, 365);
-        const yyyy = 2000 + Math.floor((ndb - doyb) / 365);
-        let { mmmm, dddd } = Teno._getMonthNumberAndDayOfMonth(yyyy, doyb)
-        if (Teno._IS_BISEXTILE_YEAR(yyyy) && mmmm >= 3) dddd++
+        let doyb = Teno.mod(ndb, 365);
+        let yyyy = 2000 + Math.floor((ndb - doyb) / 365);
+        let { mmmm, dddd } = Teno._getMonthNumberAndDayOfMonth(yyyy, doyb, teno)
+
+        // if (Teno._IS_BISEXTILE_YEAR(yyyy) && mmmm >= 3) dddd++
 
         if (Teno._isLeap(teno)) {
             const leapCount = Teno._leapCount(teno)
