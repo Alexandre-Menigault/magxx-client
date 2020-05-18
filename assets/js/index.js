@@ -300,7 +300,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
 
         const teno = Teno.fromTimestamp(posix * 1000);
 
-        let file = `${location.protocol}//${location.hostname}${config.serverBaseUrl}/api/data/${$("#obsSelector").val()}/${teno.teno}/${type}?interval=${$("#dateRangeSelector").val()}`;
+        let file = `${location.protocol}//${location.hostname}${config.serverBaseUrl}/api/data/${$("#obsSelector").val()}/${teno.fixedTeno()}/${type}?interval=${$("#dateRangeSelector").val()}`;
 
         const loading = document.getElementById("loadingSpinner");
         loading.style.visibility = "visible"
