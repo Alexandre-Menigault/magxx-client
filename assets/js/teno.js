@@ -56,10 +56,10 @@ class Teno {
     }
 
     static _get29FebOfYear(yyyy) {
-        const startYearTeno = Teno.fromYYYYMMDDHHMMSS({yyyy, mmmm: 1, dddd: 1, hh: 0, mm: 0, ss: 0});
-        const endYearTeno = Teno.fromYYYYMMDDHHMMSS({yyyy, mmmm: 12, dddd: 31, hh: 23, mm: 59, ss: 59});
-        for(let feb29 of Teno.FEBUARY_29s) {
-            if(feb29.start > startYearTeno.teno && feb29.end < endYearTeno.teno) {
+        const startYearTeno = Teno.fromYYYYMMDDHHMMSS({ yyyy, mmmm: 1, dddd: 1, hh: 0, mm: 0, ss: 0 });
+        const endYearTeno = Teno.fromYYYYMMDDHHMMSS({ yyyy, mmmm: 12, dddd: 31, hh: 23, mm: 59, ss: 59 });
+        for (let feb29 of Teno.FEBUARY_29s) {
+            if (feb29.start > startYearTeno.teno && feb29.end < endYearTeno.teno) {
                 return feb29;
             }
         }
@@ -135,15 +135,15 @@ class Teno {
 
         if (Teno._IS_BISEXTILE_YEAR(year)) {
             const feb29 = Teno._get29FebOfYear(year)
-            if(teno >= feb29.end) {
-                remainingDays +=2
-                if (remainingDays > daysInMonthYear[monthCounter-1]) {
-                    remainingDays -= daysInMonthYear[monthCounter-1]+1;
+            if (teno >= feb29.end) {
+                remainingDays += 1
+                if (remainingDays >= daysInMonthYear[monthCounter - 1]) {
+                    remainingDays -= daysInMonthYear[monthCounter - 1];
                     monthCounter++;
                 }
-            } else if(teno < feb29.start) {
-                if (remainingDays +1 > daysInMonthYear[monthCounter-1]) {
-                    remainingDays -= daysInMonthYear[monthCounter-1];
+            } else if (teno < feb29.start) {
+                if (remainingDays + 1 > daysInMonthYear[monthCounter - 1]) {
+                    remainingDays -= daysInMonthYear[monthCounter - 1];
                     monthCounter++;
                 }
             }
@@ -277,7 +277,7 @@ class Teno {
         let yyyy = 2000 + Math.floor((ndb - doyb) / 365);
         let { mmmm, dddd } = Teno._getMonthNumberAndDayOfMonth(yyyy, doyb, teno)
 
-        // if (Teno._IS_BISEXTILE_YEAR(yyyy) && mmmm >= 3) dddd++
+        // if (Teno._IS_BISEXTILE_YEAR(yyyy) && mmmm >= 3) dddd--
 
         if (Teno._isLeap(teno)) {
             const leapCount = Teno._leapCount(teno)
