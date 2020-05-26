@@ -10,7 +10,13 @@ import TenoFormatter from "./tenoFormtter.js"
 window.addEventListener("DOMContentLoaded", (event) => {
 
 
-    let pages = { graph: config.pathname + "/", env: config.pathname + "/env.html", log: config.pathname + "/log.html", abs: config.pathname + "/abs-mes.html" }
+    let pages = {
+        graph: config.pathname + "/",
+        env: config.pathname + "/env.html",
+        log: config.pathname + "/log.html",
+        abs: config.pathname + "/abs-mes.html",
+        baseline: config.pathname + "/baseline.html",
+    }
 
     const nav = document.getElementById("navbar")
     const navbar = new NavBar({ parent: nav });

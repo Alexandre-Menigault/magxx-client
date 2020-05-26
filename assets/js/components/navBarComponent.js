@@ -3,11 +3,17 @@ import NavLink from "./navLinkComponent.js";
 import Button from "./buttonComponent.js";
 import config from "../../../config.js"
 
-let pages = { graph: config.pathname, env: config.pathname + "/env.html", log: config.pathname + "/log.html", abs: config.pathname + "/abs-mes.html" }
+let pages = {
+    graph: config.pathname + "/",
+    env: config.pathname + "/env.html",
+    log: config.pathname + "/log.html",
+    abs: config.pathname + "/abs-mes.html",
+    baseline: config.pathname + "/baseline.html",
+}
 
 function fetchObsList() {
     // TODO: cache response
-    fetch(location.protocol + "//"+ location.hostname + config.serverBaseUrl  + "/api/observatories").then((res) => {
+    fetch(location.protocol + "//" + location.hostname + config.serverBaseUrl + "/api/observatories").then((res) => {
         return res.json()
     }).then((obs) => {
         const selector = $('#obsSelector');
@@ -79,7 +85,8 @@ class NavBarComponent extends Component {
         const navbarLink2 = new NavLink("Env", pages.env, { active: window.location.pathname == pages.env })
         const navbarLink3 = new NavLink("Log", pages.log, { active: window.location.pathname == pages.log })
         const navbarLink4 = new NavLink("Abs", pages.abs, { active: window.location.pathname == pages.abs })
-        navbarComponent.appendChildren(navbarLink, navbarLink2, navbarLink3, navbarLink4);
+        const navbarLink5 = new NavLink("Baseline", pages.baseline, { active: window.location.pathname == pages.baseline })
+        navbarComponent.appendChildren(navbarLink, navbarLink2, navbarLink3, navbarLink4, navbarLink5);
         navbarComponent.draw()
         navLinksDiv.appendChild(navLinksUl);
         this.baseHTMLElement.appendChild(navLinksDiv);
