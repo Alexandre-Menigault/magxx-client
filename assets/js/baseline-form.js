@@ -57,18 +57,33 @@ window.addEventListener("DOMContentLoaded", (event) => {
             f: $('#input-noiseDIF-f').val()
         }
 
+
+        const $validateButton = $('#input-button-compute')
+        $validateButton.addClass("disabled")
+        $validateButton.prop("disabled", true)
+        const startTime = Date.now();
         $.ajax({
             url: location.protocol + "//" + location.hostname + config.serverBaseUrl + '/api/baseline/test',
             method: 'POST',
             data: JSON.stringify(payload),
             success: function (data, status) {
                 alert("Success")
+
+                $validateButton.removeClass("disabled")
+                $validateButton.prop("disabled", false)
                 // document.getElementById('baseline-form').reset()
                 console.log(data)
+                console.log(`Ellpsed time ${(Date.now() - startTime) / 1000} ms`);
             },
             error(xhr, status, error) {
                 alert("Error")
                 console.log(error)
+
+                $validateButton.removeClass("disabled")
+                $validateButton.prop("disabled", false)
+
+                console.log(`Ellpsed time ${(Date.now() - startTime) / 1000} s`);
+                console.log(`Ellpsed time ${(Date.now() - startTime) / 60000} min`);
             }
         })
     }
