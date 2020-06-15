@@ -16,6 +16,9 @@ class BaselineChart {
     }
 
     initchart() {
+        let plotType = "scatter";
+        if (this.parent.isBaseline)
+            plotType = "line"
         this.chart = new CanvasJS.Chart(this.canvas, {
             culture: 'fr',
             axisY: {
@@ -31,6 +34,7 @@ class BaselineChart {
                     return TenoFormatter.format(Teno.toYYYYMMDDHHMMSS(parseInt(e.value)), "%Y-%m-%D %H:%M:%S")
                 },
                 labelAngle: 0,
+                interval: 86400 * 2
             },
             legend: {
                 dockInsidePlotArea: false,
@@ -38,7 +42,7 @@ class BaselineChart {
                 horizontalAlign: "left"
             },
             data: [{
-                type: "scatter",
+                type: plotType,
                 markerType: "cross",
                 dataPoints: this.data,
                 color: this.options.color,

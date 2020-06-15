@@ -3,10 +3,13 @@ import DateTimeValidator from "../../validators/dateTimeValidator.js";
 import config from "../../config.js";
 import fetchTimeout from "./vendor/fetch-timeout.js";
 import Teno from "./teno.js";
+import BaselineCharts from "./BaselineCharts.js";
+import BaselineChart from "./BaselineChart.js";
 
 
 window.addEventListener("DOMContentLoaded", (event) => {
 
+    let setTimeoutId = -1; // Used to cancel the screen out fetching
 
     let lastObsUsed = window.localStorage.getItem("lastObsUsed");
     if (lastObsUsed == undefined) window.localStorage.setItem("lastObsUsed", '[]')
@@ -15,12 +18,11 @@ window.addEventListener("DOMContentLoaded", (event) => {
 
     // document.getElementById('baseline-form').reset()
 
-
-    $('#input-start-date,#input-end-date').focusin(function (e) {
+    $('#input-imposed_start_date,#input-imposed_end_date,#input-start-date,#input-end-date').focusin(function (e) {
         e.preventDefault()
         $(e.target).datetimepicker("show")
     })
-    $('#input-start-date,#input-end-date').focusout(function (e) {
+    $('#input-imposed_start_date,#input-imposed_end_date,#input-start-date,#input-end-date').focusout(function (e) {
         $(e.target).datetimepicker("hide")
     })
 
@@ -38,7 +40,9 @@ window.addEventListener("DOMContentLoaded", (event) => {
     function computeBaseline() {
         const payload = {}
         const start_date = $('#input-start-date').val().split('-')
+        const imposed_start_date = $('#input-imposed_start_date').val().split('-')
         const end_date = $('#input-end-date').val().split('-')
+        const imposed_end_date = $('#input-imposed_end_date').val().split('-')
         payload.obs = $('#input-obs').val()
         payload.start_teno = Teno.fromYYYYMMDDHHMMSS({ yyyy: parseInt(start_date[0]), mmmm: parseInt(start_date[1]), dddd: parseInt(start_date[2]), hh: 0, mm: 0, ss: 0 }).teno
         payload.end_teno = Teno.fromYYYYMMDDHHMMSS({ yyyy: parseInt(end_date[0]), mmmm: parseInt(end_date[1]), dddd: parseInt(end_date[2]), hh: 0, mm: 0, ss: 0 }).teno
@@ -56,24 +60,44 @@ window.addEventListener("DOMContentLoaded", (event) => {
             i: $('#input-noiseDIF-i').val(),
             f: $('#input-noiseDIF-f').val()
         }
-
+        payload.imposed_values = [
+            {
+                "date": Teno.fromYYYYMMDDHHMMSS({ yyyy: parseInt(imposed_start_date[0]), mmmm: parseInt(imposed_start_date[1]), dddd: parseInt(imposed_start_date[2]), hh: 0, mm: 0, ss: 0 }).teno,
+                "value": {
+                    "H": $('#input-imposed_start_h').val(),
+                    "D": $('#input-imposed_start_d').val(),
+                    "Z": $('#input-imposed_start_z').val()
+                }
+            },
+            {
+                "date": Teno.fromYYYYMMDDHHMMSS({ yyyy: parseInt(imposed_end_date[0]), mmmm: parseInt(imposed_end_date[1]), dddd: parseInt(imposed_end_date[2]), hh: 0, mm: 0, ss: 0 }).teno,
+                "value": {
+                    "H": $('#input-imposed_end_h').val(),
+                    "D": $('#input-imposed_end_d').val(),
+                    "Z": $('#input-imposed_end_z').val()
+                },
+            }
+        ]
 
         const $validateButton = $('#input-button-compute')
         $validateButton.addClass("disabled")
         $validateButton.prop("disabled", true)
         const startTime = Date.now();
         $.ajax({
-            url: location.protocol + "//" + location.hostname + config.serverBaseUrl + '/api/baseline/test',
+            url: location.protocol + "//" + location.hostname + config.serverBaseUrl + '/api/baseline',
             method: 'POST',
             data: JSON.stringify(payload),
             success: function (data, status) {
-                alert("Success")
+                // alert("Success")
+
+                displayBaselineCharts(data)
 
                 $validateButton.removeClass("disabled")
                 $validateButton.prop("disabled", false)
                 // document.getElementById('baseline-form').reset()
                 console.log(data)
-                console.log(`Ellpsed time ${(Date.now() - startTime) / 1000} ms`);
+                console.log(`Ellpsed time ${(Date.now() - startTime) / 1000} s`);
+                console.log(`Ellpsed time ${(Date.now() - startTime) / 60000} min`);
             },
             error(xhr, status, error) {
                 alert("Error")
@@ -88,6 +112,11 @@ window.addEventListener("DOMContentLoaded", (event) => {
         })
     }
 
+    function displayBaselineCharts(data) {
+        const baselineContainer = $("#baselineCharts");
+        const baselineCharts = new BaselineCharts(data, 'baselineCharts', true);
+        // baselineCharts._createPlots();
+    }
 
     function fetchObsList() {
         fetch(location.protocol + "//" + location.hostname + config.serverBaseUrl + "/api/observatories").then((res) => {
@@ -178,5 +207,42 @@ window.addEventListener("DOMContentLoaded", (event) => {
             $item.addClass("is-invalid")
             return false
         }
+    }
+
+    function displayScreenOut(measure1, measure2) {
+        return `
+            <div class="d-flex flex-row">
+                <div class="p-2 flex-fill text-center">
+                    <p class="font-weight-bold">Measure 1</p>
+                    <ul class="list-unstyled">
+                        <li><label class="font-weight-bold float">Date: </label>${measure1[2]}</li>
+                        <li><label class="font-weight-bold">Observer: </label>${measure1[13]}</li>
+                        <li><label class="font-weight-bold">H0: </label>${measure1[3]}</li>
+                        <li><label class="font-weight-bold">D0: </label>${measure1[4]}</li>
+                        <li><label class="font-weight-bold">Z0: </label>${measure1[5]}</li>
+                        <li><label class="font-weight-bold">F0: </label>${measure1[6]}</li>
+                        <li><label class="font-weight-bold">D: </label>${measure1[8]}</li>
+                        <li><label class="font-weight-bold">I: </label>${measure1[10]}</li>
+                        <li><label class="font-weight-bold">F: </label>${measure1[12]}</li>
+                    </ul>
+                </div>
+                <div class="p-2 flex-fill text-center">
+                    <p class="font-weight-bold">Measure 2</p>
+                    <ul class="list-unstyled">
+                        <li><label class="font-weight-bold float">Date: </label>${measure2[2]}</li>
+                        <li><label class="font-weight-bold">Observer: </label>${measure2[13]}</li>
+                        <li><label class="font-weight-bold">H0: </label>${measure2[3]}</li>
+                        <li><label class="font-weight-bold">D0: </label>${measure2[4]}</li>
+                        <li><label class="font-weight-bold">Z0: </label>${measure2[5]}</li>
+                        <li><label class="font-weight-bold">F0: </label>${measure2[6]}</li>
+                        <li><label class="font-weight-bold">D: </label>${measure2[8]}</li>
+                        <li><label class="font-weight-bold">I: </label>${measure2[10]}</li>
+                        <li><label class="font-weight-bold">F: </label>${measure2[12]}</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div id="test_measure_baseline"></div>
+        `
     }
 })

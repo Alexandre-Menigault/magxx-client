@@ -27,13 +27,22 @@ class BaselineCharts {
      * @param {string[]} headers 
      * @param {string} parentId 
      */
-    constructor(plots_data, parentId) {
+    constructor(plots_data, parentId, isBaseline = false) {
         this.charts = [];
         this.container = document.getElementById(parentId);
         this.container.innerHTML = '';
-        this.headers = ["h0", "d0", "z0", "f0"];
-        this.times = ["tenoI", "tenoD", "tenoI", "tenoF"];
-        this.colors = ["#080", "#0088b8", "#ff8c00", "#9400d3"]
+        this.isBaseline = isBaseline;
+        if (isBaseline) {
+            this.headers = ["H", "D", "Z", "F", "dF"];
+            this.times = ["teno", "teno", "teno", "teno", "teno"];
+            this.colors = ["#080", "#0088b8", "#ff8c00", "#9400d3", "#000"]
+
+        } else {
+            this.headers = ["h0", "d0", "z0", "f0"];
+            this.times = ["tenoI", "tenoD", "tenoI", "tenoF"];
+            this.colors = ["#080", "#0088b8", "#ff8c00", "#9400d3"]
+
+        }
         this._createPlots(plots_data);
     }
 
@@ -50,6 +59,11 @@ class BaselineCharts {
             for (const d of jsonData) {
                 // Prevent adding rejected measurements
                 if (d["tag"] == 'V') data.push({ x: parseInt(d[this.times[i]]), y: parseFloat(d[header]) })
+                else if (this.isBaseline) {
+                    const y = parseFloat(d[header])
+                    if (y < 99999.0)
+                        data.push({ x: parseInt(d[this.times[i]].teno), y })
+                }
             }
             // console.log(data);
             charts.push(new BaselineChart(data, {
