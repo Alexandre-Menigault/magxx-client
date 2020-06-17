@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Definitive - Magproc</title>
+    <link rel="stylesheet" href="./assets/css/vendor/bootstrap.css">
+    <link rel="stylesheet" href="./assets/css/vendor/font-awesome.all.min.css">
+    <link rel="stylesheet" href="./assets/css/vendor/tempusdominus-bootstrap-4.min.css">
+    <link rel="stylesheet" href="./assets/css/style.css">
+</head>
+
+<body>
+    <div class="container-fluid" style="min-height: 100%; min-width: 100vw; max-width: 100vw; padding: 0px"
+        class="px-0">
+        <nav id="navbar" tabindex="-1" class="sticky-top navbar navbar-expand-lg navbar-dark bg-dark">
+
+        </nav>
+        <form id="definitive-form">
+
+            <div class="container-fluid d-flex flex-row align-items-stretch bd-highlight"
+                style="margin-top:10px; min-height: 100%">
+
+                <div class="d-flex flex-grow-1 flex-column align-items-stretch w-75">
+                    <div class="d-flex flex-column">
+                        <div class="d-flex flex-row flex-wrap w-75">
+                            <button type="button" id="input-button-compute" "
+                                class=" btn btn-primary disabled mb-3 mx-4 w-25" disabled>Compute definitive</button>
+                            <div class="input-group mb-3 w-50 align-self-center">
+                            </div>
+
+                            <div class="input-group mb-3 mx-3 w-45">
+                                <!-- OBS -->
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">OBS</span>
+                                </div>
+                                <select name="obs" id="input-obs" class="custom-select needs-validation"
+                                    placeholder="CLF" required>
+                                    <option disabled selected>Choose an observatoy</option>
+                                </select>
+                            </div>
+                            <div class="input-group mb-3 mx-2 w-45">
+
+                            </div>
+                            <div class="input-group mb-3 mx-3 w-45">
+                                <!-- Start Year -->
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">Year</span>
+                                </div>
+                                <input type="text" id="input-year"
+                                    class="form-control datetimepicker-input needs-validation" data-type="date"
+                                    data-date-format="YYYY" placeholder="2019" data-toggle="datetimepicker" required>
+                            </div>
+                            <div class="input-group mb-3 mx-3 w-45">
+                                <!-- Interval -->
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">Interval</span>
+                                </div>
+                                <select name="obs" id="input-interval" class="custom-select needs-validation"
+                                    placeholder="01-01_12-31" required>
+                                    <option disabled selected>Choose an interval</option>
+                                </select>
+                            </div>
+                            <div class="input-group mb-3 mx-3 w-45">
+                                <!-- Interval Trys -->
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">Interval</span>
+                                </div>
+                                <select name="obs" id="input-interval-trys" class="custom-select needs-validation"
+                                    placeholder="01" required>
+                                    <option disabled selected>Choose an interval try</option>
+                                </select>
+                            </div>
+                            <div class="input-group mb-3 mx-2 w-45">
+                                <!-- Search time half interval -->
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">STIV</span>
+                                </div>
+                                <input type="text" id="input-stiv" class="form-control needs-validation" required>
+                            </div>
+                            <div class="input-group mb-3 mx-3 w-75">
+                                <!-- Imposed Start Date -->
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">Imposed start Date</span>
+                                </div>
+                                <input type="text" id="input-imposed_start_date"
+                                    class="form-control datetimepicker-input needs-validation" data-type="date"
+                                    data-date-format="YYYY-MM-DD" placeholder="2019-12-31" data-toggle="datetimepicker"
+                                    required>
+                            </div>
+                            <div class="input-group mb-3 mx-2 w-25">
+                                <!-- Imposed value start H -->
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">Start H</span>
+                                </div>
+                                <input type="text" id="input-imposed_start_h" class="form-control needs-validation"
+                                    required>
+                            </div>
+                            <div class="input-group mb-3 mx-2 w-25">
+                                <!-- Imposed value start H -->
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">Start D</span>
+                                </div>
+                                <input type="text" id="input-imposed_start_d" class="form-control needs-validation"
+                                    required>
+                            </div>
+                            <div class="input-group mb-3 mx-2 w-25">
+                                <!-- Imposed value start H -->
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">Start Z</span>
+                                </div>
+                                <input type="text" id="input-imposed_start_z" class="form-control needs-validation"
+                                    required>
+                            </div>
+                            <div class="input-group mb-3 mx-3 w-75">
+                                <!-- Imposed End Date -->
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">Imposed end Date</span>
+                                </div>
+                                <input type="text" id="input-imposed_end_date"
+                                    class="form-control datetimepicker-input needs-validation" data-type="date"
+                                    data-date-format="YYYY-MM-DD" placeholder="2019-12-31" data-toggle="datetimepicker"
+                                    required>
+                            </div>
+                            <div class="input-group mb-3 mx-2 w-25">
+                                <!-- Imposed value End H -->
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">End H</span>
+                                </div>
+                                <input type="text" id="input-imposed_end_h" class="form-control needs-validation"
+                                    required>
+                            </div>
+                            <div class="input-group mb-3 mx-2 w-25">
+                                <!-- Imposed value stEndart H -->
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">End D</span>
+                                </div>
+                                <input type="text" id="input-imposed_end_d" class="form-control needs-validation"
+                                    required>
+                            </div>
+                            <div class="input-group mb-3 mx-2 w-25">
+                                <!-- Imposed value End H -->
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">End Z</span>
+                                </div>
+                                <input type="text" id="input-imposed_end_z" class="form-control needs-validation"
+                                    required>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex flex-grow-1 flex-column align-items-stretch w-75">
+
+                    <div class=" d-flex flex-grow-1 flex-column">
+                        <h2>Angles</h2>
+                        <div class="d-flex flex-row flex-wrap w-100">
+                            <div class="input-group mr-3 mb-3 w-25">
+                                <!-- Angle 1  -->
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">Angle 1</span>
+                                </div>
+                                <input type="text" id="input-angle1" class="form-control  needs-validation"
+                                    placeholder="00.000gr" required data-type="decimal" data-decimal-precision="3"
+                                    data-negative="true">
+                            </div>
+                            <div class="input-group mr-3 mb-3 w-25">
+                                <!-- Angle 2  -->
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">Angle 2</span>
+                                </div>
+                                <input type="text" id="input-angle2" class="form-control  needs-validation"
+                                    placeholder="00.000gr" required data-type="decimal" data-decimal-precision="3"
+                                    data-negative="true">
+                            </div>
+                            <div class="input-group mr-3 mb-3 w-25">
+                                <!-- Angle 3  -->
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">Angle 3</span>
+                                </div>
+                                <input type="text" id="input-angle3" class="form-control  needs-validation"
+                                    placeholder="00.000gr" required data-type="decimal" data-decimal-precision="3"
+                                    data-negative="true">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class=" d-flex flex-grow-1 flex-column">
+                        <h2>Noise variance XYZF</h2>
+                        <div class="d-flex flex-row flex-wrap w-100">
+                            <div class="input-group mr-3 mb-3 w-45">
+                                <!-- X  -->
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">X</span>
+                                </div>
+                                <input type="text" id="input-noiseXYZF-x" class="form-control  needs-validation"
+                                    placeholder="00.000gr" required data-type="decimal" data-decimal-precision="3">
+                            </div>
+                            <div class="input-group mr-3 mb-3 w-45">
+                                <!-- Y  -->
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">Y</span>
+                                </div>
+                                <input type="text" id="input-noiseXYZF-y" class="form-control  needs-validation"
+                                    placeholder="00.000gr" required data-type="decimal" data-decimal-precision="3">
+                            </div>
+                            <div class="input-group mr-3 mb-3 w-45">
+                                <!-- Z  -->
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">Z</span>
+                                </div>
+                                <input type="text" id="input-noiseXYZF-z" class="form-control  needs-validation"
+                                    placeholder="00.000gr" required data-type="decimal" data-decimal-precision="3">
+                            </div>
+                            <div class="input-group mr-3 mb-3 w-45">
+                                <!-- F  -->
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">F</span>
+                                </div>
+                                <input type="text" id="input-noiseXYZF-f" class="form-control  needs-validation"
+                                    placeholder="00.000gr" required data-type="decimal" data-decimal-precision="3">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class=" d-flex flex-grow-1 flex-column">
+                        <h2>Noise variance DIF</h2>
+                        <div class="d-flex flex-row flex-wrap w-100">
+                            <div class="input-group mr-3 mb-3 w-25">
+                                <!-- D  -->
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">D</span>
+                                </div>
+                                <input type="text" id="input-noiseDIF-d" class="form-control  needs-validation"
+                                    placeholder="00.000gr" required data-type="decimal" data-decimal-precision="3">
+                            </div>
+                            <div class="input-group mr-3 mb-3 w-25">
+                                <!-- I  -->
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">I</span>
+                                </div>
+                                <input type="text" id="input-noiseDIF-i" class="form-control  needs-validation"
+                                    placeholder="00.000gr" required data-type="decimal" data-decimal-precision="3">
+                            </div>
+                            <div class="input-group mr-3 mb-3 w-25">
+                                <!-- F  -->
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">F</span>
+                                </div>
+                                <input type="text" id="input-noiseDIF-f" class="form-control  needs-validation"
+                                    placeholder="00.000gr" required data-type="decimal" data-decimal-precision="3">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </form>
+
+        <div id="baselineCharts">
+
+        </div>
+    </div>
+
+
+    <!-- TODO: Générateur de valeurs aléatoires, à retirer en prod -->
+    <script src="./assets/js/vendor/dev-faker.js"></script>
+
+    <script src="./assets/js/vendor/jquery-3.4.1.js"></script>
+    <script src="./assets/js/vendor/bootstrap.bundle.js"></script>
+    <script src="./assets/js/vendor/canvasjs.min.js"></script>
+    <script src="./assets/js/vendor/moment-2.22.2.min.js"></script>
+    <script src="./assets/js/vendor/locale/fr.js"></script>
+    <script src="./assets/js/vendor/tempusdominus-bootstrap-4.min.js"></script>
+    <script src="./assets/js/vendor/fetch-timeout.js" type="module"></script>
+    <script src="./assets/js/index.js" type="module"></script>
+    <script src="./assets/js/definitive-form.js" type="module"></script>
+</body>
+
+</html>

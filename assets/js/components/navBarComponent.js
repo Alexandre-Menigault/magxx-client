@@ -9,6 +9,7 @@ let pages = {
     log: config.pathname + "/log.html",
     abs: config.pathname + "/abs-mes.html",
     baseline: config.pathname + "/baseline.html",
+    definitive: config.pathname + "/definitive.html",
 }
 
 function fetchObsList() {
@@ -86,7 +87,8 @@ class NavBarComponent extends Component {
         const navbarLink3 = new NavLink("Log", pages.log, { active: window.location.pathname == pages.log })
         const navbarLink4 = new NavLink("Abs", pages.abs, { active: window.location.pathname == pages.abs })
         const navbarLink5 = new NavLink("Baseline", pages.baseline, { active: window.location.pathname == pages.baseline })
-        navbarComponent.appendChildren(navbarLink, navbarLink2, navbarLink3, navbarLink4, navbarLink5);
+        const navbarLink6 = new NavLink("Definitive", pages.definitive, { active: window.location.pathname == pages.definitive })
+        navbarComponent.appendChildren(navbarLink, navbarLink2, navbarLink3, navbarLink4, navbarLink5, navbarLink6);
         navbarComponent.draw()
         navLinksDiv.appendChild(navLinksUl);
         this.baseHTMLElement.appendChild(navLinksDiv);

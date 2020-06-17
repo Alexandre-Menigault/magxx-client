@@ -2,6 +2,7 @@ class DateTimeValidator {
     static get TIME_FORMAT_COLUMN() { return "H:mm:ss" }
     static get TIME_FORMAT_POINT() { return "H.mm.ss" }
     static get DATE_FORMAT() { return "YYYY-MM-DD" }
+    static get YEAR_FORMAT() { return "YYYY" }
     /**
      * Date time validator using momentjs
      * @static
