@@ -1,4 +1,0 @@
-AuthName "Magproc"
-AuthType Basic
-AuthUserFile c:\xampp\htdocs\Observatoire\.htpasswd
-require valid-user
