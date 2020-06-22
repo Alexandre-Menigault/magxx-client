@@ -40,6 +40,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
 
     $("#input-year").on("hide.datetimepicker", fetchIntervals);
     $("#input-interval").on("change", fetchIntervalTrys);
+    $("#input-intervalTry").on("change", fetchBaselineConfig);
 
     function fetchIntervals() {
         const year = parseInt($('#input-year').val());
@@ -48,9 +49,21 @@ window.addEventListener("DOMContentLoaded", (event) => {
         fetch(location.protocol + "//" + location.hostname + config.serverBaseUrl + `/api/baseline/intervals?obs=${obs}&year=${year}`)
             .then((res) => res.json())
             .then(intervals => {
+                // Clear the selector before adding new options
+                intervalsSelector.empty();
+                const defaultOpt = new Option("Choose an interval", "")
+                defaultOpt.disabled = true;
+                intervalsSelector.append(defaultOpt)
+                let isFirstElem = true;
                 for (let interval of intervals) {
-                    intervalsSelector.append(new Option(interval, interval));
+                    const opt = new Option(interval, interval);
+                    if (isFirstElem) {
+                        opt.selected = true
+                        isFirstElem = false;
+                    }
+                    intervalsSelector.append(opt);
                 }
+                fetchIntervalTrys()
             })
             .catch(err => {
                 console.error(err);
@@ -65,13 +78,63 @@ window.addEventListener("DOMContentLoaded", (event) => {
         fetch(location.protocol + "//" + location.hostname + config.serverBaseUrl + `/api/baseline/interval-trys?obs=${obs}&year=${year}&intervalString=${interval}`)
             .then((res) => res.json())
             .then(trys => {
+                // Clear the selector before adding new options
+                trysSelector.empty();
+                const defaultOpt = new Option("Choose an interval try", "")
+                defaultOpt.disabled = true;
+                trysSelector.append(defaultOpt);
+                let isFirstElem = true;
                 for (let t of trys) {
-                    trysSelector.append(new Option(t, t));
+                    const opt = new Option(t, t);
+                    if (isFirstElem) {
+                        opt.selected = true
+                        isFirstElem = false
+                    }
+                    trysSelector.append(opt);
                 }
+                fetchBaselineConfig();
             })
             .catch(err => {
                 console.error(err);
+            }).finally(() => {
+                validateForm();
             })
+    }
+
+    function fetchBaselineConfig() {
+
+        const year = parseInt($('#input-year').val());
+        const obs = $('#input-obs').val();
+        const interval = $('#input-interval').val();
+        const try_ = $('#input-interval-trys').val();
+
+        fetch(location.protocol + "//" + location.hostname + config.serverBaseUrl + `/api/baseline/try-config?obs=${obs}&year=${year}&intervalString=${interval}&try=${try_}`)
+            .then((res) => res.json())
+            .then((data) => {
+                displayConfigValues(data);
+            })
+    }
+
+    function displayConfigValues(data) {
+        $('#input-timestep').val(data.try.baseline_time_step);
+        $('#input-angle1').val(data.obs.euler_a);
+        $('#input-angle2').val(data.obs.euler_b);
+        $('#input-angle3').val(data.obs.euler_g);
+
+        $('#input-noiseXYZF-x').val(data.obs.noise_XYZF.X)
+        $('#input-noiseXYZF-y').val(data.obs.noise_XYZF.Y)
+        $('#input-noiseXYZF-z').val(data.obs.noise_XYZF.Z)
+        $('#input-noiseXYZF-f').val(data.obs.noise_XYZF.F)
+
+        $('#input-baselineMeanXYZF-x').val(data.try.mean_XYZF.X)
+        $('#input-baselineMeanXYZF-y').val(data.try.mean_XYZF.Y)
+        $('#input-baselineMeanXYZF-z').val(data.try.mean_XYZF.Z)
+        $('#input-baselineMeanXYZF-f').val(data.try.mean_XYZF.F)
+
+        $('#input-baselineScalingXYZF-x').val(data.try.scaling_XYZF.X)
+        $('#input-baselineScalingXYZF-y').val(data.try.scaling_XYZF.Y)
+        $('#input-baselineScalingXYZF-z').val(data.try.scaling_XYZF.Z)
+        $('#input-baselineScalingXYZF-f').val(data.try.scaling_XYZF.F)
     }
 
     // ========= Form validation ==============
