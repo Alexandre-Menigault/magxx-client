@@ -15,8 +15,11 @@ window.addEventListener("DOMContentLoaded", (event) => {
 
     $('#definitive-form')[0].reset();
 
+    $('#input-button-compute').click(computeDefinitive);
+
     $('#input-year').datetimepicker({
         format: "YYYY",
+        maxDate: moment(),
     })
 
     $('#input-year').focusin(function (e) {
@@ -31,10 +34,6 @@ window.addEventListener("DOMContentLoaded", (event) => {
     $('.needs-validation').on("input", (function (e) {
         validateForm()
     }))
-
-    $('#input-button-compute').click(function (e) {
-        computeBaseline();
-    })
 
     fetchObsList();
 
@@ -135,6 +134,30 @@ window.addEventListener("DOMContentLoaded", (event) => {
         $('#input-baselineScalingXYZF-y').val(data.try.scaling_XYZF.Y)
         $('#input-baselineScalingXYZF-z').val(data.try.scaling_XYZF.Z)
         $('#input-baselineScalingXYZF-f').val(data.try.scaling_XYZF.F)
+    }
+
+    function computeDefinitive() {
+        const $validateButton = $('#input-button-compute')
+        const year = parseInt($('#input-year').val());
+        const obs = $('#input-obs').val();
+        const interval = $('#input-interval').val();
+        const try_ = $('#input-interval-trys').val();
+
+        $validateButton.addClass("disabled")
+        $validateButton.prop("disabled", true)
+        fetch(location.protocol + "//" + location.hostname + config.serverBaseUrl + `/api/definitive/compute?obs=${obs}&year=${year}&intervalString=${interval}&try=${try_}`)
+            .then((res) => res.json())
+            .then((data) => {
+                console.log(data);
+                alert("Compute success")
+            })
+            .catch((err) => {
+                console.error(err)
+                alert("Compute error")
+            }).finally(() => {
+                $validateButton.removeClass("disabled")
+                $validateButton.prop("disabled", false)
+            })
     }
 
     // ========= Form validation ==============
