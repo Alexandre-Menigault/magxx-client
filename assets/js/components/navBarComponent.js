@@ -55,7 +55,7 @@ class NavBarComponent extends Component {
         const brand = document.createElement("a");
         brand.classList.add("navbar-brand");
         brand.href = "#"
-        brand.innerText = "Magxx";
+        brand.innerText = "Magproc";
         this.baseHTMLElement.appendChild(brand);
 
         // Input collapse
