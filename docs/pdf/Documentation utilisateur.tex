@@ -30,6 +30,7 @@ Les différentes fonctionnalités de Magproc sont accessibles via le menu en hau
 \item Abs - Le formulaire des données absolues
 \item Baseline - Le formulaire de calcul de ligne de base
 \item Definitive - Le formulaire de calcul des données définitives
+\item Teno - Un lien vers le convertisseur de Teno vers une date lisible
 \end{itemize}
 
 \section{Visualisation des données}
@@ -72,5 +73,13 @@ Enfin, quand tous les champs sont remplis, l'utilisateur clique sur le bouton "T
 \linebreak
 Une fois qu'il a vérifié que sa mesure était correcte, l'utilisateur clique sur "Save results" pour sauvegarder sa mesure et réinitialiser le formulaire pour facilement en entrer une nouvelle.
 
+\subsection{Formulaire de ligne de base}
+\label{sec:baseline}
+Cette page est faite pour calculer une ligne de base pour un intervalle de temps, pour un observatoire donné.
+\linebreak
+L'utilisateur doit renseigner différents champs pour calculer une nouvelle ligne de base.
+Tout d'abord il doit renseigner l'observatoire pour lequel il veut calculer une ligne de base, ainsi qu'un intervalle de temps. Une fois l'observatoire sélectionné, les données du formulaire seront remplis avec les valeurs de la dernière ligne de base crée, s'il y en a une existante. Ensuite s'il le souhaite, il peut modifier tous les champs à sa convenance afin de manipuler le résultat de la ligne de base. L'utilisateur a la possibilité de renseigner un point de départ et d'arrivée, qui sont des points de passage obligatoire de la ligne de base, afin d'assurer une continuité de la ligne de base, pour éviter de créer un saut. Si aucun point n'est imposé, saisir 99999.0 dans les champs H, D et Z, et une date quelconque.
+\linebreak
+Une fois le formulaire remplit, l'utilisateur clique sur le bouton "Compute baseline" afin de lancer le calcul de la ligne de base sur le serveur. Lorsque elle est calculée, un graphique apparait avec les différents composants afin de visualiser si la ligne de base semble correcte. Si elle l'est, l'utilisateur n'a rien de plus à faire. Il peut néanmoins modifier les valeurs et continuer à faire des essais pour cet intervalle jusqu'à avoir un résultat satisfaisant.
 
 \end{document}
