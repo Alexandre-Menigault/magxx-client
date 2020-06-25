@@ -9,3 +9,13 @@ out/
 config.js
 
 .htaccess
+
+*.aux
+
+*.out
+
+*.log
+
+*.gz
+
+*.toc

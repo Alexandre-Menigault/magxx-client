@@ -10,6 +10,7 @@ let pages = {
     abs: config.pathname + "/abs-mes.html",
     baseline: config.pathname + "/baseline.html",
     definitive: config.pathname + "/definitive.html",
+    teno: config.pathname + "/teno.html",
 }
 
 function fetchObsList() {
@@ -88,7 +89,8 @@ class NavBarComponent extends Component {
         const navbarLink4 = new NavLink("Abs", pages.abs, { active: window.location.pathname == pages.abs })
         const navbarLink5 = new NavLink("Baseline", pages.baseline, { active: window.location.pathname == pages.baseline })
         const navbarLink6 = new NavLink("Definitive", pages.definitive, { active: window.location.pathname == pages.definitive })
-        navbarComponent.appendChildren(navbarLink, navbarLink2, navbarLink3, navbarLink4, navbarLink5, navbarLink6);
+        const navbarLink7 = new NavLink("Teno", pages.teno, { active: window.location.pathname == pages.teno, external: true })
+        navbarComponent.appendChildren(navbarLink, navbarLink2, navbarLink3, navbarLink4, navbarLink5, navbarLink6, navbarLink7);
         navbarComponent.draw()
         navLinksDiv.appendChild(navLinksUl);
         this.baseHTMLElement.appendChild(navLinksDiv);

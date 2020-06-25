@@ -17,6 +17,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
         abs: config.pathname + "/abs-mes.html",
         baseline: config.pathname + "/baseline.html",
         definitive: config.pathname + "/definitive.html",
+        teno: config.pathname + "/teno.html",
     }
 
     const nav = document.getElementById("navbar")

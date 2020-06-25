@@ -30,6 +30,15 @@ class NavLinkComponent extends Component {
             a.setAttribute("aria-disabled", "true");
             a.classList.add("disabled");
         }
+        if (this.options.external != undefined && this.options.external) {
+            a.setAttribute("target", "_blank");
+            a.setAttribute("rel", "noopener noreferer")
+            const i = document.createElement("i");
+            i.classList.add("fas", "fa-external-link-alt")
+            i.setAttribute("aria-hidden", "true")
+            i.style.paddingLeft = "5px";
+            a.appendChild(i)
+        }
         if (this.options.active) this.baseHTMLElement.classList.add("active")
         this.baseHTMLElement.appendChild(a);
     }
