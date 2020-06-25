@@ -30,6 +30,12 @@ class NavLinkComponent extends Component {
             a.setAttribute("aria-disabled", "true");
             a.classList.add("disabled");
         }
+        if (this.options.title != undefined && typeof this.options.title == "string") {
+            if (this.options.external != undefined && this.options.external)
+                a.setAttribute("title", `[External] ${this.options.title}`);
+            else
+                a.setAttribute("title", this.options.title);
+        }
         if (this.options.external != undefined && this.options.external) {
             a.setAttribute("target", "_blank");
             a.setAttribute("rel", "noopener noreferer")

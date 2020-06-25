@@ -89,7 +89,7 @@ class NavBarComponent extends Component {
         const navbarLink4 = new NavLink("Abs", pages.abs, { active: window.location.pathname == pages.abs })
         const navbarLink5 = new NavLink("Baseline", pages.baseline, { active: window.location.pathname == pages.baseline })
         const navbarLink6 = new NavLink("Definitive", pages.definitive, { active: window.location.pathname == pages.definitive })
-        const navbarLink7 = new NavLink("Teno", pages.teno, { active: window.location.pathname == pages.teno, external: true })
+        const navbarLink7 = new NavLink("Teno", pages.teno, { active: window.location.pathname == pages.teno, external: true, title: "Teno Converter" })
         navbarComponent.appendChildren(navbarLink, navbarLink2, navbarLink3, navbarLink4, navbarLink5, navbarLink6, navbarLink7);
         navbarComponent.draw()
         navLinksDiv.appendChild(navLinksUl);
