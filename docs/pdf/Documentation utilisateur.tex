@@ -1,0 +1,76 @@
+\documentclass[10pt,a4paper]{report}
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{hyperref}
+\author{Alexandre Menigault}
+\title{Magproc - Documentation utilisateur}
+
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\chapter{Présentation de l'application}
+
+
+L'application est disponible à l'adresse \url{http://magproc.ipgp.fr/magproc}
+Pour y accéder l'utilisateur doit entrer un nom d'utilisateur et un mot de passe.
+Les différentes fonctionnalités de Magproc sont accessibles via le menu en haut de la page.
+\linebreak
+\begin{itemize}
+\item \hyperref[sec:raw]{Raw - La visualisation des données de variation}
+\item Env - La visualisation des données d'environnement
+\item Log - La visualisation des données de log de l'ENO
+\item Abs - Le formulaire des données absolues
+\item Baseline - Le formulaire de calcul de ligne de base
+\item Definitive - Le formulaire de calcul des données définitives
+\end{itemize}
+
+\section{Visualisation des données}
+\subsection{Données de variation}
+\label{sec:raw}
+Cette page est faite pour visualiser les données de variation d'un observatoire.
+\linebreak 
+Pour se faire, il faut sélectionner, dans la barre de menu à droite, l'observatoire et la date que l'on souhaite visualiser. Une fois fait, l'application va demander les données de cet observatoire au jour sélectionné, comme l'affichage des données prend du temps, un indicateur de chargement apparait à gauche du sélecteur de l'observatoire. Le jour peut aussi être modifié avec les flèches droite et gauche, pour avancer ou reculer d'un jour. Lorsque les données sont chargés, les cinq graphiques s'affichent, un pour chaque composante, X, Y, Z, F, et $\Delta$F.
+\linebreak
+L'utilisateur peut sélectionner une partie d'un graphique pour zoomer dedans, cela ajuste automatiquement le zoom sur les autre graphiques. Pour revenir d'un cran en arrière, l'utilisateur a le choix d'utiliser la molette de sa souris vers le bas quand le curseur est pointé sur un graphique. Il peut aussi revenir au zoom initial en double cliquant sur un des graphiques. En passant sa souris sur les points d'un graphique, l'utilisateur pourra voir l'heure à laquelle la mesure a été effectuée, et la valeur en nano Tesla (nT).
+\subsection{Données d'environnement}
+\label{sec:env}
+Cette page est faite pour visualiser les données d'environnement d'un observatoire.
+\linebreak
+Tout comme pour les données de variations, il faut sélectionner un observatoire et une date pour récupérer les données de variation à cette date. Les données sont présentées sous forme d'un tableau, avec les même entêtes que dans les fichiers. L'utilisateur n'a pas la possibilité de trier ce tableau.
+
+\subsection{Données de Log}
+\label{sec:log}
+Cette page est faite pour visualiser les données de log d'un observatoire.
+\linebreak
+Tout comme pour les données de variations, il faut sélectionner un observatoire et une date pour récupérer les données de variation à cette date. Les données sont présentées sous forme d'un tableau, avec les même entêtes que dans les fichiers. L'utilisateur n'a pas la possibilité de trier ce tableau. Il y a 3 flags différents.
+\begin{itemize}
+\item INFO - BLEU - Une information du système
+\item WARNING - ORANGE - Une information a surveiller, comme l'horloge du système qui n'a pas pu se synchroniser
+\item ERROR - ROUGE - Une erreur du système de l'ENO
+\end{itemize}
+
+\subsection{Formulaire de mesure absolues}
+\label{sec:abs}
+Cette page est faite pour entrer des nouvelles mesures absolues.
+\linebreak
+Afin de saisir une mesure absolue, l'utilisateur doit renseigner différents champs.
+Il renseigne d'abord l'observatoire duquel vient la mesure absolue. Cela remplit automatiquement divers champs liés à la configuration de l'observatoire la plus récente.
+\linebreak
+Ensuite il doit renseigner ses valeurs de visée, les quatre premiers sont pour la première mesure absolue. Dans le cas d'une mesure double, les valeurs de début de la deuxième mesure sont celles de fin de la première mesure.
+\linebreak
+Puis, il renseigne les valeurs de champ pour la déclinaison et l'inclinaison avec l'heure associée. Attention si la mesure se commence et se fini sur un jour différent suivant la timezone UTC, la mesure ne sera pas prise en compte.
+\linebreak
+Enfin, quand tous les champs sont remplis, l'utilisateur clique sur le bouton "Test Measure" pour vérifier que les valeurs qu'il a renseigné correspondent à ce que l'observateur a noté, et aussi comparer sur les graphiques si sa mesure n'a pas l'air aberrante.
+\linebreak
+Une fois qu'il a vérifié que sa mesure était correcte, l'utilisateur clique sur "Save results" pour sauvegarder sa mesure et réinitialiser le formulaire pour facilement en entrer une nouvelle.
+
+
+\end{document}
