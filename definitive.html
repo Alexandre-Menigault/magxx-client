@@ -50,8 +50,9 @@
                                     <span class="input-group-text">Year</span>
                                 </div>
                                 <input type="text" id="input-year"
-                                    class="form-control datetimepicker-input needs-validation" data-type="date"
-                                    data-date-format="YYYY" placeholder="2019" data-toggle="datetimepicker" required>
+                                    class="form-control datetimepicker-input nneeds-validation" data-type="date"
+                                    data-date-format="YYYY" placeholder="2019" data-toggle="datetimepicker"
+                                    data-target="#input-year" required>
                             </div>
                             <div class="input-group mb-3 mx-3 w-45">
                                 <!-- Interval -->
@@ -66,7 +67,7 @@
                             <div class="input-group mb-3 mx-3 w-45">
                                 <!-- Interval Trys -->
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text">Interval</span>
+                                    <span class="input-group-text">Try</span>
                                 </div>
                                 <select name="intervalTry" id="input-interval-trys"
                                     class="custom-select needs-validation" placeholder="01" required>
@@ -218,13 +219,32 @@
                         </div>
                     </div>
                 </div>
-
             </div>
 
         </form>
 
-        <div id="baselineCharts">
+        <div>
+            <div class="input-group mb-3 mx-3 w-25">
+                <!-- Definitive try -->
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Definitive Try</span>
+                </div>
+                <select id="input-def-trys" class="custom-select" placeholder="01" required>
+                    <option disabled selected>Choose an definitive try</option>
+                </select>
+            </div>
+            <div class="input-group mb-3 mx-3 w-25">
+                <!-- Start day -->
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Start day</span>
+                </div>
+                <input type="text" id="input-def-start-date" class="form-control datetimepicker-input" data-type="date"
+                    data-date-format="YYYY-MM-DD" placeholder="2020-01-01" data-toggle="datetimepicker"
+                    data-target="#input-def-start-date" required>
+            </div>
+            <div id="definitiveCharts">
 
+            </div>
         </div>
     </div>
 

@@ -1,9 +1,9 @@
 import NumberValidator from "../../validators/numberValidator.js";
 import DateTimeValidator from "../../validators/dateTimeValidator.js";
 import config from "../../config.js";
+import DefinitiveCharts from "./DefinitiveCharts.js";
 
 import Teno from "./teno.js";
-import BaselineCharts from "./BaselineCharts.js";
 
 
 window.addEventListener("DOMContentLoaded", (event) => {
@@ -17,18 +17,19 @@ window.addEventListener("DOMContentLoaded", (event) => {
 
     $('#input-button-compute').click(computeDefinitive);
 
+    $('#input-year').val('')
+    $('#input-year').datetimepicker()
     $('#input-year').datetimepicker({
         format: "YYYY",
+        viewMode: 'years',
         maxDate: moment(),
     })
-
-    $('#input-year').focusin(function (e) {
-        e.preventDefault()
-        $(e.target).datetimepicker("show")
-    })
-    $('#input-year').focusout(function (e) {
-        e.preventDefault()
-        $(e.target).datetimepicker("hide")
+    $('#input-def-start-date').val('')
+    $('#input-def-start-date').datetimepicker({
+        format: "L",
+        viewMode: 'days',
+        sideBySide: true,
+        maxDate: moment(),
     })
 
     $('.needs-validation').on("input", (function (e) {
@@ -40,6 +41,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
     $("#input-year").on("hide.datetimepicker", fetchIntervals);
     $("#input-interval").on("change", fetchIntervalTrys);
     $("#input-intervalTry").on("change", fetchBaselineConfig);
+    $("#input-def-start-date").on("hide.datetimepicker", fetchDefinitiveDay);
 
     function fetchIntervals() {
         const year = parseInt($('#input-year').val());
@@ -92,6 +94,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
                     trysSelector.append(opt);
                 }
                 fetchBaselineConfig();
+                fetchDefinitiveTrys()
             })
             .catch(err => {
                 console.error(err);
@@ -112,6 +115,32 @@ window.addEventListener("DOMContentLoaded", (event) => {
             .then((data) => {
                 displayConfigValues(data);
             })
+    }
+
+    function fetchDefinitiveTrys() {
+
+        const year = parseInt($('#input-year').val());
+        const obs = $('#input-obs').val();
+        const interval = $('#input-interval').val();
+        const trysSelector = $('#input-def-trys');
+        fetch(`${location.protocol}//${location.hostname}${config.serverBaseUrl}/api/definitive/trys?obs=${obs}&year=${year}&intervalString=${interval}`)
+            .then((res) => res.json())
+            .then((trys) => {
+                trysSelector.empty();
+                const defaultOpt = new Option("Choose an definitve try", "")
+                defaultOpt.disabled = true;
+                trysSelector.append(defaultOpt);
+                let isFirstElem = true;
+                for (let t of trys) {
+                    const opt = new Option(t, t);
+                    if (isFirstElem) {
+                        opt.selected = true
+                        isFirstElem = false
+                    }
+                    trysSelector.append(opt);
+                }
+            })
+
     }
 
     function displayConfigValues(data) {
@@ -150,6 +179,8 @@ window.addEventListener("DOMContentLoaded", (event) => {
             .then((data) => {
                 console.log(data);
                 alert("Compute success")
+                fetchDefinitiveTrys();
+
             })
             .catch((err) => {
                 console.error(err)
@@ -157,6 +188,49 @@ window.addEventListener("DOMContentLoaded", (event) => {
             }).finally(() => {
                 $validateButton.removeClass("disabled")
                 $validateButton.prop("disabled", false)
+            })
+    }
+
+    function fetchDefinitiveDay() {
+
+        const year = parseInt($('#input-year').val());
+        const obs = $('#input-obs').val();
+        const interval = $('#input-interval').val();
+        const try_ = $('#input-def-trys').val();
+        const $startDay = $('#input-def-start-date').val().split('-');
+        const startDay = Teno.fromYYYYMMDDHHMMSS({ yyyy: parseInt($startDay[0]), mmmm: parseInt($startDay[1]), dddd: parseInt($startDay[2]), hh: 0, mm: 0, ss: 0 }).teno;
+
+        fetch(`${location.protocol}//${location.hostname}${config.serverBaseUrl}/api/definitive/${obs}/${year}/${interval}/${try_}/${startDay}`,
+            {
+                headers: {
+                    'Accept': "plain/text"
+                }
+            })
+            .then((res) => res.text())
+            .then((data) => {
+                data = data.split(/(?:\r\n|\r|\n)/g)
+                console.log(data)
+                const jsonData = []
+                for (let line of data) {
+                    // Remove spaces
+                    line = line.trim().replace("/ /g", '');
+                    const lineSplit = line.split(',');
+                    const teno = parseInt(lineSplit[0]);
+                    const X = parseFloat(lineSplit[1]);
+                    const Y = parseFloat(lineSplit[2]);
+                    const Z = parseFloat(lineSplit[3]);
+                    const F = parseFloat(lineSplit[4]);
+                    const deltaF = F - Math.sqrt(X * X + Y * Y + Z * Z);
+                    jsonData.push({
+                        teno: teno,
+                        X: X,
+                        Y: Y,
+                        Z: Z,
+                        F: F,
+                        dF: deltaF
+                    })
+                }
+                new DefinitiveCharts(jsonData, "definitiveCharts");
             })
     }
 
